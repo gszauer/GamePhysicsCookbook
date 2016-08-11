@@ -27,6 +27,12 @@
 #include <cstdio>
 #include "IWindow.h"
 
+// I set all of these settings in the "Project Settings" of visual studio
+// #pragma comment(lib, "opengl32.lib") 
+// #pragma comment(lib, "glew32.lib") 
+// #pragma comment(linker,"/SUBSYSTEM:CONSOLE")
+// #pragma comment(linker,"/SUBSYSTEM:WINDOWS")
+
 std::wstring MAIN_WIN32_WINDOW_NAME;
 RECT windowRect;
 RECT clientRect;
@@ -39,6 +45,7 @@ HGLRC OpenGLBindContext(HDC hdc);
 void OpenGLUnbindContext(HWND hwnd, HDC hdc, HGLRC hglrc);
 void UpdateFullscreen(IWindow* pWindowInstance, HWND hwnd, HDC hdc);
 void SetDisplayMode(int width, int height, int bpp, int refreshRate);
+int WParamToKeydef(WPARAM param);
 
 #define NO_RESIZE_STYLE (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX)
 #define NORMAL_STYLE (WS_VISIBLE | WS_OVERLAPPEDWINDOW)
@@ -91,6 +98,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 	HINSTANCE hinstance = hInstance;
 
 	WNDCLASSEX wndclass;
+	ZeroMemory(&wndclass, sizeof(WNDCLASSEX));
 	wndclass.cbSize = sizeof(WNDCLASSEX);
 	wndclass.style = CS_HREDRAW | CS_VREDRAW;
 	wndclass.lpfnWndProc = WndProc;
@@ -269,7 +277,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 			}
 		}
 
-		pWindowInstance->OnUpdate(0.0f);
+		pWindowInstance->OnUpdate(0.0f); // TODO: Calculate delta time!
 		pWindowInstance->OnRender();
 		win32DebugRender(hwnd);
 		SwapBuffers(hdc);
@@ -336,17 +344,17 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
 		pWindowInstance->OnMouseUp(MOUSE_MIDDLE);
 		break;
 	// Handle keyboard events
+	case WM_SYSKEYUP:
+		break;
 	case WM_SYSKEYDOWN:
-		if (wParam == VK_RETURN) {
-			//if ((HIWORD(lParam) & KF_ALTDOWN)) {
-				if (pWindowInstance->GetFullScreen()) {
-					pWindowInstance->SetFullScreen(false);
-				}
-				else {
-					pWindowInstance->SetFullScreen(true);
-				}
-			//}
-		}
+		break;
+	case WM_KEYDOWN:
+		// TODO: Accelerator keys?
+		pWindowInstance->OnKeyDown(WParamToKeydef(wParam));
+		break;
+	case WM_KEYUP:
+		// TODO: Accelerator keys?
+		pWindowInstance->OnKeyUp(WParamToKeydef(wParam));
 		break;
 	}
 	return DefWindowProc(hwnd, iMsg, wParam, lParam);
@@ -368,7 +376,7 @@ bool CheckIfAlreadyRunning() {
 
 HGLRC OpenGLBindContext(HDC hdc) {
 	PIXELFORMATDESCRIPTOR pfd;
-	memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
+	ZeroMemory(&pfd, sizeof(PIXELFORMATDESCRIPTOR));
 
 	pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
 	pfd.nVersion = 1;
@@ -466,6 +474,7 @@ void SetDisplayMode(int width, int height, int bpp, int refreshRate) {
 	}
 
 	DEVMODE dm;
+	ZeroMemory(&dm, sizeof(DEVMODE));
 	dm.dmSize = sizeof(DEVMODE);
 
 	int i = 0;
@@ -478,4 +487,8 @@ void SetDisplayMode(int width, int height, int bpp, int refreshRate) {
 			}
 		}
 	}
+}
+
+int WParamToKeydef(WPARAM param) {
+	// TODO
 }
