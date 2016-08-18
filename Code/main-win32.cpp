@@ -489,6 +489,179 @@ void SetDisplayMode(int width, int height, int bpp, int refreshRate) {
 	}
 }
 
+#define REMAP(VIR_KEY, NEW_KEY) \
+	case VIR_KEY: return NEW_KEY
+
+// MAP_KEY(VK_SCROLL, KEY_SCROLL_LOCK);
+/// KEY_KP_HOME
+// #define KEY_SYSREQ            0x106A
+//#define KEY_BREAK             0x106B
+//#define KEY_BACK_TAB          0x0089
+//#define KEY_HYPER             0x10ED
+// #define KEY_KP_ENTER          0x108D
+/*#define KEY_KP_UP             0x10B8
+#define KEY_KP_PG_UP          0x10B9
+#define KEY_KP_LEFT           0x10B4
+#define KEY_KP_FIVE           0x10B5
+#define KEY_KP_RIGHT          0x10B6
+#define KEY_KP_END            0x10B1
+#define KEY_KP_DOWN           0x10B2
+#define KEY_KP_PG_DOWN        0x10B3
+#define KEY_KP_INSERT         0x10B0
+#define KEY_KP_DELETE         0x10AE*/
+
+
 int WParamToKeydef(WPARAM param) {
-	// TODO
+	switch (param)
+	{
+		REMAP(VK_PAUSE, KEY_PAUSE);
+		REMAP(VK_PRINT, KEY_PRINT);
+		REMAP(VK_ESCAPE, KEY_ESCAPE);
+		REMAP(VK_BACK, KEY_BACKSPACE);
+		REMAP(VK_TAB, KEY_TAB);
+		REMAP(VK_RETURN, KEY_RETURN);
+		REMAP(VK_CAPITAL, KEY_CAPS_LOCK);
+		REMAP(VK_SHIFT, KEY_SHIFT);
+		REMAP(VK_LSHIFT, KEY_SHIFT);
+		REMAP(VK_RSHIFT, KEY_SHIFT);
+		REMAP(VK_CONTROL, KEY_CTRL);
+		REMAP(VK_RCONTROL, KEY_CTRL);
+		REMAP(VK_LCONTROL, KEY_CTRL);
+		REMAP(VK_MENU, KEY_ALT);
+		REMAP(VK_INSERT, KEY_INSERT);
+		REMAP(VK_HOME, KEY_HOME);
+		REMAP(VK_PRIOR, KEY_PG_UP);
+		REMAP(VK_DELETE, KEY_DELETE);
+		REMAP(VK_END, KEY_END);
+		REMAP(VK_NEXT, KEY_PG_DOWN);
+		REMAP(VK_LEFT, KEY_LEFT_ARROW);
+		REMAP(VK_RIGHT, KEY_RIGHT_ARROW);
+		REMAP(VK_UP, KEY_UP_ARROW);
+		REMAP(VK_DOWN, KEY_DOWN_ARROW);
+		REMAP(VK_NUMLOCK, KEY_NUM_LOCK);
+		REMAP(VK_OEM_PLUS, KEY_KP_PLUS);
+		REMAP(VK_OEM_MINUS, KEY_KP_MINUS);
+		REMAP(VK_ADD, KEY_KP_PLUS);
+		REMAP(VK_SUBTRACT, KEY_KP_MINUS);
+		REMAP(VK_MULTIPLY, KEY_KP_MULTIPLY);
+		REMAP(VK_DIVIDE, KEY_KP_DIVIDE);
+		REMAP(VK_F1, KEY_F1);
+		REMAP(VK_F2, KEY_F2);
+		REMAP(VK_F3, KEY_F3);
+		REMAP(VK_F4, KEY_F3);
+		REMAP(VK_F5, KEY_F3);
+		REMAP(VK_F6, KEY_F3);
+		REMAP(VK_F7, KEY_F3);
+		REMAP(VK_F8, KEY_F4);
+		REMAP(VK_F9, KEY_F5);
+		REMAP(VK_F10, KEY_F10);
+		REMAP(VK_F11, KEY_F11);
+		REMAP(VK_F12, KEY_F12);
+		REMAP(VK_SPACE, KEY_SPACE);
+		REMAP(VK_EXCLAIN)
+	}
+
+
+#define KEY_EXCLAM            '!'
+#define KEY_QUOTE             '"'
+#define KEY_NUMBER            '#'
+#define KEY_DOLLAR            '$'
+#define KEY_PERCENT           '%'
+#define KEY_CIRCUMFLEX        '^'
+#define KEY_AMPERSAND         '&'
+#define KEY_APOSTROPHE        '\''
+#define KEY_LEFT_PARENTHESIS  '('
+#define KEY_RIGHT_PARENTHESIS ')'
+#define KEY_ASTERISK          '*'
+#define KEY_PLUS              '+'
+#define KEY_COMMA             ','
+#define KEY_MINUS             '-'
+#define KEY_PERIOD            '.'
+#define KEY_SLASH             '/'
+#define KEY_ZERO              '0'
+#define KEY_ONE               '1'
+#define KEY_TWO               '2'
+#define KEY_THREE             '3'
+#define KEY_FOUR              '4'
+#define KEY_FIVE              '5'
+#define KEY_SIX               '6'
+#define KEY_SEVEN             '7'
+#define KEY_EIGHT             '8'
+#define KEY_NINE              '9'
+#define KEY_COLON             ':'
+#define KEY_SEMICOLON         ';'
+#define KEY_LESS_THAN         '<'
+#define KEY_EQUAL             '='
+#define KEY_GREATER_THAN      '>'
+#define KEY_QUESTION          '?'
+#define KEY_AT                '@'
+#define KEY_CAPITAL_A         'A'
+#define KEY_CAPITAL_B         'B'
+#define KEY_CAPITAL_C         'C'
+#define KEY_CAPITAL_D         'D'
+#define KEY_CAPITAL_E         'E'
+#define KEY_CAPITAL_F         'F'
+#define KEY_CAPITAL_G         'G'
+#define KEY_CAPITAL_H         'H'
+#define KEY_CAPITAL_I         'I'
+#define KEY_CAPITAL_J         'J'
+#define KEY_CAPITAL_K         'K'
+#define KEY_CAPITAL_L         'L'
+#define KEY_CAPITAL_M         'M'
+#define KEY_CAPITAL_N         'N'
+#define KEY_CAPITAL_O         'O'
+#define KEY_CAPITAL_P         'P'
+#define KEY_CAPITAL_Q         'Q'
+#define KEY_CAPITAL_R         'R'
+#define KEY_CAPITAL_S         'S'
+#define KEY_CAPITAL_T         'T'
+#define KEY_CAPITAL_U         'U'
+#define KEY_CAPITAL_V         'V'
+#define KEY_CAPITAL_W         'W'
+#define KEY_CAPITAL_X         'X'
+#define KEY_CAPITAL_Y         'Y'
+#define KEY_CAPITAL_Z         'Z'
+#define KEY_LEFT_BRACKET      '['
+#define KEY_BACK_SLASH        '\\'
+#define KEY_RIGHT_BRACKET     ']'
+#define KEY_UNDERSCORE        '_'
+#define KEY_GRAVE             '`'
+#define KEY_A                 'a'
+#define KEY_B                 'b'
+#define KEY_C                 'c'
+#define KEY_D                 'd'
+#define KEY_E                 'e'
+#define KEY_F                 'f'
+#define KEY_G                 'g'
+#define KEY_H                 'h'
+#define KEY_I                 'i'
+#define KEY_J                 'j'
+#define KEY_K                 'k'
+#define KEY_L                 'l'
+#define KEY_M                 'm'
+#define KEY_N                 'n'
+#define KEY_O                 'o'
+#define KEY_P                 'p'
+#define KEY_Q                 'q'
+#define KEY_R                 'r'
+#define KEY_S                 's'
+#define KEY_T                 't'
+#define KEY_U                 'u'
+#define KEY_V                 'v'
+#define KEY_W                 'w'
+#define KEY_X                 'x'
+#define KEY_Y                 'y'
+#define KEY_Z                 'z'
+#define KEY_LEFT_BRACE        '{'
+#define KEY_BAR               '|'
+#define KEY_RIGHT_BRACE       '}'
+#define KEY_TILDE             '~'
+#define KEY_EURO              0x20AC
+#define KEY_POUND             0x00A3
+#define KEY_YEN               0x00A5
+#define KEY_MIDDLE_DOT        0x0095
+#define KEY_SEARCH            0xFFAA
+
+
+	return KEY_NONE;
 }
