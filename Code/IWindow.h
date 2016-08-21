@@ -45,8 +45,8 @@ public:
 	virtual void OnMouseDown(int mouseCode) { }
 	virtual void OnMouseUp(int mouseCode) { }
 
-	virtual void OnKeyDown(int keyCode) { } // TODO
-	virtual void OnKeyUp(int keyCode) { } // TODO
+	virtual void OnKeyDown(int keyCode) { }
+	virtual void OnKeyUp(int keyCode) { }
 
 	void SetTitle(const char* title);
 	bool GetAndResetTitleDirtyFlag();
@@ -72,9 +72,9 @@ public:
 
 int KeyIndex(int keyCode);
 
-#define MOUSE_LEFT		0
-#define MOUSE_MIDDLE	1
-#define MOUSE_RIGHT		2
+#define MOUSE_LEFT		1
+#define MOUSE_MIDDLE	2
+#define MOUSE_RIGHT		3
 
 #define KEY_NONE              0
 #define KEY_PAUSE             0x0013

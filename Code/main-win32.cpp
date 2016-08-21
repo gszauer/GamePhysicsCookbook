@@ -29,82 +29,8 @@
 #include "matrices.h"
 
 // TODO: Remove test code!
-bool useOrtho = false;
-class DemoWindow : IWindow {
-protected:
-	float rotation = 0.0f;
-public:
-	void OnInitialize() {
-		
-	}
-
-	void OnRender() {
-		glViewport(0, 0, m_nWidth, m_nHeight);
-
-		float fov = 62.0f;
-		float aspect = (float)(m_nWidth) / (float)(m_nHeight);
-
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		
-		mat4 frustum;
-		if (useOrtho) {
-			frustum = Ortho(-1.0f, 1.0f, 1.0f, -1.0f, -10.0f, 10.0f);
-		}
-		else {
-			frustum = Projection(fov, aspect, 0.01f, 1000.0f);
-		}
-		glLoadMatrixf(frustum.asArray);
-
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		mat4 lookAt = LookAt(vec3(2.0f, 3.0f, -6.0f), vec3(), vec3(0.0f, 1.0f, 0.0f));
-		glLoadMatrixf(lookAt.asArray);
-
-		// Debug, render
-		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-#if 1
-		glBegin(GL_LINES);
-		glColor3f(1.0f, 0.0f, 0.0f);
-		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(1.0f, 0.0f, 0.0f);
-
-		glColor3f(0.0f, 1.0f, 0.0f);
-		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(0.0f, 1.0f, 0.0f);
-
-		glColor3f(0.0f, 0.0f, 1.0f);
-		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(0.0f, 0.0f, 1.0f);
-		glEnd();
-#else
-		glBegin(GL_TRIANGLES);
-		glColor3f(1.0f, 0.0f, 0.0f);
-		glVertex3f(0.0f, 1.0f, 0.0f);
-		glColor3f(0.0f, 1.0f, 0.0f);
-		glVertex3f(-1.0f, -1.0f, 1.0f);
-		glColor3f(0.0f, 0.0f, 1.0f);
-		glVertex3f(1.0f, -1.0f, 1.0f);
-		glEnd();
-#endif
-	}
-	
-	void OnMouseUp(int mouseCode) { 
-		useOrtho = !useOrtho;
-	}
-
-	void OnUpdate(float dt) {
-		
-	}
-
-	void OnShutdown() {
-		
-	}
-};
-static DemoWindow debugInstance;
+#include "GLWindow.h"
+static GLWindow debugInstance("OpenGL Window", 800, 600);
 // ENDTODO
 
 // I set all of these settings in the "Project Settings" of visual studio
