@@ -146,11 +146,15 @@
   <ItemGroup>
     <ClInclude Include="..\Code\IWindow.h" />
     <ClInclude Include="..\Code\lodepng.h" />
+    <ClInclude Include="..\Code\matrices.h" />
+    <ClInclude Include="..\Code\vectors.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\IWindow.cpp" />
     <ClCompile Include="..\Code\lodepng.cpp" />
     <ClCompile Include="..\Code\main-win32.cpp" />
+    <ClCompile Include="..\Code\matrices.cpp" />
+    <ClCompile Include="..\Code\vectors.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -35,6 +35,7 @@ public:
 
 	virtual void OnInitialize() { }
 	virtual void OnUpdate(float deltaTime) { }
+	virtual void OnFixedUpdate(float deltaTime) { } // TODO
 	virtual void OnRender() { }
 	virtual void OnShutdown() { }
 
