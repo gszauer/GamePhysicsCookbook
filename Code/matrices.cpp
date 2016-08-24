@@ -2,6 +2,8 @@
 #include <cmath>
 #include <cfloat>
 
+//#define DO_SANITY_TESTS
+
 #ifdef DO_SANITY_TESTS
 	#include <iostream>
 
@@ -664,7 +666,14 @@ mat4 LookAt(const vec3& position, const vec3& target, const vec3& up) {
 		0.0f, 0.0f, 0.0f, 1.0f
 	);
 
-	mat4 view = Inverse(viewPosition) * Inverse(viewOrientation);
+	// I had this implemented originally, it was wrong!
+	// It's scale * orientation * transform
+	// That's why it needed two inverses :(
+	//mat4 view = Inverse(viewPosition) * Inverse(viewOrientation);
+	//std::cout << "View: " << view << "\n\n";
+	//std::cout << "Alt: " << Inverse(viewOrientation * viewPosition) << "\n\n";
+	// Turns out it's the same as one inverse in the correct order
+	mat4 view = Inverse(viewOrientation * viewPosition);
 	mat4 result =
 #else
 	return

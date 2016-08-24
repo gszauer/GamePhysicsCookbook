@@ -12,7 +12,7 @@ IWindow* IWindow::g_pSingleton = 0;
 	m_bQuitFlag(false), m_bFullscreenFlag(false), m_nWidth(w), m_nHeight(h), \
 	m_szTitle(0), m_bTitleDirty(false), m_vGenericIntegerValues(0), \
 	m_vGenericIntegerNames(0),m_nGenericIntegerCount(0), m_nGenericIntegerLength(0), \
-	m_nTargetFPS(30)
+	m_nTargetFPS(30), m_nFixedFPS(30)
 
 IWindow::IWindow() : I_WINDOW_CPP_DEFAULTS(800, 600) {
 	if (g_pSingleton != 0) {
@@ -192,6 +192,11 @@ void IWindow::SetTargetFPS(int target) {
 		m_nTargetFPS = 120;
 	}
 }
+
+int IWindow::GetFixedFPS() {
+	return m_nFixedFPS;
+}
+
 int IWindow::GetTargetFPS() {
 	return m_nTargetFPS;
 }

@@ -1,5 +1,3 @@
-#include "GLWindow.h"
-
 #define WIN32_LEAN_AND_MEAN 
 #define WIN32_EXTRA_LEAN
 #include <windows.h>
@@ -10,6 +8,9 @@
 #include <GL\wglew.h>
 #endif
 #include <gl\GL.h>
+
+#include "GLWindow.h"
+
 
 #define Clamp01(x) \
 	(x < 0.0f? 0.0f : (x > 1.0f? 1.0f : x))
@@ -45,6 +46,9 @@ void GLWindow::SetClearColor(float r, float g, float b) {
 	b = Clamp01(b);
 	g = Clamp01(g);
 	glClearColor(r, g, b, 1.0f);
+
+	SetInt("glMajor", 2);
+	SetInt("glMinor", 1);
 }
 
 void GLWindow::SetDrawOrigin(bool value) {
@@ -53,6 +57,10 @@ void GLWindow::SetDrawOrigin(bool value) {
 
 void GLWindow::OnInitialize() {
 	glClearColor(0.5f, 0.6f, 0.7f, 1.0f);
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	
 	// TODO: Set Default GL States!
 	OnResize(m_nWidth, m_nHeight);
 }
@@ -111,7 +119,7 @@ void GLWindow::OnMouseUp(int mouseCode) {
 	BitOff(mouseButtonState, Bit(mouseCode));
 }
 
-void GLWindow::OnKeyDown(int keyCode) { 
+void GLWindow::OnKeyDown(int keyCode) { // TODO: THIS IS BUSTEDDDD!!!
 	keyboardState[keyCode] = true;
 }
 

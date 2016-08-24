@@ -22,6 +22,7 @@ protected:
 	int m_nGenericIntegerLength; // Total
 
 	int m_nTargetFPS;
+	int m_nFixedFPS;
 public:
 	inline static IWindow* GetInstance() {
 		return g_pSingleton;
@@ -35,7 +36,7 @@ public:
 
 	virtual void OnInitialize() { }
 	virtual void OnUpdate(float deltaTime) { }
-	virtual void OnFixedUpdate(float deltaTime) { } // TODO
+	virtual void OnFixedUpdate() { } 
 	virtual void OnRender() { }
 	virtual void OnShutdown() { }
 
@@ -64,6 +65,7 @@ public:
 
 	void SetTargetFPS(int target);
 	int GetTargetFPS();
+	int GetFixedFPS();
 
 	void SetInt(const char* name, int value);
 	int GetInt(const char* name, int default);

@@ -4,7 +4,7 @@
 #include "IWindow.h"
 #include "matrices.h"
 
-class GLWindow : IWindow {
+class GLWindow : public IWindow {
 protected:
 	float m_nFOV;
 	float m_nNear;

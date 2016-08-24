@@ -1,6 +1,6 @@
 // Undef this if you don't want to use GLEW. 
 // Only GL 1.1 will be usable without it!
-#define USE_GLEW
+// #define USE_GLEW - DEFINED IN PROJECT!
 
 // If you don't want a console window define this
 
@@ -27,11 +27,6 @@
 #include <cstdio>
 #include "IWindow.h"
 #include "matrices.h"
-
-// TODO: Remove test code!
-#include "GLWindow.h"
-static GLWindow debugInstance("OpenGL Window", 800, 600);
-// ENDTODO
 
 // I set all of these settings in the "Project Settings" of visual studio
 // #pragma comment(lib, "opengl32.lib") 
@@ -93,8 +88,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 			return FALSE;
 		}
 	}
-	pWindowInstance->SetInt("glMajor", 2);
-	pWindowInstance->SetInt("glMinor", 1);
 
 	int width = pWindowInstance->GetWidth();
 	int height = pWindowInstance->GetHeight();
@@ -237,6 +230,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 	DWORD next_game_tick = GetTickCount();
 	int sleep_time = 0;
 	double lastTime = GetMilliseconds();
+	double fixed_millis = pWindowInstance->GetFixedFPS() / 1000.0; // TODO idk if this is right
+	double fixed_ellapsed = 0.0;
 
 	while (!pWindowInstance->GetQuitFlag()) {
 		// If or while? Not sure if all messages should process at once or not
@@ -246,14 +241,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 			}
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-		}
-
-		// Regulate FPS
-		int SKIP_TICKS = 1000 / pWindowInstance->GetTargetFPS();
-		next_game_tick += SKIP_TICKS;
-		sleep_time = next_game_tick - GetTickCount();
-		if (sleep_time >= 0) {
-			Sleep(sleep_time);
 		}
 
 		// Potentially change title
@@ -282,15 +269,28 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 			}
 		}
 
-		// TODO: FixedUpdate
-
 		double time = GetMilliseconds();
 		float deltaTime = float(time - lastTime) * 0.001f;
 		lastTime = time;
 
 		pWindowInstance->OnUpdate(deltaTime);
+
+		fixed_ellapsed += deltaTime;
+		while (fixed_ellapsed >= fixed_millis) {
+			pWindowInstance->OnFixedUpdate();
+			fixed_ellapsed -= fixed_millis;
+		}
+
 		pWindowInstance->OnRender();
 		SwapBuffers(hdc);
+
+		// Regulate FPS
+		int SKIP_TICKS = 1000 / pWindowInstance->GetTargetFPS();
+		next_game_tick += SKIP_TICKS;
+		sleep_time = next_game_tick - GetTickCount();
+		if (sleep_time >= 0) {
+			Sleep(sleep_time);
+		}
 	}
 
 	pWindowInstance->OnShutdown();

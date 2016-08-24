@@ -100,7 +100,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_GLEW;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,7 +133,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_GLEW;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,18 +144,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Code\FixedFunctionPrimitives.h" />
     <ClInclude Include="..\Code\GLWindow.h" />
     <ClInclude Include="..\Code\IWindow.h" />
-    <ClInclude Include="..\Code\lodepng.h" />
     <ClInclude Include="..\Code\matrices.h" />
+    <ClInclude Include="..\Code\SampleApplication.h" />
     <ClInclude Include="..\Code\vectors.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\FixedFunctionPrimitives.cpp" />
     <ClCompile Include="..\Code\GLWindow.cpp" />
     <ClCompile Include="..\Code\IWindow.cpp" />
-    <ClCompile Include="..\Code\lodepng.cpp" />
     <ClCompile Include="..\Code\main-win32.cpp" />
     <ClCompile Include="..\Code\matrices.cpp" />
+    <ClCompile Include="..\Code\SampleApplication.cpp" />
     <ClCompile Include="..\Code\vectors.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
