@@ -13,6 +13,9 @@
 
 #include "FixedFunctionPrimitives.h"
 
+#define M_PI 3.14159265358979323846f
+
+
 void FixedFunctionSubdivTetrahedron(float* a, float* b, float* c, int div, float r) {
 	if (div <= 0) {
 		glNormal3fv(a);
@@ -56,6 +59,10 @@ void FixedFunctionSubdivTetrahedron(float* a, float* b, float* c, int div, float
 	}
 }
 
+void FixedFunctionSphere() {
+	FixedFunctionSphere(2, 1.0f);
+}
+
 void FixedFunctionSphere(int numDivisions, float radius) {
 	static float X = 0.525731112119133606f;
 	static float Y = 0.0f;
@@ -93,6 +100,10 @@ void FixedFunctionSphere(int numDivisions, float radius) {
 	}
 
 	glEnd();
+}
+
+void FixedFunctionCube() {
+	FixedFunctionCube(1.0f, 1.0f, 1.0f);
 }
 
 void FixedFunctionCube(float extentsX, float extentsY, float extentsZ) {
@@ -169,3 +180,71 @@ void FixedFunctionCube(float extentsX, float extentsY, float extentsZ) {
 
 	glEnd();
 }
+
+void FixedFunctionTorus(float outerRaidus, float innerRadius) {
+	float diff = (outerRaidus - innerRadius);
+	float minorRad = diff * 0.5f;
+	float majorRad = outerRaidus - minorRad;
+	FixedFunctionTorus(15, 10, majorRad, minorRad);
+}
+
+void FixedFunctionTorus(int TORUS_MAJOR_RES, int TORUS_MINOR_RES, float TORUS_MAJOR, float TORUS_MINOR) {
+	int    i, j, k;
+	double s, t, x, y, z, nx, ny, nz, scale, twopi;
+
+	twopi = 2.0 * M_PI;
+	for (i = 0; i < TORUS_MINOR_RES; i++)
+	{
+		glBegin(GL_QUAD_STRIP);
+		for (j = 0; j <= TORUS_MAJOR_RES; j++)
+		{
+			for (k = 1; k >= 0; k--)
+			{
+				s = (i + k) % TORUS_MINOR_RES + 0.5;
+				t = j % TORUS_MAJOR_RES;
+
+				// Calculate point on surface
+				x = (TORUS_MAJOR + TORUS_MINOR * cos(s * twopi / TORUS_MINOR_RES)) * cos(t * twopi / TORUS_MAJOR_RES);
+				y = TORUS_MINOR * sin(s * twopi / TORUS_MINOR_RES);
+				z = (TORUS_MAJOR + TORUS_MINOR * cos(s * twopi / TORUS_MINOR_RES)) * sin(t * twopi / TORUS_MAJOR_RES);
+
+				// Calculate surface normal
+				nx = x - TORUS_MAJOR * cos(t * twopi / TORUS_MAJOR_RES);
+				ny = y;
+				nz = z - TORUS_MAJOR * sin(t * twopi / TORUS_MAJOR_RES);
+				scale = 1.0 / sqrt(nx*nx + ny*ny + nz*nz);
+				nx *= scale;
+				ny *= scale;
+				nz *= scale;
+
+				glNormal3f((float)nx, (float)ny, (float)nz);
+				glVertex3f((float)x, (float)y, (float)z);
+			}
+		}
+
+		glEnd();
+	}
+}
+
+/* https://www.opengl.org/archives/resources/code/samples/redbook/torus.c
+void FixedFunctionTorus(int numc, int numt) {
+	int i, j, k;
+	double s, t, x, y, z, twopi;
+
+	twopi = 2 * M_PI;
+	for (i = 0; i < numc; i++) {
+		glBegin(GL_QUAD_STRIP);
+		for (j = 0; j <= numt; j++) {
+			for (k = 1; k >= 0; k--) {
+				s = (i + k) % numc + 0.5;
+				t = j % numt;
+
+				x = (1 + .1*cos(s*twopi / numc))*cos(t*twopi / numt);
+				y = (1 + .1*cos(s*twopi / numc))*sin(t*twopi / numt);
+				z = .1 * sin(s * twopi / numc);
+				glVertex3f(x, y, z);
+			}
+		}
+		glEnd();
+	}
+} */

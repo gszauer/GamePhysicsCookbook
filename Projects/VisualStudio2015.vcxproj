@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Code\Camera.h" />
     <ClInclude Include="..\Code\FixedFunctionPrimitives.h" />
     <ClInclude Include="..\Code\GLWindow.h" />
     <ClInclude Include="..\Code\IWindow.h" />
@@ -152,6 +153,7 @@
     <ClInclude Include="..\Code\vectors.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\Camera.cpp" />
     <ClCompile Include="..\Code\FixedFunctionPrimitives.cpp" />
     <ClCompile Include="..\Code\GLWindow.cpp" />
     <ClCompile Include="..\Code\IWindow.cpp" />
