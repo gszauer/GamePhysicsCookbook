@@ -13,8 +13,9 @@
 
 #include "FixedFunctionPrimitives.h"
 
-#define M_PI 3.14159265358979323846f
-
+#ifndef  M_PI
+	#define M_PI 3.14159265358979323846f
+#endif
 
 void FixedFunctionSubdivTetrahedron(float* a, float* b, float* c, int div, float r) {
 	if (div <= 0) {
@@ -186,6 +187,50 @@ void FixedFunctionTorus(float outerRaidus, float innerRadius) {
 	float minorRad = diff * 0.5f;
 	float majorRad = outerRaidus - minorRad;
 	FixedFunctionTorus(15, 10, majorRad, minorRad);
+}
+
+void FixedFunctionCylinder(int slices, float height, float radius) {
+	float x = 0.0f;
+	float y = 0.0f;
+	float z = 0.0f;
+
+	float twopi = 2.0 * M_PI;
+	float twopi_slices = twopi / (float)slices;
+
+	// SIDES!
+	glBegin(GL_TRIANGLE_STRIP);
+	for (int i = 0; i <= slices; i++) {
+		double angle = twopi_slices * (float)i;  // i 16-ths of a full circle
+		double x = cos(angle);
+		double y = sin(angle);
+		glNormal3f(x, y, 0.0f);  // Normal for both vertices at this angle.
+		glVertex3f(x, y, -1.0f); // Vertex on the bottom edge.
+		glVertex3f(x, y, 1.0f);  // Vertex on the top edge.
+	}
+	glEnd();
+
+	// CAPS
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glBegin(GL_TRIANGLE_FAN);  // Draw the top, in the plane z = 1.
+	for (int i = slices; i >= 0; i--) {
+		double angle = twopi_slices * (float)i;
+		double x = cos(angle);
+		double y = sin(angle);
+		glVertex3f(x, y, 1);
+	}
+	glEnd();
+
+
+	glNormal3f(0.0f, 0.0f, -1.0f);
+	glBegin(GL_TRIANGLE_FAN);  // Draw the bottom, in the plane z = -1
+	for (int i = 0; i <= slices; i++) {
+		double angle = twopi_slices * (float)i;
+		double x = cos(angle);
+		double y = sin(angle);
+		glVertex3f(x, y, -1);
+	}
+	glEnd();
+
 }
 
 void FixedFunctionTorus(int TORUS_MAJOR_RES, int TORUS_MINOR_RES, float TORUS_MAJOR, float TORUS_MINOR) {

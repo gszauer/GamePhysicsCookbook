@@ -16,7 +16,10 @@
 void SampleApplication::OnInitialize() {
 	GLWindow::OnInitialize();
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glDisable(GL_CULL_FACE);
+	glEnable(GL_NORMALIZE);
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
@@ -44,6 +47,7 @@ void SampleApplication::OnRender() {
 	GLWindow::OnRender();
 	glEnable(GL_LIGHTING);
 
+	/*
 	// TODO: Is this the correct transform order?
 	glPushMatrix();
 	// Translate Last
@@ -70,7 +74,6 @@ void SampleApplication::OnRender() {
 	glScalef(sphereScale, sphereScale, sphereScale);
 	FixedFunctionSphere(2, 0.5f);
 	glPopMatrix();
-	
 
 	// TODO: Same as above!
 	glPushMatrix();
@@ -83,6 +86,20 @@ void SampleApplication::OnRender() {
 	// Scale First
 	glScalef(cubeScale, cubeScale, cubeScale);
 	FixedFunctionTorus(0.75f, 0.5f);
+	glPopMatrix();
+	*/
+
+	// TODO: Same as above!
+	glPushMatrix();
+	// Translate Last
+	glTranslatef(-1.0f, 0.5f, -1.0f);
+	// Rotate Second
+	//glRotatef(sphereRotation.x, 1.0f, 0.0f, 0.0f);
+	//glRotatef(sphereRotation.y, 0.0f, 1.0f, 0.0f);
+	//glRotatef(sphereRotation.z, 0.0f, 0.0f, 1.0f);
+	// Scale First
+	//glScalef(cubeScale, cubeScale, cubeScale);
+	FixedFunctionCylinder(10, 1.0f, 0.5f);
 	glPopMatrix();
 }
 
