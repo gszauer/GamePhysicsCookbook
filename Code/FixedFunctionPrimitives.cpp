@@ -79,10 +79,6 @@ void FixedFunctionSphere(int numDivisions, float radius) {
 		{ 8,10,1 },{ 8,3,10 },{ 5,3,8 },{ 5,2,3 },{ 2,7,3 },
 		{ 7,10,3 },{ 7,6,10 },{ 7,11,6 },{ 11,0,6 },{ 0,1,6 },
 		{ 6,1,10 },{ 9,0,11 },{ 9,11,2 },{ 9,2,5 },{ 7,2,11 } 
-		/*{ 1,4,0 },{ 4,9,0 },{ 4,5,9 },{ 8,5,4 },{ 1,8,4 },
-		{ 1,10,8 },{ 10,3,8 },{ 8,3,5 },{ 3,2,5 },{ 3,7,2 },
-		{ 3,10,7 },{ 10,6,7 },{ 6,11,7 },{ 6,0,11 },{ 6,1,0 },
-		{ 10,1,6 },{ 11,0,9 },{ 2,11,9 },{ 5,2,9 },{ 11,2,7 }*/
 	};
 
 	glBegin(GL_TRIANGLES);
@@ -91,13 +87,6 @@ void FixedFunctionSphere(int numDivisions, float radius) {
 		FixedFunctionSubdivTetrahedron(
 			vdata[tindices[i][0]], vdata[tindices[i][1]], vdata[tindices[i][2]], numDivisions, radius
 		);
-		
-		/*glNormal3fv(vdata[tindices[i][0]]);
-		glVertex3fv(vdata[tindices[i][0]]);
-		glNormal3fv(vdata[tindices[i][2]]);
-		glVertex3fv(vdata[tindices[i][2]]);
-		glNormal3fv(vdata[tindices[i][1]]);
-		glVertex3fv(vdata[tindices[i][1]]);*/
 	}
 
 	glEnd();
@@ -194,6 +183,7 @@ void FixedFunctionCylinder(float height, float radius) {
 }
 
 void FixedFunctionCylinder(int slices, float height, float radius) {
+	// Modified from http://math.hws.edu/graphicsbook/c4/s2.html
 	height *= 0.5f;
 	float twopi_slices = (2.0f * M_PI) / (float)slices;
 
@@ -240,6 +230,7 @@ void FixedFunctionCylinder(int slices, float height, float radius) {
 	glEnd();
 }
 
+/* From the opengl super bible! */
 void FixedFunctionTorus(int TORUS_MAJOR_RES, int TORUS_MINOR_RES, float TORUS_MAJOR, float TORUS_MINOR) {
 	int    i, j, k;
 	double s, t, x, y, z, nx, ny, nz, scale, twopi;
