@@ -12,10 +12,11 @@ void FixedFunctionCylinder(int slices, float height, float radius);
 void FixedFunctionTorus(float outerRaidus, float innerRadius);
 void FixedFunctionSphere();
 void FixedFunctionCube();
+void FixedFunctionCylinder(float height, float radius);
 
 void FixedFunctionSubdivTetrahedron(float* a, float* b, float* c, int div, float r);
 
-// TODO: Cylinder
 // TODO: Cone
+// TODO Plane
 
 #endif

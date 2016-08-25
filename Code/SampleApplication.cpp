@@ -15,9 +15,8 @@
 
 void SampleApplication::OnInitialize() {
 	GLWindow::OnInitialize();
-
+	//matView = LookAt(vec3(0.0f, 0.0f, -5.0f), vec3(), vec3(0.0f, 1.0f, 0.0f));
 	//glDisable(GL_CULL_FACE);
-	glEnable(GL_NORMALIZE);
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -47,7 +46,6 @@ void SampleApplication::OnRender() {
 	GLWindow::OnRender();
 	glEnable(GL_LIGHTING);
 
-	/*
 	// TODO: Is this the correct transform order?
 	glPushMatrix();
 	// Translate Last
@@ -74,7 +72,7 @@ void SampleApplication::OnRender() {
 	glScalef(sphereScale, sphereScale, sphereScale);
 	FixedFunctionSphere(2, 0.5f);
 	glPopMatrix();
-
+	 
 	// TODO: Same as above!
 	glPushMatrix();
 	// Translate Last
@@ -87,19 +85,19 @@ void SampleApplication::OnRender() {
 	glScalef(cubeScale, cubeScale, cubeScale);
 	FixedFunctionTorus(0.75f, 0.5f);
 	glPopMatrix();
-	*/
+	
 
 	// TODO: Same as above!
 	glPushMatrix();
 	// Translate Last
-	glTranslatef(-1.0f, 0.5f, -1.0f);
+	glTranslatef(-2.0f, 0.5f, -1.0f);
 	// Rotate Second
-	//glRotatef(sphereRotation.x, 1.0f, 0.0f, 0.0f);
-	//glRotatef(sphereRotation.y, 0.0f, 1.0f, 0.0f);
-	//glRotatef(sphereRotation.z, 0.0f, 0.0f, 1.0f);
+	glRotatef(sphereRotation.x, 1.0f, 0.0f, 0.0f);
+	glRotatef(sphereRotation.y, 0.0f, 1.0f, 0.0f);
+	glRotatef(sphereRotation.z, 0.0f, 0.0f, 1.0f);
 	// Scale First
-	//glScalef(cubeScale, cubeScale, cubeScale);
-	FixedFunctionCylinder(10, 1.0f, 0.5f);
+	glScalef(cubeScale, cubeScale, cubeScale);
+	FixedFunctionCylinder(15, 1.0f, 0.5f);
 	glPopMatrix();
 }
 

@@ -189,48 +189,55 @@ void FixedFunctionTorus(float outerRaidus, float innerRadius) {
 	FixedFunctionTorus(15, 10, majorRad, minorRad);
 }
 
+void FixedFunctionCylinder(float height, float radius) {
+	FixedFunctionCylinder(15, height, radius);
+}
+
 void FixedFunctionCylinder(int slices, float height, float radius) {
-	float x = 0.0f;
-	float y = 0.0f;
-	float z = 0.0f;
+	height *= 0.5f;
+	float twopi_slices = (2.0f * M_PI) / (float)slices;
 
-	float twopi = 2.0 * M_PI;
-	float twopi_slices = twopi / (float)slices;
-
-	// SIDES!
+	// HULL
 	glBegin(GL_TRIANGLE_STRIP);
 	for (int i = 0; i <= slices; i++) {
 		double angle = twopi_slices * (float)i;  // i 16-ths of a full circle
 		double x = cos(angle);
-		double y = sin(angle);
-		glNormal3f(x, y, 0.0f);  // Normal for both vertices at this angle.
-		glVertex3f(x, y, -1.0f); // Vertex on the bottom edge.
-		glVertex3f(x, y, 1.0f);  // Vertex on the top edge.
+		double z = sin(angle);
+
+		float norm[] = { x, 0.0f, z };
+		float d = sqrtf(norm[0] * norm[0] + norm[1] * norm[1] + norm[2] * norm[2]);
+		norm[0] /= d; norm[1] /= d; norm[2] /= d;
+
+		x *= radius;
+		z *= radius;
+
+		glNormal3f(norm[0], norm[1], norm[2]); 
+		glVertex3f(x, height, z);  
+		glVertex3f(x, -height, z);
 	}
 	glEnd();
 
-	// CAPS
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glBegin(GL_TRIANGLE_FAN);  // Draw the top, in the plane z = 1.
-	for (int i = slices; i >= 0; i--) {
-		double angle = twopi_slices * (float)i;
-		double x = cos(angle);
-		double y = sin(angle);
-		glVertex3f(x, y, 1);
-	}
-	glEnd();
-
-
-	glNormal3f(0.0f, 0.0f, -1.0f);
-	glBegin(GL_TRIANGLE_FAN);  // Draw the bottom, in the plane z = -1
+	// TOP CAP
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glBegin(GL_TRIANGLE_FAN); 
 	for (int i = 0; i <= slices; i++) {
 		double angle = twopi_slices * (float)i;
-		double x = cos(angle);
-		double y = sin(angle);
-		glVertex3f(x, y, -1);
+		double x = cos(angle) * radius;
+		double z = sin(angle) * radius;
+		glVertex3f(x, height, z);
 	}
 	glEnd();
 
+	// BOTTOM CAP
+	glNormal3f(0.0f, -1.0f, 0.0f);
+	glBegin(GL_TRIANGLE_FAN); 
+	for (int i = slices; i >= 0; i--) {
+		double angle = twopi_slices * (float)i;
+		double x = cos(angle) * radius;
+		double z = sin(angle) * radius;
+		glVertex3f(x, -height, z);
+	}
+	glEnd();
 }
 
 void FixedFunctionTorus(int TORUS_MAJOR_RES, int TORUS_MINOR_RES, float TORUS_MAJOR, float TORUS_MINOR) {
