@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\PhysicsBookDraftCode\Physics\Geometry2D.h" />
     <ClInclude Include="..\Code\Camera.h" />
     <ClInclude Include="..\Code\FixedFunctionPrimitives.h" />
     <ClInclude Include="..\Code\GLWindow.h" />
@@ -153,6 +154,7 @@
     <ClInclude Include="..\Code\vectors.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\PhysicsBookDraftCode\Physics\Geometry2D.cpp" />
     <ClCompile Include="..\Code\Camera.cpp" />
     <ClCompile Include="..\Code\FixedFunctionPrimitives.cpp" />
     <ClCompile Include="..\Code\GLWindow.cpp" />

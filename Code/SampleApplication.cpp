@@ -15,10 +15,10 @@
 
 void SampleApplication::OnInitialize() {
 	GLWindow::OnInitialize();
-	//matView = LookAt(vec3(0.0f, 0.0f, -5.0f), vec3(), vec3(0.0f, 1.0f, 0.0f));
+	matView = LookAt(vec3(0.0f, 0.0f, -10.0f), vec3(), vec3(0.0f, 1.0f, 0.0f));
 	//glDisable(GL_CULL_FACE);
-
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPointSize(3.0f);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
@@ -44,6 +44,108 @@ void SampleApplication::OnInitialize() {
 void SampleApplication::OnRender() {
 	glDisable(GL_LIGHTING);
 	GLWindow::OnRender();
+
+	glColor3f(1.0f, 1.0f, 0.0f);
+	Rectangle2D r(Point2D(1, 0), vec2(2, 3));
+	Render(r);
+
+	Line2D ls[] = {
+		Line2D(Point2D(0, 0), Point2D(5, 5)),
+		//Line2D(Point2D(1, 0), Point2D(1, 5)),
+		Line2D(Point2D(-4, -3), Point2D(-3, -4)),
+		Line2D(Point2D(0, 0), Point2D(0, -5)),
+		Line2D(Point2D(0.99f, 0), Point2D(0.99f, 5)),
+	};
+
+	for (int i = 0; i < 4; ++i) {
+		if (LineRectangle(ls[i], r)) {
+			glColor3f(0.0f, 0.0f, 1.0f);
+		}
+		else {
+			glColor3f(1.0f, 0.0f, 1.0f);
+		}
+		Render(ls[i]);
+	}
+
+	return;
+
+	Circle c1(Point2D(1.0f, 1.0f), 0.71f);
+
+	glColor3f(1.0f, 1.0f, 0.0f);
+	Render(c1);
+
+	Line2D lines[] = {
+		Line2D(Point2D(-2, -2), Point2D(2, 2)),
+		Line2D(Point2D(-2, -2), Point2D(-2, -6)),
+		Line2D(Point2D(0, 1), Point2D(1, 0)),
+		Line2D(Point2D(5, 6), Point2D(6, 5))
+	};
+	for (int i = 0; i < 4; ++i) {
+		if (LineCircle(lines[i], c1)) {
+			glColor3f(0.0f, 1.0f, 1.0f);
+		}
+		else {
+			glColor3f(1.0f, 0.0f, 1.0f);
+		}
+		Render(lines[i]);
+	}
+
+	return;
+	/*glColor3f(1.0f, 1.0f, 0.0f);
+	glBegin(GL_LINES);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(3.0f, 3.0f, 0.0f);
+	glEnd();*/
+
+	glColor3f(0.0f, 1.0f, 1.0f);
+	OrientedRectangle rect(Point2D(3, 3), vec2(2, 1), 0.0);
+	Render(rect);
+	rect.rotation = 45.0f;
+	Render(rect);
+
+	glColor3f(1.0f, 0.0f, 1.0f);
+	vec2 corner1(1, 2);
+	vec2 corner2(1, 4);
+
+	vec2 rc1 = rect.position + RotateVector(corner1 - rect.position, 45);
+	vec2 rc2 = rect.position + RotateVector(corner2 - rect.position, 45);
+
+	vec2 start = rc1;
+	vec2 end = rc2;
+	float percent = 0.5f;
+	vec2 midPoint = (start + ((end - start) * percent));
+
+	vec2 leftPoint = midPoint - rect.position;
+	leftPoint = midPoint + Normalized(leftPoint) * 0.1f;
+	vec2 rightPoint = midPoint - rect.position;
+	rightPoint = midPoint - Normalized(rightPoint) * 0.1f;
+
+	Render(rightPoint);
+	vec2 localPoint = rightPoint - rect.position;
+	//Render(localPoint);
+
+	glColor3f(1.0f, 1.0f, 0.0f);
+	glBegin(GL_LINES);
+	glVertex3f(rect.position.x + localPoint.x, rect.position.y + localPoint.y, 0.0f);
+	glVertex3f(rect.position.x, rect.position.y, 0.0f);
+	glEnd();
+
+
+	float theta = -DEG2RAD(rect.rotation);
+	float zRotation2x2[] = { // Construct matrix
+		cosf(theta), sinf(theta),
+		-sinf(theta), cosf(theta) };
+	// Rotate vector
+	Multiply(localPoint.asArray, vec2(localPoint.x, localPoint.y).asArray, 1, 2, zRotation2x2, 2, 2);
+
+	glColor3f(1.0f, 1.0f, 0.0f);
+	glBegin(GL_LINES);
+	glVertex3f(rect.position.x + localPoint.x, rect.position.y + localPoint.y, 0.0f);
+	glVertex3f(rect.position.x, rect.position.y, 0.0f);
+	glEnd();
+
+
+	return;
 	glEnable(GL_LIGHTING);
 
 	// TODO: Is this the correct transform order?

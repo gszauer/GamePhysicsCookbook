@@ -104,6 +104,8 @@ float Distance(const vec3& p1, const vec3& p2);
 
 float DistanceSq(const vec2& p1, const vec2& p2);
 float DistanceSq(const vec3& p1, const vec3& p2);
+
+vec2 RotateVector(const vec2& vector, float degrees);
 #endif
 
 void Normalize(vec2& v);

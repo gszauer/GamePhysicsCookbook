@@ -17,6 +17,62 @@
 	#define M_PI 3.14159265358979323846f
 #endif
 
+void Render(const Circle& circle) {
+	glBegin(GL_LINE_LOOP);
+
+	for (int i = 0; i < 360; ++i) {
+		glVertex2f(circle.position.x + cosf(DEG2RAD(i)) * circle.radius, circle.position.y + sinf(DEG2RAD(i)) * circle.radius);
+	}
+
+	glEnd();
+}
+
+void Render(const Line2D& line) {
+	glBegin(GL_LINES);
+	glVertex3f(line.start.x, line.start.y, 0.0f);
+	glVertex3f(line.end.x, line.end.y, 0.0f);
+	glEnd();
+}
+
+void Render(const Point2D& point) {
+	glBegin(GL_POINTS);
+	glVertex3f(point.x, point.y, 0.0f);
+	glEnd();
+}
+
+void Render(const Rectangle2D& rect) {
+	vec2 min = GetMin(rect);
+	vec2 max = GetMax(rect);
+
+
+	glBegin(GL_QUADS); // TODO: Change to GL_LINES or GL_LINE_LOOP
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(max[0], max[1], 0.0f);
+	glVertex3f(min[0], max[1], 0.0f);
+	glVertex3f(min[0], min[1], 0.0f);
+	glVertex3f(max[0], min[1], 0.0f);
+	glEnd();
+}
+
+void Render(const OrientedRectangle& rect) {
+	glPushMatrix();
+	glTranslatef(rect.position.x, rect.position.y, 0.0f);
+	glRotatef(rect.rotation, 0.0f, 0.0f, 1.0f);
+
+	vec3 min = vec3(-rect.halfExtents.x, -rect.halfExtents.y, 0.0f);
+	vec3 max = vec3(+rect.halfExtents.x, +rect.halfExtents.y, 0.0f);
+	
+	glBegin(GL_QUADS); // TODO: Change to GL_LINES or GL_LINE_LOOP
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(max[0], max[1], max[2]);
+	glVertex3f(min[0], max[1], max[2]);
+	glVertex3f(min[0], min[1], max[2]);
+	glVertex3f(max[0], min[1], max[2]);
+	glEnd();
+
+	glPopMatrix();
+}
+
 void FixedFunctionSubdivTetrahedron(float* a, float* b, float* c, int div, float r) {
 	if (div <= 0) {
 		glNormal3fv(a);

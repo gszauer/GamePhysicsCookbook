@@ -202,6 +202,17 @@ float DistanceSq(const vec2& p1, const vec2& p2) {
 float DistanceSq(const vec3& p1, const vec3& p2) {
 	return MagnitudeSq(p1 - p2);
 }
+
+vec2 RotateVector(const vec2& vector, float degrees) {
+	degrees = DEG2RAD(degrees);
+	float s = sinf(degrees);
+	float c = cosf(degrees);
+
+	return vec2(
+		vector.x * c - vector.y * s,
+		vector.x * s + vector.y * c
+	);
+}
 #endif
 
 void Normalize(vec2& v) {
