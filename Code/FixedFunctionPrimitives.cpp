@@ -44,13 +44,15 @@ void Render(const Rectangle2D& rect) {
 	vec2 min = GetMin(rect);
 	vec2 max = GetMax(rect);
 
-
-	glBegin(GL_QUADS); // TODO: Change to GL_LINES or GL_LINE_LOOP
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(max[0], max[1], 0.0f);
-	glVertex3f(min[0], max[1], 0.0f);
+	glBegin(GL_LINES); 
 	glVertex3f(min[0], min[1], 0.0f);
+	glVertex3f(min[0], max[1], 0.0f);
+	glVertex3f(min[0], max[1], 0.0f);
+	glVertex3f(max[0], max[1], 0.0f);
+	glVertex3f(max[0], max[1], 0.0f);
 	glVertex3f(max[0], min[1], 0.0f);
+	glVertex3f(max[0], min[1], 0.0f);
+	glVertex3f(min[0], min[1], 0.0f);
 	glEnd();
 }
 
@@ -59,15 +61,18 @@ void Render(const OrientedRectangle& rect) {
 	glTranslatef(rect.position.x, rect.position.y, 0.0f);
 	glRotatef(rect.rotation, 0.0f, 0.0f, 1.0f);
 
-	vec3 min = vec3(-rect.halfExtents.x, -rect.halfExtents.y, 0.0f);
-	vec3 max = vec3(+rect.halfExtents.x, +rect.halfExtents.y, 0.0f);
+	vec2 min = vec2(-rect.halfExtents.x, -rect.halfExtents.y);
+	vec2 max = vec2(+rect.halfExtents.x, +rect.halfExtents.y);
 	
-	glBegin(GL_QUADS); // TODO: Change to GL_LINES or GL_LINE_LOOP
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(max[0], max[1], max[2]);
-	glVertex3f(min[0], max[1], max[2]);
-	glVertex3f(min[0], min[1], max[2]);
-	glVertex3f(max[0], min[1], max[2]);
+	glBegin(GL_LINES);
+	glVertex3f(min[0], min[1], 0.0f);
+	glVertex3f(min[0], max[1], 0.0f);
+	glVertex3f(min[0], max[1], 0.0f);
+	glVertex3f(max[0], max[1], 0.0f);
+	glVertex3f(max[0], max[1], 0.0f);
+	glVertex3f(max[0], min[1], 0.0f);
+	glVertex3f(max[0], min[1], 0.0f);
+	glVertex3f(min[0], min[1], 0.0f);
 	glEnd();
 
 	glPopMatrix();

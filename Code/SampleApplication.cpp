@@ -12,11 +12,15 @@
 #include "SampleApplication.h"
 #include"FixedFunctionPrimitives.h"
 
+// TODO: REMOVE
+#include "vectors.h"
 
 void SampleApplication::OnInitialize() {
 	GLWindow::OnInitialize();
 	matView = LookAt(vec3(0.0f, 0.0f, -10.0f), vec3(), vec3(0.0f, 1.0f, 0.0f));
 	//glDisable(GL_CULL_FACE);
+	glDisable(GL_DEPTH_TEST);
+
 	glPointSize(3.0f);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -41,108 +45,35 @@ void SampleApplication::OnInitialize() {
 	sphereRotation = cubeRotation;
 }
 
+float rot = 0.0f; // TODO, REMOVE
+
 void SampleApplication::OnRender() {
 	glDisable(GL_LIGHTING);
 	GLWindow::OnRender();
 
-	glColor3f(1.0f, 1.0f, 0.0f);
-	Rectangle2D r(Point2D(1, 0), vec2(2, 3));
-	Render(r);
+	Rectangle2D r1(Point2D(1.0f, 1.0f), vec2(3.0f, 2.0f));
+	glColor3f(0.0f, 0.0f, 1.0f);
+	Render(r1);
 
-	Line2D ls[] = {
-		Line2D(Point2D(0, 0), Point2D(5, 5)),
-		//Line2D(Point2D(1, 0), Point2D(1, 5)),
-		Line2D(Point2D(-4, -3), Point2D(-3, -4)),
-		Line2D(Point2D(0, 0), Point2D(0, -5)),
-		Line2D(Point2D(0.99f, 0), Point2D(0.99f, 5)),
-	};
+	vec2 mousePos = GetMousePosition();
+	mousePos.x /= (float)GetWidth();
+	mousePos.y /= (float)GetHeight();
+	mousePos.x *= 7.7f * 2.0f;
+	mousePos.y *= 5.8f * 2.0f;
+	mousePos.x -= 7.7f;
+	mousePos.y -= 5.8f;
+	mousePos.y *= -1.0f;
 
-	for (int i = 0; i < 4; ++i) {
-		if (LineRectangle(ls[i], r)) {
-			glColor3f(0.0f, 0.0f, 1.0f);
-		}
-		else {
-			glColor3f(1.0f, 0.0f, 1.0f);
-		}
-		Render(ls[i]);
+	
+	OrientedRectangle r2(Point2D(mousePos.x, mousePos.y), vec2(1, 2), rot);
+
+	if (!RectangleOrientedRectangle(r1, r2)) {
+		glColor3f(1.0f, 0.0f, 0.0f);
 	}
-
-	return;
-
-	Circle c1(Point2D(1.0f, 1.0f), 0.71f);
-
-	glColor3f(1.0f, 1.0f, 0.0f);
-	Render(c1);
-
-	Line2D lines[] = {
-		Line2D(Point2D(-2, -2), Point2D(2, 2)),
-		Line2D(Point2D(-2, -2), Point2D(-2, -6)),
-		Line2D(Point2D(0, 1), Point2D(1, 0)),
-		Line2D(Point2D(5, 6), Point2D(6, 5))
-	};
-	for (int i = 0; i < 4; ++i) {
-		if (LineCircle(lines[i], c1)) {
-			glColor3f(0.0f, 1.0f, 1.0f);
-		}
-		else {
-			glColor3f(1.0f, 0.0f, 1.0f);
-		}
-		Render(lines[i]);
+	else {
+		glColor3f(0.0f, 1.0f, 0.0f);
 	}
-
-	return;
-	/*glColor3f(1.0f, 1.0f, 0.0f);
-	glBegin(GL_LINES);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(3.0f, 3.0f, 0.0f);
-	glEnd();*/
-
-	glColor3f(0.0f, 1.0f, 1.0f);
-	OrientedRectangle rect(Point2D(3, 3), vec2(2, 1), 0.0);
-	Render(rect);
-	rect.rotation = 45.0f;
-	Render(rect);
-
-	glColor3f(1.0f, 0.0f, 1.0f);
-	vec2 corner1(1, 2);
-	vec2 corner2(1, 4);
-
-	vec2 rc1 = rect.position + RotateVector(corner1 - rect.position, 45);
-	vec2 rc2 = rect.position + RotateVector(corner2 - rect.position, 45);
-
-	vec2 start = rc1;
-	vec2 end = rc2;
-	float percent = 0.5f;
-	vec2 midPoint = (start + ((end - start) * percent));
-
-	vec2 leftPoint = midPoint - rect.position;
-	leftPoint = midPoint + Normalized(leftPoint) * 0.1f;
-	vec2 rightPoint = midPoint - rect.position;
-	rightPoint = midPoint - Normalized(rightPoint) * 0.1f;
-
-	Render(rightPoint);
-	vec2 localPoint = rightPoint - rect.position;
-	//Render(localPoint);
-
-	glColor3f(1.0f, 1.0f, 0.0f);
-	glBegin(GL_LINES);
-	glVertex3f(rect.position.x + localPoint.x, rect.position.y + localPoint.y, 0.0f);
-	glVertex3f(rect.position.x, rect.position.y, 0.0f);
-	glEnd();
-
-
-	float theta = -DEG2RAD(rect.rotation);
-	float zRotation2x2[] = { // Construct matrix
-		cosf(theta), sinf(theta),
-		-sinf(theta), cosf(theta) };
-	// Rotate vector
-	Multiply(localPoint.asArray, vec2(localPoint.x, localPoint.y).asArray, 1, 2, zRotation2x2, 2, 2);
-
-	glColor3f(1.0f, 1.0f, 0.0f);
-	glBegin(GL_LINES);
-	glVertex3f(rect.position.x + localPoint.x, rect.position.y + localPoint.y, 0.0f);
-	glVertex3f(rect.position.x, rect.position.y, 0.0f);
-	glEnd();
+	Render(r2);
 
 
 	return;
@@ -205,6 +136,19 @@ void SampleApplication::OnRender() {
 
 void SampleApplication::OnUpdate(float deltaTime) { 
 	GLWindow::OnUpdate(deltaTime);
+
+	if (MouseButonDown(MOUSE_LEFT)) {
+		rot += 90.0f * deltaTime;
+		while (rot > 360) {
+			rot -= 360.0f;
+		}
+	}
+	else if (MouseButonDown(MOUSE_RIGHT)) {
+		rot -= 90.0f * deltaTime;
+		while (rot < 0) {
+			rot += 360.0f;
+		}
+	}
 
 	cubeRotation.x += 90.0f * deltaTime;
 	cubeRotation.y += 45.0f * deltaTime;
