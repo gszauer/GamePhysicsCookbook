@@ -12,12 +12,15 @@ protected:
 	vec3 sphereRotation;
 public:
 	SampleApplication(const char* title, int width, int height) 
-		: GLWindow(title, width, height) { }
+		: GLWindow(title, width, height) {
+		m_nFixedFPS = 30.0f; m_nTargetFPS = 60.0f;
+	}
 	virtual ~SampleApplication() { }
 
 	virtual void OnRender();
 	virtual void OnInitialize();
 	void OnUpdate(float deltaTime);
+	void OnFixedUpdate(float fixedDelta);
 };
 
 static SampleApplication debugInstance("Sample Application", 800, 600);

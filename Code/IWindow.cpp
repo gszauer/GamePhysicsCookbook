@@ -4,8 +4,7 @@
 
 IWindow* IWindow::g_pSingleton = 0;
 
-// TODO: Change this to 10!
-#define I_WINDOW_CPP_GENERIC_DEFAULT_LENGTH 2 
+#define I_WINDOW_CPP_GENERIC_DEFAULT_LENGTH 5 
 #define I_WINDOW_CPP_GENERIC_EXPAND_BY 10
 
 #define I_WINDOW_CPP_DEFAULTS(w, h) \

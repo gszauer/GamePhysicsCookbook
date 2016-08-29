@@ -230,7 +230,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 	DWORD next_game_tick = GetTickCount();
 	int sleep_time = 0;
 	double lastTime = GetMilliseconds();
-	double fixed_millis = pWindowInstance->GetFixedFPS() / 1000.0; // TODO idk if this is right
+	double fixed_millis = pWindowInstance->GetFixedFPS() / 1000.0; 
 	double fixed_ellapsed = 0.0;
 
 	while (!pWindowInstance->GetQuitFlag()) {
@@ -276,8 +276,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 		pWindowInstance->OnUpdate(deltaTime);
 
 		fixed_ellapsed += deltaTime;
-		while (fixed_ellapsed >= fixed_millis) {
-			pWindowInstance->OnFixedUpdate();
+		while (fixed_ellapsed > fixed_millis) {
+			pWindowInstance->OnFixedUpdate(fixed_millis);
 			fixed_ellapsed -= fixed_millis;
 		}
 
