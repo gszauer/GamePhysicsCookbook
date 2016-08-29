@@ -45,13 +45,13 @@ void SampleApplication::OnInitialize() {
 	sphereRotation = cubeRotation;
 }
 
-float rot = 0.0f; // TODO, REMOVE
-
+float rot1 = 45.0f; // TODO, REMOVE
+float rot2 = 45.0f;
 void SampleApplication::OnRender() {
 	glDisable(GL_LIGHTING);
 	GLWindow::OnRender();
 
-	Rectangle2D r1(Point2D(1.0f, 1.0f), vec2(3.0f, 2.0f));
+	OrientedRectangle r1(Point2D(1.0f, 1.0f), vec2(1.5f, 1.0f), rot1);
 	glColor3f(0.0f, 0.0f, 1.0f);
 	Render(r1);
 
@@ -65,9 +65,9 @@ void SampleApplication::OnRender() {
 	mousePos.y *= -1.0f;
 
 	
-	OrientedRectangle r2(Point2D(mousePos.x, mousePos.y), vec2(1, 2), rot);
+	OrientedRectangle r2(Point2D(mousePos.x, mousePos.y), vec2(1, 2), rot2);
 
-	if (!RectangleOrientedRectangle(r1, r2)) {
+	if (!OrientedRectangleOrientedRectangle(r1, r2)) {
 		glColor3f(1.0f, 0.0f, 0.0f);
 	}
 	else {
@@ -75,6 +75,25 @@ void SampleApplication::OnRender() {
 	}
 	Render(r2);
 
+	Rectangle2D r3(Point2D(), r1.halfExtents * 2.0f);
+	OrientedRectangle r4(Point2D(mousePos.x, mousePos.y), vec2(1, 2), rot2);
+	
+	r4.rotation = r2.rotation - r1.rotation;
+	vec2 rotVector = r2.position - r1.position;
+	float theta = -DEG2RAD(r1.rotation);
+	float zRotation2x2[] = {
+		cosf(theta), sinf(theta),
+		-sinf(theta), cosf(theta) };
+	Multiply(rotVector.asArray, vec2(rotVector.x, rotVector.y).asArray, 1, 2, zRotation2x2, 2, 2);
+	r4.position = rotVector + r1.halfExtents;
+
+	glPushMatrix();
+	glTranslatef(-3.0f, 0.0f, 0.0f);
+	glColor3f(1.0f, 0.0f, 1.0f);
+	Render(r3);
+	glColor3f(0.0f, 1.0f, 1.0f);
+	Render(r4);
+	glPopMatrix();
 
 	return;
 	glEnable(GL_LIGHTING);
@@ -138,15 +157,15 @@ void SampleApplication::OnUpdate(float deltaTime) {
 	GLWindow::OnUpdate(deltaTime);
 
 	if (MouseButonDown(MOUSE_LEFT)) {
-		rot += 90.0f * deltaTime;
-		while (rot > 360) {
-			rot -= 360.0f;
+		rot1 += 90.0f * deltaTime;
+		while (rot1 > 360) {
+			rot1 -= 360.0f;
 		}
 	}
 	else if (MouseButonDown(MOUSE_RIGHT)) {
-		rot -= 90.0f * deltaTime;
-		while (rot < 0) {
-			rot += 360.0f;
+		rot2 += 90.0f * deltaTime;
+		while (rot2 > 360) {
+			rot2 -= 360.0f;
 		}
 	}
 
