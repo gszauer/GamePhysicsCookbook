@@ -119,12 +119,12 @@ void GLWindow::OnMouseUp(int mouseCode) {
 	BitOff(mouseButtonState, Bit(mouseCode));
 }
 
-void GLWindow::OnKeyDown(int keyCode) { // TODO: THIS IS BUSTEDDDD!!!
-	keyboardState[keyCode] = true;
+void GLWindow::OnKeyDown(int keyCode) {
+	keyboardState[KeyIndex(keyCode)] = true;
 }
 
 void GLWindow::OnKeyUp(int keyCode) {
-	keyboardState[keyCode] = false;
+	keyboardState[KeyIndex(keyCode)] = false;
 }
 
 void GLWindow::SetView(const mat4& view) {
@@ -147,9 +147,9 @@ bool GLWindow::MouseButonDown(int button) {
 	return BitValue(mouseButtonState, Bit(button));
 }
 
-bool GLWindow::KeyDown(int key) {
-	if (key < 0 || key >= 256) {
+bool GLWindow::KeyDown(int keyCode) {
+	if (keyCode < 0 || keyCode >= 256) {
 		return false;
 	}
-	return keyboardState[key];
+	return keyboardState[KeyIndex(keyCode)];
 }
