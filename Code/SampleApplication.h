@@ -19,8 +19,7 @@ public:
 
 	virtual void OnRender();
 	virtual void OnInitialize();
-	void OnUpdate(float deltaTime);
-	void OnFixedUpdate(float fixedDelta);
+	virtual void OnUpdate(float deltaTime);
 };
 
 static SampleApplication debugInstance("Sample Application", 800, 600);

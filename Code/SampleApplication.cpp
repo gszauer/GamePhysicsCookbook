@@ -12,6 +12,9 @@
 #include "SampleApplication.h"
 #include"FixedFunctionPrimitives.h"
 
+// TODO: REMOVE
+#include "vectors.h"
+
 void SampleApplication::OnInitialize() {
 	GLWindow::OnInitialize();
 	matView = LookAt(vec3(0.0f, 0.0f, -10.0f), vec3(), vec3(0.0f, 1.0f, 0.0f));
@@ -42,32 +45,55 @@ void SampleApplication::OnInitialize() {
 	sphereRotation = cubeRotation;
 }
 
-float pos1 = 0.0f;
-float pos2 = 0.0f;
-float dir1 = 1.0f;
-float dir2 = 1.0f;
-
+float rot1 = 45.0f; // TODO, REMOVE
+float rot2 = 45.0f;
 void SampleApplication::OnRender() {
 	glDisable(GL_LIGHTING);
 	GLWindow::OnRender();
 
-	/*vec2 mousePos = GetMousePosition();
+	OrientedRectangle r1(Point2D(1.0f, 1.0f), vec2(1.5f, 1.0f), rot1);
+	glColor3f(0.0f, 0.0f, 1.0f);
+	Render(r1);
+
+	vec2 mousePos = GetMousePosition();
 	mousePos.x /= (float)GetWidth();
 	mousePos.y /= (float)GetHeight();
 	mousePos.x *= 7.7f * 2.0f;
 	mousePos.y *= 5.8f * 2.0f;
 	mousePos.x -= 7.7f;
 	mousePos.y -= 5.8f;
-	mousePos.y *= -1.0f;*/
+	mousePos.y *= -1.0f;
 
-	
-	Circle c1(Point2D(pos1, -1.0f), 1.0f);
-	Circle c2(Point2D(pos2, 1.0f), 1.0f);
 
-	glColor3f(1.0f, 0.0f, 0.0f);
-	Render(c1);
-	glColor3f(0.0f, 0.0f, 1.0f);
-	Render(c2);
+	OrientedRectangle r2(Point2D(mousePos.x, mousePos.y), vec2(1, 2), rot2);
+
+	if (!OrientedRectangleOrientedRectangle(r1, r2)) {
+		glColor3f(1.0f, 0.0f, 0.0f);
+	}
+	else {
+		glColor3f(0.0f, 1.0f, 0.0f);
+	}
+	Render(r2);
+
+	Rectangle2D r3(Point2D(), r1.halfExtents * 2.0f);
+	OrientedRectangle r4(Point2D(mousePos.x, mousePos.y), vec2(1, 2), rot2);
+
+	r4.rotation = r2.rotation - r1.rotation;
+	vec2 rotVector = r2.position - r1.position;
+	float theta = -DEG2RAD(r1.rotation);
+	float zRotation2x2[] = {
+		cosf(theta), sinf(theta),
+		-sinf(theta), cosf(theta) };
+	Multiply(rotVector.asArray, vec2(rotVector.x, rotVector.y).asArray, 1, 2, zRotation2x2, 2, 2);
+	r4.position = rotVector + r1.halfExtents;
+
+	glPushMatrix();
+	glTranslatef(-3.0f, 0.0f, 0.0f);
+	glColor3f(1.0f, 0.0f, 1.0f);
+	Render(r3);
+	glColor3f(0.0f, 1.0f, 1.0f);
+	Render(r4);
+	glPopMatrix();
 
 	return;
 	glEnable(GL_LIGHTING);
@@ -85,7 +111,7 @@ void SampleApplication::OnRender() {
 	FixedFunctionCube(0.5f, 0.5f, 0.5f);
 	glPopMatrix();
 
-	
+
 	// TODO: Same as above!
 	glPushMatrix();
 	// Translate Last
@@ -98,7 +124,7 @@ void SampleApplication::OnRender() {
 	glScalef(sphereScale, sphereScale, sphereScale);
 	FixedFunctionSphere(2, 0.5f);
 	glPopMatrix();
-	 
+
 	// TODO: Same as above!
 	glPushMatrix();
 	// Translate Last
@@ -111,7 +137,7 @@ void SampleApplication::OnRender() {
 	glScalef(cubeScale, cubeScale, cubeScale);
 	FixedFunctionTorus(0.75f, 0.5f);
 	glPopMatrix();
-	
+
 
 	// TODO: Same as above!
 	glPushMatrix();
@@ -127,25 +153,20 @@ void SampleApplication::OnRender() {
 	glPopMatrix();
 }
 
-void SampleApplication::OnFixedUpdate(float fixedDelta) {
-	pos2 += 5.0f * fixedDelta * dir2;
-	if (pos2 > 7.7f) {
-		dir2 *= -1.0f;
-	}
-	else if (pos2 < -7.7f) {
-		dir2 *= -1.0f;
-	}
-}
-
-void SampleApplication::OnUpdate(float deltaTime) { 
+void SampleApplication::OnUpdate(float deltaTime) {
 	GLWindow::OnUpdate(deltaTime);
 
-	pos1 += 5.0f * deltaTime * dir1;
-	if (pos1 > 7.7f) {
-		dir1 *= -1.0f;
+	if (MouseButonDown(MOUSE_LEFT)) {
+		rot1 += 90.0f * deltaTime;
+		while (rot1 > 360) {
+			rot1 -= 360.0f;
+		}
 	}
-	else if (pos1 < -7.7f) {
-		dir1 *= -1.0f;
+	else if (MouseButonDown(MOUSE_RIGHT)) {
+		rot2 += 90.0f * deltaTime;
+		while (rot2 > 360) {
+			rot2 -= 360.0f;
+		}
 	}
 
 	cubeRotation.x += 90.0f * deltaTime;
