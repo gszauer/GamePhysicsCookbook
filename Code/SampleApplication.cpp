@@ -15,7 +15,7 @@
 void SampleApplication::OnInitialize() {
 	GLWindow::OnInitialize();
 	matView = LookAt(vec3(cameraPos.x, cameraPos.y, -10.0f), vec3(), vec3(0.0f, 1.0f, 0.0f));
-	glDisable(GL_CULL_FACE);
+	//glDisable(GL_CULL_FACE);
 	//glDisable(GL_DEPTH_TEST);
 
 	glPointSize(3.0f);
@@ -43,7 +43,6 @@ void SampleApplication::OnInitialize() {
 }
 
 void SampleApplication::OnRender() {
-	glDisable(GL_LIGHTING);
 	GLWindow::OnRender();
 
 	/*vec2 mousePos = GetMousePosition();
@@ -55,7 +54,6 @@ void SampleApplication::OnRender() {
 	mousePos.y -= 5.8f;
 	mousePos.y *= -1.0f;*/
 
-	glEnable(GL_LIGHTING);
 
 	/*
 	// TODO: Is this the correct transform order?
@@ -83,10 +81,10 @@ void SampleApplication::OnRender() {
 	// Scale First
 	glScalef(sphereScale, sphereScale, sphereScale);
 	//FixedFunctionSphere(2, 0.5f); TODO: Uncomment
-	drawCone(); // TODO: Delete
+	FixedFunctionCone(); // TODO: Delete
 	glPopMatrix();
 
-	//drawCone();
+	FixedFunctionCone();
 
 
 	/*
@@ -123,7 +121,7 @@ void SampleApplication::OnRender() {
 	glPopMatrix();
 	*/
 
-	FixedFunctionOrigin(true);
+	FixedFunctionOrigin();
 }
 
 void SampleApplication::OnUpdate(float deltaTime) {

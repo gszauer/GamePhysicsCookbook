@@ -453,18 +453,6 @@ void FixedFunctionOrigin() {
 	FixedFunctionOrigin(false, false);
 }
 
-
-
-void normalize(float v[3]) {
-	float d = sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-
-	if (d == 0) {
-		printf("zero length vector");
-		return;
-	}
-	v[0] /= d;	v[1] /= d;	v[2] /= d;
-}
-
 void drawtriangle(float *v1, float *v2, float *v3)
 {
 	vec3 vert1(v1[0], v1[1], v1[2]);
@@ -482,26 +470,19 @@ void drawtriangle(float *v1, float *v2, float *v3)
 	glVertex3fv(v2);
 	glVertex3fv(v3);
 	glEnd();
-
-	glColor3f(1.0f, 0.0f, 1.0f);
-	vec3 centroid = (vert1 + vert2 + vert3) * (1.0f / 3.0f);
-	glBegin(GL_LINES);
-	glVertex3fv(centroid.asArray);
-	glVertex3fv((centroid + norm).asArray);
-	glEnd();
 }
 
 
-void subdivideCone(float *v1, float *v2, int depth, int height) {
+void FixedFunctionSubdivCone(float *v1, float *v2, int subdiv, int height, float radius) {
 	float v0[3] = { 0, 0, 0 };
 
-	if (depth == 0) {
-		glColor3f(1.0f, 0.0f, 0.0f);
-		drawtriangle(v2, v1, v0); // bottom cover of the cone
+	if (subdiv == 0) {
+		// Bottom cover of the cone
+		drawtriangle(v2, v0, v1);
 
-		glColor3f(0.0f, 0.0f, 1.0f);
-		v0[2] = height; // height of the cone, the tip on z axis
-		drawtriangle(v1, v2, v0); // side cover of the cone
+		v0[1] = height; // height of the cone, the tip on y axis
+		// Side cover of the cone
+		drawtriangle(v1, v0, v2); 
 
 		return;
 	}
@@ -512,26 +493,36 @@ void subdivideCone(float *v1, float *v2, int depth, int height) {
 		v1[2] + v2[2],
 	};
 
-	normalize(v12);
+	// Normalize
+	float d = 1.0f / sqrtf(v12[0] * v12[0] + v12[1] * v12[1] + v12[2] * v12[2]);
+	v12[0] *= d; v12[1] *= d; v12[2] *= d;
+	// Adjust to radius
+	v12[0] *= radius;
+	v12[1] *= radius;
+	v12[2] *= radius;
 
-	subdivideCone(v1, v12, depth - 1, height);
-	subdivideCone(v12, v2, depth - 1, height);
+	FixedFunctionSubdivCone(v1, v12, subdiv - 1, height, radius);
+	FixedFunctionSubdivCone(v12, v2, subdiv - 1, height, radius);
 }
 
 
-void drawCone(int depth, int height) {
-	glDisable(GL_LIGHTING);
+// Adapted from: http://cs.gmu.edu/~jchen/graphics/book/examples/2.5.cone.c
+void FixedFunctionCone(int subdiv, int height, float radius) {
 	static float vdata[4][3] = {
-		{ 1.0, 0.0, 0.0 }, { 0.0, 1.0, 0.0 },
-		{ -1.0, 0.0, 0.0 }, { 0.0, -1.0, 0.0 }
+		{  radius, 0.0, 0.0 }, { 0.0, 0.0,  radius },
+		{ -radius, 0.0, 0.0 }, { 0.0, 0.0, -radius }
 	};
 
-	subdivideCone(vdata[0], vdata[1], depth, height);
-	subdivideCone(vdata[1], vdata[2], depth, height);
-	subdivideCone(vdata[2], vdata[3], depth, height);
-	subdivideCone(vdata[3], vdata[0], depth, height);
+	FixedFunctionSubdivCone(vdata[0], vdata[1], subdiv, height, radius);
+	FixedFunctionSubdivCone(vdata[1], vdata[2], subdiv, height, radius);
+	FixedFunctionSubdivCone(vdata[2], vdata[3], subdiv, height, radius);
+	FixedFunctionSubdivCone(vdata[3], vdata[0], subdiv, height, radius);
 }
 
-void drawCone() {
-	drawCone(2, 1); // TODO: Up default to 3!
+void FixedFunctionCone(int height, float radius) {
+	FixedFunctionCone(4, height, radius);
+}
+
+void FixedFunctionCone() {
+	FixedFunctionCone(4, 1, 1.0f);
 }
