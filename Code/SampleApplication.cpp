@@ -12,17 +12,14 @@
 #include "SampleApplication.h"
 #include"FixedFunctionPrimitives.h"
 
-float todoRemoveY = 0.0f;
-
 void SampleApplication::OnInitialize() {
 	GLWindow::OnInitialize();
-	//matView = LookAt(vec3(0.0f, 0.0f, -10.0f), vec3(), vec3(0.0f, 1.0f, 0.0f));
-	matView = LookAt(vec3(2.0f, todoRemoveY, -10.0f), vec3(), vec3(0.0f, 1.0f, 0.0f));
-	//glDisable(GL_CULL_FACE);
+	matView = LookAt(vec3(cameraPos.x, cameraPos.y, -10.0f), vec3(), vec3(0.0f, 1.0f, 0.0f));
+	glDisable(GL_CULL_FACE);
 	//glDisable(GL_DEPTH_TEST);
 
 	glPointSize(3.0f);
-	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
@@ -60,6 +57,7 @@ void SampleApplication::OnRender() {
 
 	glEnable(GL_LIGHTING);
 
+	/*
 	// TODO: Is this the correct transform order?
 	glPushMatrix();
 	// Translate Last
@@ -72,7 +70,7 @@ void SampleApplication::OnRender() {
 	glScalef(cubeScale, cubeScale, cubeScale);
 	FixedFunctionCube(0.5f, 0.5f, 0.5f);
 	glPopMatrix();
-
+	*/
 
 	// TODO: Same as above!
 	glPushMatrix();
@@ -84,9 +82,14 @@ void SampleApplication::OnRender() {
 	glRotatef(sphereRotation.z, 0.0f, 0.0f, 1.0f);
 	// Scale First
 	glScalef(sphereScale, sphereScale, sphereScale);
-	FixedFunctionSphere(2, 0.5f);
+	//FixedFunctionSphere(2, 0.5f); TODO: Uncomment
+	drawCone(); // TODO: Delete
 	glPopMatrix();
 
+	//drawCone();
+
+
+	/*
 	// TODO: Same as above!
 	glPushMatrix();
 	// Translate Last
@@ -118,22 +121,29 @@ void SampleApplication::OnRender() {
 	glTranslatef(0.0f, -1.0f, 0.0f);
 	FixedFunctionPlane();
 	glPopMatrix();
+	*/
 
 	FixedFunctionOrigin(true);
 }
-
-#include <iostream> // TODO: REMOVE
 
 void SampleApplication::OnUpdate(float deltaTime) {
 	GLWindow::OnUpdate(deltaTime);
 
 	if (KeyDown(KEY_DOWN_ARROW)) {
-		todoRemoveY += -5.0f * deltaTime;
-	} else if (KeyDown(KEY_UP_ARROW)) {
-		todoRemoveY += 5.0f * deltaTime;
+		cameraPos.y += -5.0f * deltaTime;
 	}
-	
-	matView = LookAt(vec3(2.0f, todoRemoveY, -10.0f), vec3(), vec3(0.0f, 1.0f, 0.0f));
+	else if (KeyDown(KEY_UP_ARROW)) {
+		cameraPos.y += 5.0f * deltaTime;
+	}
+
+	if (KeyDown(KEY_LEFT_ARROW)) {
+		cameraPos.x += -5.0f * deltaTime;
+	}
+	else if (KeyDown(KEY_RIGHT_ARROW)) {
+		cameraPos.x += 5.0f * deltaTime;
+	}
+
+	matView = LookAt(vec3(cameraPos.x, cameraPos.y, -10.0f), vec3(), vec3(0.0f, 1.0f, 0.0f));
 
 	cubeRotation.x += 90.0f * deltaTime;
 	cubeRotation.y += 45.0f * deltaTime;

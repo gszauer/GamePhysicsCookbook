@@ -10,10 +10,12 @@ protected:
 	float cubeScale;
 	float sphereScale;
 	vec3 sphereRotation;
+	vec2 cameraPos;
 public:
 	SampleApplication(const char* title, int width, int height) 
 		: GLWindow(title, width, height) {
-		m_nFixedFPS = 30.0f; m_nTargetFPS = 60.0f;
+		m_nFixedFPS = 30.0f; 
+		m_nTargetFPS = 60.0f;
 	}
 	virtual ~SampleApplication() { }
 

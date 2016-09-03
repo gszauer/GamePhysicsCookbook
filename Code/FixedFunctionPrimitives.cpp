@@ -304,6 +304,8 @@ void FixedFunctionCylinder(int slices, float height, float radius) {
 }
 
 /* From the opengl super bible! */
+// Description of what the arguments mean is here: 
+// http://www.povray.org/documentation/images/reference/mimxrtor.png
 void FixedFunctionTorus(int TORUS_MAJOR_RES, int TORUS_MINOR_RES, float TORUS_MAJOR, float TORUS_MINOR) {
 	int    i, j, k;
 	double s, t, x, y, z, nx, ny, nz, scale, twopi;
@@ -449,4 +451,87 @@ void FixedFunctionOrigin(bool depthTest) {
 
 void FixedFunctionOrigin() {
 	FixedFunctionOrigin(false, false);
+}
+
+
+
+void normalize(float v[3]) {
+	float d = sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+
+	if (d == 0) {
+		printf("zero length vector");
+		return;
+	}
+	v[0] /= d;	v[1] /= d;	v[2] /= d;
+}
+
+void drawtriangle(float *v1, float *v2, float *v3)
+{
+	vec3 vert1(v1[0], v1[1], v1[2]);
+	vec3 vert2(v2[0], v2[1], v2[2]);
+	vec3 vert3(v3[0], v3[1], v3[2]);
+
+	vec3 edge1 = vert1 - vert2;
+	vec3 edge2 = vert1 - vert3;
+
+	vec3 norm = Normalized(Cross(edge1, edge2));
+
+	glBegin(GL_TRIANGLES);
+	glNormal3f(norm.x, norm.y, norm.z);
+	glVertex3fv(v1);
+	glVertex3fv(v2);
+	glVertex3fv(v3);
+	glEnd();
+
+	glColor3f(1.0f, 0.0f, 1.0f);
+	vec3 centroid = (vert1 + vert2 + vert3) * (1.0f / 3.0f);
+	glBegin(GL_LINES);
+	glVertex3fv(centroid.asArray);
+	glVertex3fv((centroid + norm).asArray);
+	glEnd();
+}
+
+
+void subdivideCone(float *v1, float *v2, int depth, int height) {
+	float v0[3] = { 0, 0, 0 };
+
+	if (depth == 0) {
+		glColor3f(1.0f, 0.0f, 0.0f);
+		drawtriangle(v2, v1, v0); // bottom cover of the cone
+
+		glColor3f(0.0f, 0.0f, 1.0f);
+		v0[2] = height; // height of the cone, the tip on z axis
+		drawtriangle(v1, v2, v0); // side cover of the cone
+
+		return;
+	}
+
+	float v12[3]{
+		v1[0] + v2[0],
+		v1[1] + v2[1],
+		v1[2] + v2[2],
+	};
+
+	normalize(v12);
+
+	subdivideCone(v1, v12, depth - 1, height);
+	subdivideCone(v12, v2, depth - 1, height);
+}
+
+
+void drawCone(int depth, int height) {
+	glDisable(GL_LIGHTING);
+	static float vdata[4][3] = {
+		{ 1.0, 0.0, 0.0 }, { 0.0, 1.0, 0.0 },
+		{ -1.0, 0.0, 0.0 }, { 0.0, -1.0, 0.0 }
+	};
+
+	subdivideCone(vdata[0], vdata[1], depth, height);
+	subdivideCone(vdata[1], vdata[2], depth, height);
+	subdivideCone(vdata[2], vdata[3], depth, height);
+	subdivideCone(vdata[3], vdata[0], depth, height);
+}
+
+void drawCone() {
+	drawCone(2, 1); // TODO: Up default to 3!
 }

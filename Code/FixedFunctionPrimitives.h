@@ -3,15 +3,18 @@
 
 #include "C:\Code\PhysicsBookDraftCode\Physics\Geometry2D.h"
 
+// 2D Geometry
 void Render(const Point2D& point); 
 void Render(const Line2D& line);
 void Render(const Circle& circle);
 void Render(const Rectangle2D& rect); 
 void Render(const OrientedRectangle& rect);
 
+// 3D Geometry
+
+// Generic Primitives
 void FixedFunctionSphere(int numDivisions, float radius);
 void FixedFunctionCube(float extentsX, float extentsY, float extentsZ);
-// http://www.povray.org/documentation/images/reference/mimxrtor.png
 void FixedFunctionTorus(int majorSegments, int minorSegments, float majorRadius, float minorRadius);
 void FixedFunctionCylinder(int slices, float height, float radius);
 void FixedFunctionPlane(float size, int subdivs);
@@ -34,5 +37,7 @@ void FixedFunctionPlane();
 void FixedFunctionSubdivTetrahedron(float* a, float* b, float* c, int div, float r);
 
 // TODO: Cone
+void drawCone(int depth, int height);
+void drawCone();
 
 #endif
