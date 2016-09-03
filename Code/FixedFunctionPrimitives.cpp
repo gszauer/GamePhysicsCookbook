@@ -395,3 +395,58 @@ void FixedFunctionPlane(float size) {
 void FixedFunctionPlane() {
 	FixedFunctionPlane(10, 10);
 }
+
+void FixedFunctionOrigin(bool depthTest, bool twoSided) {
+	bool isLit = glIsEnabled(GL_LIGHTING);
+	bool depthOn = glIsEnabled(GL_DEPTH_TEST);
+
+	if (isLit) {
+		glDisable(GL_LIGHTING);
+	}
+	if (depthOn && !depthTest) {
+		glDisable(GL_DEPTH_TEST);
+	} else if (depthTest) {
+		glEnable(GL_DEPTH_TEST);
+	}
+
+	glBegin(GL_LINES);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(1.0f, 0.0f, 0.0f);
+	if (twoSided) {
+		glVertex3f(0.0f, 0.0f, 0.0f);
+		glVertex3f(-1.0f, 0.0f, 0.0f);
+	}
+
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 1.0f, 0.0f);
+	if (twoSided) {
+		glVertex3f(0.0f, 0.0f, 0.0f);
+		glVertex3f(0.0f, -1.0f, 0.0f);
+	}
+
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 1.0f);
+	if (twoSided) {
+		glVertex3f(0.0f, 0.0f, 0.0f);
+		glVertex3f(0.0f, 0.0f, -1.0f);
+	}
+	glEnd();
+
+	if (isLit) {
+		glEnable(GL_LIGHTING);
+	}
+	if (depthOn) {
+		glEnable(GL_DEPTH_TEST);
+	}
+}
+
+void FixedFunctionOrigin(bool depthTest) {
+	FixedFunctionOrigin(depthTest, false);
+}
+
+void FixedFunctionOrigin() {
+	FixedFunctionOrigin(false, false);
+}

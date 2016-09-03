@@ -15,12 +15,15 @@ void FixedFunctionCube(float extentsX, float extentsY, float extentsZ);
 void FixedFunctionTorus(int majorSegments, int minorSegments, float majorRadius, float minorRadius);
 void FixedFunctionCylinder(int slices, float height, float radius);
 void FixedFunctionPlane(float size, int subdivs);
+void FixedFunctionOrigin(bool depthTest, bool twoSided);
 
 // Conveniance function
 void FixedFunctionTorus(float outerRaidus, float innerRadius);
 void FixedFunctionCylinder(float height, float radius);
 void FixedFunctionCylinder(float height);
 void FixedFunctionPlane(float size);
+void FixedFunctionOrigin(bool depthTest);
+void FixedFunctionOrigin();
 void FixedFunctionTorus();
 void FixedFunctionSphere();
 void FixedFunctionCube();

@@ -26,7 +26,6 @@ GLWindow::GLWindow(const char* title, int width, int height)
 	mouseButtonState = 0;
 	memset(keyboardState, false, sizeof(bool) * 256);
 	m_vecMousePos = vec2(0.0f, 0.0f);
-	m_bDrawOrigin = true;
 	m_nFOV = 60.0f;
 	m_nNear = 0.01f;
 	m_nFar = 1000.0f;
@@ -51,10 +50,6 @@ void GLWindow::SetClearColor(float r, float g, float b) {
 	SetInt("glMinor", 1);
 }
 
-void GLWindow::SetDrawOrigin(bool value) {
-	m_bDrawOrigin = value;
-}
-
 void GLWindow::OnInitialize() {
 	glClearColor(0.5f, 0.6f, 0.7f, 1.0f);
 
@@ -70,29 +65,6 @@ void GLWindow::OnRender() {
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(matView.asArray);
-
-	if (m_bDrawOrigin) {
-		bool isLit = glIsEnabled(GL_LIGHTING);
-		if (isLit) {
-			glDisable(GL_LIGHTING);
-		}
-		glBegin(GL_LINES);
-		glColor3f(1.0f, 0.0f, 0.0f);
-		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(1.0f, 0.0f, 0.0f);
-
-		glColor3f(0.0f, 1.0f, 0.0f);
-		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(0.0f, 1.0f, 0.0f);
-
-		glColor3f(0.0f, 0.0f, 1.0f);
-		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(0.0f, 0.0f, 1.0f);
-		glEnd();
-		if (isLit) {
-			glEnable(GL_LIGHTING);
-		}
-	}
 }
 
 void GLWindow::OnResize(int width, int height) {

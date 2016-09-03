@@ -9,7 +9,6 @@ protected:
 	float m_nFOV;
 	float m_nNear;
 	float m_nFar;
-	bool m_bDrawOrigin;
 	vec2 m_vecMousePos;
 	unsigned int mouseButtonState;
 	bool keyboardState[256];
@@ -20,7 +19,6 @@ public:
 
 	void SetPerspective(float fov, float zNear, float zFar);
 	void SetClearColor(float r, float g, float b);
-	void SetDrawOrigin(bool value);
 
 	virtual void OnInitialize();
 	virtual void OnRender();

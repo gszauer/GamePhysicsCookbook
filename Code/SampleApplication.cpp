@@ -19,7 +19,7 @@ void SampleApplication::OnInitialize() {
 	//matView = LookAt(vec3(0.0f, 0.0f, -10.0f), vec3(), vec3(0.0f, 1.0f, 0.0f));
 	matView = LookAt(vec3(2.0f, todoRemoveY, -10.0f), vec3(), vec3(0.0f, 1.0f, 0.0f));
 	//glDisable(GL_CULL_FACE);
-	glDisable(GL_DEPTH_TEST);
+	//glDisable(GL_DEPTH_TEST);
 
 	glPointSize(3.0f);
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -119,33 +119,7 @@ void SampleApplication::OnRender() {
 	FixedFunctionPlane();
 	glPopMatrix();
 
-
-
-
-	// TODO: REMOVE
-	glDisable(GL_LIGHTING);
-	glDisable(GL_DEPTH_TEST);
-	glBegin(GL_LINES);
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(-1.0f, 0.0f, 0.0f);
-
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, -1.0f, 0.0f);
-
-	glColor3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, -1.0f);
-	glEnd();
-	glEnable(GL_LIGHTING);
-	glEnable(GL_DEPTH_TEST);
+	FixedFunctionOrigin(true);
 }
 
 #include <iostream> // TODO: REMOVE
@@ -153,9 +127,9 @@ void SampleApplication::OnRender() {
 void SampleApplication::OnUpdate(float deltaTime) {
 	GLWindow::OnUpdate(deltaTime);
 
-	if (KeyDown(KEY_LEFT_ARROW)) {
+	if (KeyDown(KEY_DOWN_ARROW)) {
 		todoRemoveY += -5.0f * deltaTime;
-	} else if (KeyDown(KEY_RIGHT_ARROW)) {
+	} else if (KeyDown(KEY_UP_ARROW)) {
 		todoRemoveY += 5.0f * deltaTime;
 	}
 	
