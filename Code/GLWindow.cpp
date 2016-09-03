@@ -148,8 +148,9 @@ bool GLWindow::MouseButonDown(int button) {
 }
 
 bool GLWindow::KeyDown(int keyCode) {
+	keyCode = KeyIndex(keyCode);
 	if (keyCode < 0 || keyCode >= 256) {
 		return false;
 	}
-	return keyboardState[KeyIndex(keyCode)];
+	return keyboardState[keyCode];
 }

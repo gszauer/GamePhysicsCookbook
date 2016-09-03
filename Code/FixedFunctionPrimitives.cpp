@@ -239,8 +239,20 @@ void FixedFunctionTorus(float outerRaidus, float innerRadius) {
 	FixedFunctionTorus(15, 10, majorRad, minorRad);
 }
 
+void FixedFunctionTorus() {
+	FixedFunctionTorus(1.0f, 0.5f);
+}
+
 void FixedFunctionCylinder(float height, float radius) {
 	FixedFunctionCylinder(15, height, radius);
+}
+
+void FixedFunctionCylinder(float height) {
+	FixedFunctionCylinder(15, height, 1.0f);
+}
+
+void FixedFunctionCylinder() {
+	FixedFunctionCylinder(15, 1.0f, 1.0f);
 }
 
 void FixedFunctionCylinder(int slices, float height, float radius) {
@@ -352,3 +364,34 @@ void FixedFunctionTorus(int numc, int numt) {
 		glEnd();
 	}
 } */
+
+void FixedFunctionPlane(float size, int subdivs) {
+	glBegin(GL_TRIANGLES);
+	glNormal3f(0.0f, 1.0f, 0.0f);
+
+	float slice = size / (float)subdivs;
+
+	for (int i = 0; i < subdivs; ++i) {
+		for (int j = 0; j < subdivs; ++j) {
+			float x = ((float)i * slice) - (size * 0.5f);
+			float z = ((float)j * slice) - (size * 0.5f);
+
+			glVertex3f(x,         0.0f, z);
+			glVertex3f(x + slice, 0.0f, z);
+			glVertex3f(x,         0.0f, z + slice);
+			glVertex3f(x + slice, 0.0f, z);
+			glVertex3f(x + slice, 0.0f, z + slice);
+			glVertex3f(x,         0.0f, z + slice);
+		}
+	}
+
+	glEnd();
+}
+
+void FixedFunctionPlane(float size) {
+	FixedFunctionPlane(size, 10);
+}
+
+void FixedFunctionPlane() {
+	FixedFunctionPlane(10, 10);
+}

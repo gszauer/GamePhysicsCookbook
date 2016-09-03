@@ -14,17 +14,22 @@ void FixedFunctionCube(float extentsX, float extentsY, float extentsZ);
 // http://www.povray.org/documentation/images/reference/mimxrtor.png
 void FixedFunctionTorus(int majorSegments, int minorSegments, float majorRadius, float minorRadius);
 void FixedFunctionCylinder(int slices, float height, float radius);
-
+void FixedFunctionPlane(float size, int subdivs);
 
 // Conveniance function
 void FixedFunctionTorus(float outerRaidus, float innerRadius);
+void FixedFunctionCylinder(float height, float radius);
+void FixedFunctionCylinder(float height);
+void FixedFunctionPlane(float size);
+void FixedFunctionTorus();
 void FixedFunctionSphere();
 void FixedFunctionCube();
-void FixedFunctionCylinder(float height, float radius);
+void FixedFunctionCylinder();
+void FixedFunctionPlane();
 
+// Helper functions
 void FixedFunctionSubdivTetrahedron(float* a, float* b, float* c, int div, float r);
 
 // TODO: Cone
-// TODO Plane
 
 #endif
