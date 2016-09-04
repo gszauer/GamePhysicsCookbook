@@ -1,3 +1,9 @@
+#if _DEBUG
+	#define _CRTDBG_MAP_ALLOC
+	#include <stdlib.h>
+	#include <crtdbg.h>
+#endif
+
 // Undef this if you don't want to use GLEW. 
 // Only GL 1.1 will be usable without it!
 // #define USE_GLEW - DEFINED IN PROJECT!
@@ -25,6 +31,8 @@
 #include <string>
 #include <iostream>
 #include <cstdio>
+#include <conio.h>
+
 #include "IWindow.h"
 #include "matrices.h"
 
@@ -34,14 +42,14 @@
 // #pragma comment(linker,"/SUBSYSTEM:CONSOLE")
 // #pragma comment(linker,"/SUBSYSTEM:WINDOWS")
 
-std::wstring MAIN_WIN32_WINDOW_NAME;
 RECT windowRect;
 RECT clientRect;
 RECT borderRect;
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine, int iCmdShow);
-bool CheckIfAlreadyRunning();
+bool CheckIfAlreadyRunning(IWindow* pWindowInstance);
+HWND MakeNewWindow(IWindow* pWindowInstance, HINSTANCE hInstance, LPSTR szCmdLine);
 HGLRC OpenGLBindContext(HDC hdc);
 void OpenGLUnbindContext(HWND hwnd, HDC hdc, HGLRC hglrc);
 void UpdateFullscreen(IWindow* pWindowInstance, HWND hwnd, HDC hdc);
@@ -52,8 +60,6 @@ double GetMilliseconds();
 #define NO_RESIZE_STYLE (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX)
 #define NORMAL_STYLE (WS_VISIBLE | WS_OVERLAPPEDWINDOW)
 
-// TODO: How do i turn on CRT memleak detection?!?!?!
-
 // https://www.opengl.org/archives/resources/code/samples/win32_tutorial/
 // https://msdn.microsoft.com/en-us/library/bb384843.aspx?f=255&MSPPError=-2147217396
 // https://gist.github.com/gszauer/5718416
@@ -62,33 +68,45 @@ double GetMilliseconds();
 int main(int argc, const char** argv) {
 	IWindow* pWindowInstance = IWindow::GetInstance();
 
-	pWindowInstance->GetAndResetTitleDirtyFlag();
-	std::string title(pWindowInstance->GetTitle());
-	MAIN_WIN32_WINDOW_NAME = std::wstring(title.begin(), title.end());
-
-	if (CheckIfAlreadyRunning()) {
+	if (pWindowInstance->GetQuitFlag()) {
+		std::cout << "Something went wrong, could not initialize!\n";
+		getch();
+	}
+	else if (CheckIfAlreadyRunning(pWindowInstance)) {
 		std::cout << "Error, only one instance of application is allowed to run\n";
+		getch();
 	}
 	else {
 		WinMain(GetModuleHandle(NULL), NULL, GetCommandLineA(), SW_SHOWDEFAULT);
 	}
-
 	return 0;
+}
+
+HWND MakeNewWindow(IWindow* pWindowInstance, HINSTANCE hInstance, LPSTR szCmdLine) {
+	std::wstring MAIN_WIN32_WINDOW_NAME;
+	pWindowInstance->GetAndResetTitleDirtyFlag();
+	std::string title(pWindowInstance->GetTitle());
+	MAIN_WIN32_WINDOW_NAME = std::wstring(title.begin(), title.end());
+
+	return CreateWindowEx(0, MAIN_WIN_32_WINDOW_CLASS, MAIN_WIN32_WINDOW_NAME.c_str(),
+#ifdef ENABLE_RESIZE
+		NORMAL_STYLE
+#else
+		NO_RESIZE_STYLE
+#endif
+		, windowRect.left, windowRect.top,
+		windowRect.right - windowRect.left, windowRect.bottom - windowRect.top,
+		NULL, NULL, hInstance, szCmdLine);
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine, int iCmdShow) {
 	IWindow* pWindowInstance = IWindow::GetInstance();
-	{ // In case we start with a non-console linker
-		pWindowInstance->GetAndResetTitleDirtyFlag();
-		std::string title(pWindowInstance->GetTitle());
-		MAIN_WIN32_WINDOW_NAME = std::wstring(title.begin(), title.end());
 
-		if (CheckIfAlreadyRunning()) {
-			MessageBox(NULL, L"Only one instance of application is allowed to run", NULL, NULL);
-			return FALSE;
-		}
+	if (CheckIfAlreadyRunning(pWindowInstance)) {
+		MessageBox(NULL, L"Only one instance of application is allowed to run", NULL, NULL);
+		return FALSE;
 	}
-
+	
 	int width = pWindowInstance->GetWidth();
 	int height = pWindowInstance->GetHeight();
 
@@ -122,15 +140,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 #endif
 		, FALSE, 0);
 
-	HWND hwnd = CreateWindowEx(0, MAIN_WIN_32_WINDOW_CLASS, MAIN_WIN32_WINDOW_NAME.c_str(),
-#ifdef ENABLE_RESIZE
-		NORMAL_STYLE
-#else
-		NO_RESIZE_STYLE
-#endif
-		, windowRect.left, windowRect.top,
-		windowRect.right - windowRect.left, windowRect.bottom - windowRect.top, 
-		NULL, NULL, hInstance, szCmdLine);
+	HWND hwnd = MakeNewWindow(pWindowInstance, hInstance, szCmdLine);
 
 	HDC hdc = GetDC(hwnd);
 	HGLRC hglrc = OpenGLBindContext(hdc);
@@ -245,6 +255,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 
 		// Potentially change title
 		if (pWindowInstance->GetAndResetTitleDirtyFlag()) {
+			std::wstring MAIN_WIN32_WINDOW_NAME;
 			std::string title(pWindowInstance->GetTitle());
 			MAIN_WIN32_WINDOW_NAME = std::wstring(title.begin(), title.end());
 			SetWindowText(hwnd, MAIN_WIN32_WINDOW_NAME.c_str());
@@ -295,6 +306,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 
 	pWindowInstance->OnShutdown();
 	OpenGLUnbindContext(hwnd, hdc, hglrc);
+
+	
+	CleanupMemory(pWindowInstance);
+
+#if _DEBUG
+	_CrtDumpMemoryLeaks();
+#endif
 
 	return (int)msg.wParam;
 }
@@ -378,7 +396,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
 	return DefWindowProc(hwnd, iMsg, wParam, lParam);
 }
 
-bool CheckIfAlreadyRunning() {
+bool CheckIfAlreadyRunning(IWindow* pWindowInstance) {
+	std::wstring MAIN_WIN32_WINDOW_NAME;
+	std::string title(pWindowInstance->GetTitle());
+	MAIN_WIN32_WINDOW_NAME = std::wstring(title.begin(), title.end());
+
 	HWND hWnd = FindWindow(MAIN_WIN_32_WINDOW_CLASS, MAIN_WIN32_WINDOW_NAME.c_str());
 
 	if (hWnd) {

@@ -24,6 +24,6 @@ public:
 	virtual void OnUpdate(float deltaTime);
 };
 
-static SampleApplication debugInstance("Sample Application", 800, 600);
+// Static instance defined in .cpp file!
 
 #endif 

@@ -11,7 +11,6 @@
 
 #include "GLWindow.h"
 
-
 #define Clamp01(x) \
 	(x < 0.0f? 0.0f : (x > 1.0f? 1.0f : x))
 

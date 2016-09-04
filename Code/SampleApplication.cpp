@@ -12,7 +12,11 @@
 #include "SampleApplication.h"
 #include"FixedFunctionPrimitives.h"
 
+static SampleApplication debugInstance("Sample Application", 800, 600);
+
 void SampleApplication::OnInitialize() {
+	//malloc(2); // To test out leak detector
+
 	GLWindow::OnInitialize();
 	matView = LookAt(vec3(cameraPos.x, cameraPos.y, -10.0f), vec3(), vec3(0.0f, 1.0f, 0.0f));
 	//glDisable(GL_CULL_FACE);
@@ -80,11 +84,8 @@ void SampleApplication::OnRender() {
 	glRotatef(sphereRotation.z, 0.0f, 0.0f, 1.0f);
 	// Scale First
 	glScalef(sphereScale, sphereScale, sphereScale);
-	//FixedFunctionSphere(2, 0.5f); TODO: Uncomment
-	FixedFunctionCone(); // TODO: Delete
+	FixedFunctionSphere(2, 0.5f);
 	glPopMatrix();
-
-	FixedFunctionCone();
 
 
 	/*

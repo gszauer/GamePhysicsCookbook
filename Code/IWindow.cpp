@@ -59,10 +59,10 @@ void IWindow::SetTitle(const char* title) {
 		free(m_szTitle);
 	}
 
-	int len = strlen(title) + 1;
-	m_szTitle = (char*)malloc(sizeof(char) * len);
+	int len = strlen(title);
+	m_szTitle = (char*)malloc(sizeof(char) * len + 1);
 	strcpy(m_szTitle, title);
-	m_szTitle[len - 1] = '\0';
+	m_szTitle[len] = '\0';
 
 	m_bTitleDirty = true;
 }
@@ -77,13 +77,29 @@ const char* IWindow::GetTitle() {
 	return m_szTitle;
 }
 
-IWindow::~IWindow() {
-	free(m_szTitle);
-	free(m_vGenericIntegerValues);
-	for (int i = 0; i < m_nGenericIntegerCount; ++i) {
-		free(m_vGenericIntegerNames[i]);
+void CleanupMemory(IWindow* window) {
+	if (window->m_szTitle != 0) {
+		free(window->m_szTitle);
 	}
-	free(m_vGenericIntegerNames);
+	window->m_szTitle = 0;
+
+	if (window->m_vGenericIntegerValues != 0) {
+		free(window->m_vGenericIntegerValues);
+	}
+	window->m_vGenericIntegerValues = 0;
+
+	if (window->m_vGenericIntegerNames != 0) {
+		for (int i = 0; i < window->m_nGenericIntegerCount; ++i) {
+			free(window->m_vGenericIntegerNames[i]);
+			window->m_vGenericIntegerNames[i] = 0;
+		}
+		free(window->m_vGenericIntegerNames);
+	}
+	window->m_vGenericIntegerNames = 0;
+}
+
+IWindow::~IWindow() {
+	CleanupMemory(this);
 }
 
 void IWindow::Close() {
@@ -127,6 +143,10 @@ void IWindow::InitGenericIntegers() {
 }
 
 void IWindow::SetInt(const char* name, int value) {
+	if (m_vGenericIntegerNames == 0) {
+		InitGenericIntegers();
+	}
+
 	// Update
 	for (int i = 0; i < m_nGenericIntegerCount; ++i) {
 		if (strcmp(m_vGenericIntegerNames[i], name) == 0) {
@@ -151,6 +171,9 @@ void IWindow::SetInt(const char* name, int value) {
 		memcpy(m_vGenericIntegerNames, oldIntegerNames, sizeof(char*) * m_nGenericIntegerLength);
 
 		free(oldIntegerValues);
+		for (int i = 0; i < m_nGenericIntegerCount; ++i) {
+			free(oldIntegerNames[i]);
+		}
 		free(oldIntegerNames);
 		m_nGenericIntegerLength += I_WINDOW_CPP_GENERIC_EXPAND_BY;
 	}
@@ -165,6 +188,10 @@ void IWindow::SetInt(const char* name, int value) {
 }
 
 int IWindow::GetInt(const char* name, int default) {
+	if (m_vGenericIntegerNames == 0) {
+		return default;
+	}
+
 	for (int i = 0; i < m_nGenericIntegerCount; ++i) {
 		if (strcmp(m_vGenericIntegerNames[i], name) == 0) {
 			return m_vGenericIntegerValues[i];
@@ -174,6 +201,10 @@ int IWindow::GetInt(const char* name, int default) {
 }
 
 bool IWindow::HasInt(const char* name) {
+	if (m_vGenericIntegerNames == 0) {
+		return false;
+	}
+
 	for (int i = 0; i < m_nGenericIntegerCount; ++i) {
 		if (strcmp(m_vGenericIntegerNames[i], name) == 0) {
 			return true;

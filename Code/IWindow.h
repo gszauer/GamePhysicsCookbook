@@ -2,6 +2,7 @@
 #define _H_I_WINDOW_
 
 class IWindow {
+	friend void CleanupMemory(IWindow* window);
 private:
 	IWindow(const IWindow&) {}
 	IWindow& operator=(const IWindow&) {}
@@ -72,6 +73,7 @@ public:
 	bool HasInt(const char* name);
 };
 
+void CleanupMemory(IWindow* window);
 int KeyIndex(int keyCode);
 
 #define MOUSE_LEFT		1
