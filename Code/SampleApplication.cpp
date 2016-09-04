@@ -15,7 +15,7 @@
 void SampleApplication::OnInitialize() {
 	GLWindow::OnInitialize();
 	matView = LookAt(vec3(cameraPos.x, cameraPos.y, -10.0f), vec3(), vec3(0.0f, 1.0f, 0.0f));
-	//glDisable(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
 	//glDisable(GL_DEPTH_TEST);
 
 	glPointSize(3.0f);

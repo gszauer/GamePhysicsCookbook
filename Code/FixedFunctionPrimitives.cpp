@@ -453,37 +453,31 @@ void FixedFunctionOrigin() {
 	FixedFunctionOrigin(false, false);
 }
 
-void drawtriangle(float *v1, float *v2, float *v3)
-{
-	vec3 vert1(v1[0], v1[1], v1[2]);
-	vec3 vert2(v2[0], v2[1], v2[2]);
-	vec3 vert3(v3[0], v3[1], v3[2]);
-
-	vec3 edge1 = vert1 - vert2;
-	vec3 edge2 = vert1 - vert3;
-
-	vec3 norm = Normalized(Cross(edge1, edge2));
-
-	glBegin(GL_TRIANGLES);
-	glNormal3f(norm.x, norm.y, norm.z);
-	glVertex3fv(v1);
-	glVertex3fv(v2);
-	glVertex3fv(v3);
-	glEnd();
-}
-
-
 void FixedFunctionSubdivCone(float *v1, float *v2, int subdiv, int height, float radius) {
 	float v0[3] = { 0, 0, 0 };
 
 	if (subdiv == 0) {
 		// Bottom cover of the cone
-		drawtriangle(v2, v0, v1);
+		glNormal3f(0.0f, -1.0f, 0.0f);
+		glVertex3fv(v2);
+		glVertex3fv(v0);
+		glVertex3fv(v1);
 
 		v0[1] = height; // height of the cone, the tip on y axis
 		// Side cover of the cone
-		drawtriangle(v1, v0, v2); 
-
+		float e1[] = { v1[0] - v0[0], v1[1] - v0[1], v1[2] - v0[2] };
+		float e2[] = { v1[0] - v2[0], v1[1] - v2[1], v1[2] - v2[2] };
+		float n[] = {
+			e1[1] * e2[2] - e1[2] * e2[1],
+			e1[2] * e2[0] - e1[0] * e2[2],
+			e1[0] * e2[1] - e1[1] * e2[0],
+		};
+		float d = 1.0f / sqrtf(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]);
+		n[0] *= d; n[1] *= d; n[2] *= d;
+		glNormal3fv(n);
+		glVertex3fv(v1);
+		glVertex3fv(v0);
+		glVertex3fv(v2);
 		return;
 	}
 
@@ -513,10 +507,12 @@ void FixedFunctionCone(int subdiv, int height, float radius) {
 		{ -radius, 0.0, 0.0 }, { 0.0, 0.0, -radius }
 	};
 
+	glBegin(GL_TRIANGLES);
 	FixedFunctionSubdivCone(vdata[0], vdata[1], subdiv, height, radius);
 	FixedFunctionSubdivCone(vdata[1], vdata[2], subdiv, height, radius);
 	FixedFunctionSubdivCone(vdata[2], vdata[3], subdiv, height, radius);
 	FixedFunctionSubdivCone(vdata[3], vdata[0], subdiv, height, radius);
+	glEnd();
 }
 
 void FixedFunctionCone(int height, float radius) {
