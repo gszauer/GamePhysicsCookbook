@@ -19,7 +19,7 @@ void FixedFunctionTorus(int majorSegments, int minorSegments, float majorRadius,
 void FixedFunctionCylinder(int slices, float height, float radius);
 void FixedFunctionPlane(float size, int subdivs);
 void FixedFunctionOrigin(bool depthTest, bool twoSided);
-void FixedFunctionCone(int subdiv, int height, float radius);
+void FixedFunctionCone(int subdiv, float height, float radius);
 
 // Conveniance function
 void FixedFunctionTorus(float outerRaidus, float innerRadius);
@@ -27,7 +27,7 @@ void FixedFunctionCylinder(float height, float radius);
 void FixedFunctionCylinder(float height);
 void FixedFunctionPlane(float size);
 void FixedFunctionOrigin(bool depthTest);
-void FixedFunctionCone(int height, float radius);
+void FixedFunctionCone(float height, float radius);
 void FixedFunctionCone();
 void FixedFunctionOrigin();
 void FixedFunctionTorus();
@@ -38,6 +38,6 @@ void FixedFunctionPlane();
 
 // Helper functions
 void FixedFunctionSubdivTetrahedron(float* a, float* b, float* c, int div, float r);
-void FixedFunctionSubdivCone(float *v1, float *v2, int subdiv, int height, float radius);
+void FixedFunctionSubdivCone(float *v1, float *v2, int subdiv, float height, float radius);
 
 #endif

@@ -453,31 +453,36 @@ void FixedFunctionOrigin() {
 	FixedFunctionOrigin(false, false);
 }
 
-void FixedFunctionSubdivCone(float *v1, float *v2, int subdiv, int height, float radius) {
+void FixedFunctionSubdivCone(float *v1, float *v2, int subdiv, float height, float radius) {
 	float v0[3] = { 0, 0, 0 };
 
 	if (subdiv == 0) {
 		// Bottom cover of the cone
 		glNormal3f(0.0f, -1.0f, 0.0f);
-		glVertex3fv(v2);
 		glVertex3fv(v0);
+		glVertex3fv(v2);
 		glVertex3fv(v1);
 
 		v0[1] = height; // height of the cone, the tip on y axis
 		// Side cover of the cone
-		float e1[] = { v1[0] - v0[0], v1[1] - v0[1], v1[2] - v0[2] };
-		float e2[] = { v1[0] - v2[0], v1[1] - v2[1], v1[2] - v2[2] };
+		float e1[] = { v0[0] - v1[0], v0[1] - v1[1], v0[2] - v1[2] };
+		float e2[] = { v0[0] - v2[0], v0[1] - v2[1], v0[2] - v2[2] };
 		float n[] = {
 			e1[1] * e2[2] - e1[2] * e2[1],
 			e1[2] * e2[0] - e1[0] * e2[2],
 			e1[0] * e2[1] - e1[1] * e2[0],
 		};
 		float d = 1.0f / sqrtf(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]);
-		n[0] *= d; n[1] *= d; n[2] *= d;
-		glNormal3fv(n);
-		glVertex3fv(v1);
-		glVertex3fv(v0);
-		glVertex3fv(v2);
+		
+		glNormal3f(n[0] * d, n[1] * d, n[2] * d);
+		glVertex3f(v0[0] * radius, v0[1] * radius, v0[2] * radius);
+		
+		glNormal3fv(v1);
+		glVertex3f(v1[0] * radius, v1[1] * radius, v1[2] * radius);
+		
+		glNormal3fv(v2);
+		glVertex3f(v2[0] * radius, v2[1] * radius, v2[2] * radius);
+
 		return;
 	}
 
@@ -490,10 +495,6 @@ void FixedFunctionSubdivCone(float *v1, float *v2, int subdiv, int height, float
 	// Normalize
 	float d = 1.0f / sqrtf(v12[0] * v12[0] + v12[1] * v12[1] + v12[2] * v12[2]);
 	v12[0] *= d; v12[1] *= d; v12[2] *= d;
-	// Adjust to radius
-	v12[0] *= radius;
-	v12[1] *= radius;
-	v12[2] *= radius;
 
 	FixedFunctionSubdivCone(v1, v12, subdiv - 1, height, radius);
 	FixedFunctionSubdivCone(v12, v2, subdiv - 1, height, radius);
@@ -501,10 +502,10 @@ void FixedFunctionSubdivCone(float *v1, float *v2, int subdiv, int height, float
 
 
 // Adapted from: http://cs.gmu.edu/~jchen/graphics/book/examples/2.5.cone.c
-void FixedFunctionCone(int subdiv, int height, float radius) {
+void FixedFunctionCone(int subdiv, float height, float radius) {
 	static float vdata[4][3] = {
-		{  radius, 0.0, 0.0 }, { 0.0, 0.0,  radius },
-		{ -radius, 0.0, 0.0 }, { 0.0, 0.0, -radius }
+		{  1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f,  1.0f },
+		{ -1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }
 	};
 
 	glBegin(GL_TRIANGLES);
@@ -515,10 +516,10 @@ void FixedFunctionCone(int subdiv, int height, float radius) {
 	glEnd();
 }
 
-void FixedFunctionCone(int height, float radius) {
-	FixedFunctionCone(4, height, radius);
+void FixedFunctionCone(float height, float radius) {
+	FixedFunctionCone(3, height, radius);
 }
 
 void FixedFunctionCone() {
-	FixedFunctionCone(4, 1, 1.0f);
+	FixedFunctionCone(3, 1.0f, 1.0f);
 }
