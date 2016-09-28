@@ -14,9 +14,22 @@
 
 static SampleApplication debugInstance("Sample Application", 800, 600);
 
-void SampleApplication::OnInitialize() {
-	//malloc(2); // To test out leak detector
+/* TODO: REMOVE THIS */
+#include <cstdlib>
+Point2D randomPoints[10];
+float random(float min, float max) {
+	// this  function assumes max > min, you may want 
+	// more robust error checking for a non-debug build
+	float random = ((float)rand()) / (float)RAND_MAX;
 
+	// generate (in your case) a float between 0 and (4.5-.78)
+	// then add .78, giving you a float between .78 and 4.5
+	float range = max - min;
+	return (random*range) + min;
+}
+// End TODO
+
+void SampleApplication::OnInitialize() {
 	GLWindow::OnInitialize();
 	matView = LookAt(vec3(cameraPos.x, cameraPos.y, -10.0f), vec3(), vec3(0.0f, 1.0f, 0.0f));
 	//glDisable(GL_CULL_FACE);
@@ -44,7 +57,14 @@ void SampleApplication::OnInitialize() {
 	sphereScale = 2.0f;
 
 	sphereRotation = cubeRotation;
+
+	for (int i = 0; i < 10; ++i) {
+		randomPoints[i].x = random(-3.0f, 3.0f);
+		randomPoints[i].y = random(-2.0f, 2.0f);
+	}
 }
+
+
 
 void SampleApplication::OnRender() {
 	GLWindow::OnRender();
@@ -58,6 +78,27 @@ void SampleApplication::OnRender() {
 	mousePos.y -= 5.8f;
 	mousePos.y *= -1.0f;*/
 
+	glDisable(GL_LIGHTING);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	for (int i = 0; i < 10; ++i) {
+		Render(randomPoints[i]);
+	}
+
+	glColor3f(1.0f, 0.0f, 0.0f);
+	Circle c = ContainingCircle(randomPoints, 10);
+	Render(c);
+	Render(c.position);
+
+	glColor3f(0.0f, 1.0f, 0.0f);
+	Circle c2 = ContainingCircleAlt(randomPoints, 10);
+	Render(c2);
+	Render(c2.position);
+
+	glColor3f(0.0f, 0.0f, 1.0f);
+	Rectangle2D r = ContainingRectangle(randomPoints, 10);
+	Render(r);
+
+	return;
 
 	/*
 	// TODO: Is this the correct transform order?
@@ -127,6 +168,13 @@ void SampleApplication::OnRender() {
 
 void SampleApplication::OnUpdate(float deltaTime) {
 	GLWindow::OnUpdate(deltaTime);
+
+	if (MouseButonDown(MOUSE_LEFT)) {
+		for (int i = 0; i < 10; ++i) {
+			randomPoints[i].x = random(-3.0f, 3.0f);
+			randomPoints[i].y = random(-2.0f, 2.0f);
+		}
+	}
 
 	if (KeyDown(KEY_DOWN_ARROW)) {
 		cameraPos.y += -5.0f * deltaTime;
