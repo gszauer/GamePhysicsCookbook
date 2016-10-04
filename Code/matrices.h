@@ -208,15 +208,21 @@ mat4 Translation(float x, float y, float z);
 mat4 Translation(const vec3& pos);
 vec3 GetTranslation(const mat4& mat);
 
+#ifndef NO_EXTRAS
+mat4 Translate(float x, float y, float z);
+mat4 Translate(const vec3& pos);
+mat4 FromMat3(const mat3& mat);
+#endif
+
 mat4 Scale(float x, float y, float z);
 mat4 Scale(const vec3& vec);
 vec3 GetScale(const mat4& mat);
 
-mat4 Rotation(float pitch, float yaw, float roll);
-mat3 Rotation3x3(float pitch, float yaw, float roll);
+mat4 Rotation(float pitch, float yaw, float roll); // X, Y, Z
+mat3 Rotation3x3(float pitch, float yaw, float roll); // X, Y, Z
 #ifndef NO_EXTRAS
 mat2 Rotation2x2(float angle);
-mat4 YawPitchRoll(float yaw, float pitch, float roll);
+mat4 YawPitchRoll(float yaw, float pitch, float roll); // Y, X, Z
 #endif
 
 mat4 XRotation(float angle);

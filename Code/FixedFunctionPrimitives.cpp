@@ -34,10 +34,77 @@ void Render(const Line2D& line) {
 	glEnd();
 }
 
+void Render(const Line& line) {
+	glBegin(GL_LINES);
+	glVertex3f(line.start.x, line.start.y, line.start.z);
+	glVertex3f(line.end.x, line.end.y, line.end.z);
+	glEnd();
+}
+
 void Render(const Point2D& point) {
 	glBegin(GL_POINTS);
 	glVertex3f(point.x, point.y, 0.0f);
 	glEnd();
+}
+
+void Render(const Point& point) {
+	glBegin(GL_POINTS);
+	glVertex3f(point.x, point.y, point.x);
+	glEnd();
+}
+
+void Render(const Ray& ray) {
+	// Bit of an ugly hack, just make a really long line
+	Line line;
+	line.start = ray.origin;
+	line.end = ray.origin + ray.direction * 50000.0f;
+	// And then render that line :(
+	glBegin(GL_LINES);
+	glVertex3f(line.start.x, line.start.y, line.start.z);
+	glVertex3f(line.end.x, line.end.y, line.end.z);
+	glEnd();
+	// At some point i'm going to fix this
+}
+
+void Render(const Sphere& sphere) {
+	glPushMatrix();
+
+	glTranslatef(sphere.position.x, sphere.position.y, sphere.position.z);
+	FixedFunctionSphere(2, sphere.radius);
+
+	glPopMatrix();
+}
+
+void Render(const OBB& obb) {
+	glPushMatrix();
+
+	mat4 scale = Scale(obb.size);
+	mat4 rotation = FromMat3(obb.orientation);
+	mat4 translation = Translation(obb.position);
+
+	// SRT: Scale First, Rotate Second, Translate Last
+	// orientation = roll * pitch * yaw;
+	mat4 transform = scale * rotation * translation;
+	
+	// Using GL pipe stuff:
+	// glTranslate(obb.position.x, obb.position.y, obb.position.z);
+	// Orientation = yaw * pitch * roll
+	// glRotate??? Probably do a matrix multiplication instead
+	// glScale(obb.size.x, obb.size.y, obb.size.z);
+
+	glMultMatrixf(transform.asArray);
+	FixedFunctionCube();
+
+	glPopMatrix();
+}
+
+void Render(const AABB& aabb) {
+	glPushMatrix();
+
+	glTranslatef(aabb.position.x, aabb.position.y, aabb.position.z);
+	FixedFunctionCube(aabb.size.x, aabb.size.y, aabb.size.z);
+
+	glPopMatrix();
 }
 
 void Render(const Rectangle2D& rect) {

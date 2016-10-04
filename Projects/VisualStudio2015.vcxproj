@@ -145,10 +145,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\PhysicsBookDraftCode\Physics\Geometry3D.h" />
-    <ClInclude Include="..\Code\Camera.h" />
     <ClInclude Include="..\Code\FixedFunctionPrimitives.h" />
     <ClInclude Include="..\Code\Geometry2D.h" />
     <ClInclude Include="..\Code\GLWindow.h" />
+    <ClInclude Include="..\Code\IMGUIWindow.h" />
     <ClInclude Include="..\Code\IWindow.h" />
     <ClInclude Include="..\Code\matrices.h" />
     <ClInclude Include="..\Code\SampleApplication.h" />
@@ -156,10 +156,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\PhysicsBookDraftCode\Physics\Geometry3D.cpp" />
-    <ClCompile Include="..\Code\Camera.cpp" />
     <ClCompile Include="..\Code\FixedFunctionPrimitives.cpp" />
     <ClCompile Include="..\Code\Geometry2D.cpp" />
     <ClCompile Include="..\Code\GLWindow.cpp" />
+    <ClCompile Include="..\Code\IMGUIWindow.cpp" />
     <ClCompile Include="..\Code\IWindow.cpp" />
     <ClCompile Include="..\Code\main-win32.cpp" />
     <ClCompile Include="..\Code\matrices.cpp" />

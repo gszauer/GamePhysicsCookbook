@@ -11,15 +11,15 @@ void Render(const Circle& circle);
 void Render(const Rectangle2D& rect); 
 void Render(const OrientedRectangle& rect);
 
-// 3D Geometry (TODO)
+// 3D Geometry
 void Render(const Point& point);
 void Render(const Line& line);
 void Render(const Ray& ray);
 void Render(const Sphere& sphere);
 void Render(const AABB& aabb);
 void Render(const OBB& obb);
-void Render(const Plane& plane);
-void Render(const Triangle& triangle);
+void Render(const Plane& plane); // TODO
+void Render(const Triangle& triangle); // TODO
 
 // Generic Primitives
 void FixedFunctionSphere(int numDivisions, float radius);

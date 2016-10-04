@@ -415,6 +415,44 @@ mat4 Translation(const vec3& pos) {
 	);
 }
 
+#ifndef NO_EXTRAS
+mat4 Translate(float x, float y, float z) {
+	return mat4(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		x, y, z, 1.0f
+	);
+}
+
+mat4 Translate(const vec3& pos) {
+	return mat4(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		pos.x, pos.y, pos.z, 1.0f
+	);
+}
+
+mat4 FromMat3(const mat3& mat) {
+	mat4 result;
+
+	result._11 = mat._11;
+	result._12 = mat._12;
+	result._13 = mat._13;
+
+	result._21 = mat._21;
+	result._22 = mat._22;
+	result._23 = mat._23;
+
+	result._31 = mat._31;
+	result._32 = mat._32;
+	result._33 = mat._33;
+
+	return result;
+}
+#endif
+
 vec3 GetTranslation(const mat4& mat) {
 	return vec3(mat._41, mat._42, mat._43);
 }
@@ -446,7 +484,7 @@ mat4 Rotation(float pitch, float yaw, float roll) {
 }
 
 mat3 Rotation3x3(float pitch, float yaw, float roll) {
-	return ZRotation3x3(yaw) * XRotation3x3(pitch) * YRotation3x3(yaw);
+	return ZRotation3x3(roll) * XRotation3x3(pitch) * YRotation3x3(yaw);
 }
 
 #ifndef NO_EXTRAS

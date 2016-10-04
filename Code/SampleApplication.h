@@ -6,11 +6,8 @@
 
 class SampleApplication : public GLWindow {
 protected:
-	vec3 cubeRotation;
-	float cubeScale;
-	float sphereScale;
-	vec3 sphereRotation;
 	vec2 cameraPos;
+	float cameraDist;
 public:
 	SampleApplication(const char* title, int width, int height) 
 		: GLWindow(title, width, height) {
@@ -22,6 +19,9 @@ public:
 	virtual void OnRender();
 	virtual void OnInitialize();
 	virtual void OnUpdate(float deltaTime);
+
+public:
+	float random(float min, float max);
 };
 
 // Static instance defined in .cpp file!
