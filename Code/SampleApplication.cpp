@@ -17,14 +17,22 @@ static SampleApplication debugInstance("Sample Application", 800, 600);
 
 
 // TODO: REMOVE
-Plane plane(vec3(0, 1, 0), 0);
-AABB aabbs[] = {
-	AABB(vec3(0, 0, 0), vec3(0.5, 0.5, 0.5)),
-	AABB(vec3(0, 2, 0), vec3(0.5, 0.5, 0.5)),
-	AABB(vec3(0, -2, 0), vec3(0.5, 0.5, 0.5)),
-	AABB(vec3(2, 0, 2), vec3(0.5, 0.5, 0.5)),
+//Sphere s(vec3(1.0f, 0.5f, 0.0f), 1.0f);
+OBB obb(vec3(1, 5, 0), vec3(1, 1, 1));
+float rX = 0.0f;
+float rY = 0.0f;
+float rZ = 0.0f;
+
+Ray rays[] = {
+	Ray(vec3(0.0f, -5.0f, 0.0f), vec3(1.0f, 0.0f, 0.0f)),
+	Ray(vec3(-0.1f, -5.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)),
+	Ray(vec3(0.0f, -5.0f, 0.0f), vec3(0.0f, 0.0f, 1.0f)),
+	Ray(vec3(1.0f, -5.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)),
+	Ray(vec3(1.1f, 0.6f, 0.0f), vec3(0.5f, 0.5f, 0.0f)),
+	Ray(vec3(3.0f, -3.0f, 0.0f), vec3(-0.5f, 0.5f, 0.0f)),
+	Ray(vec3(2.0f, -2.0f, 0.0f), vec3(-0.6f, 1.0, 0.0f)),
 };
-int numObjects = 4;
+int numObjects = 7;
 // END TODO
 
 float SampleApplication::random(float min, float max) {
@@ -63,20 +71,20 @@ void SampleApplication::OnInitialize() {
 void SampleApplication::OnRender() {
 	GLWindow::OnRender();
 
-	//Render(testOBB);
+	glColor3f(0.0f, 0.0f, 1.0f);
+	Render(obb);
 
-	glColor3f(1.0f, 0.0f, 0.0f);
-	//Render(plane);
-
-	
 	for (int i = 0; i < numObjects; ++i) {
-		if (AABBPlane(aabbs[i], plane)) {
+		glColor3f(1.0f, 0.0f, 0.0f);
+		rays[i].NormalizeDirection();
+		float t = Raycast(obb, rays[i]);
+		if (t > 0.0f) {
+			glColor3f(1.0f, 0.0f, 1.0f);
+			Point intersection = rays[i].origin + rays[i].direction *t;
+			Render(intersection);
 			glColor3f(0.0f, 1.0f, 0.0f);
 		}
-		else {
-			glColor3f(0.0f, 0.0f, 1.0f);
-		}
-		Render(aabbs[i]);
+		Render(rays[i]);
 	}
 
 	FixedFunctionOrigin(true, false);
@@ -84,6 +92,17 @@ void SampleApplication::OnRender() {
 
 void SampleApplication::OnUpdate(float deltaTime) {
 	GLWindow::OnUpdate(deltaTime);
+
+	rX += 60.0f * deltaTime;
+	rY += 30.0f * deltaTime;
+	rZ += 15.0f * deltaTime;
+
+	while (rX > 360.0f) rX -= 360.0f;
+	while (rY > 360.0f) rY -= 360.0f;
+	while (rZ > 360.0f) rZ -= 360.0f;
+
+	obb.orientation = Rotation3x3(rX, rY, rZ);
+
 
 	if (KeyDown(KEY_ONE)) {
 		cameraDist = -10.0f;

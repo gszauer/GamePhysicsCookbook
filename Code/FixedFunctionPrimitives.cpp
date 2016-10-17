@@ -49,7 +49,7 @@ void Render(const Point2D& point) {
 
 void Render(const Point& point) {
 	glBegin(GL_POINTS);
-	glVertex3f(point.x, point.y, point.x);
+	glVertex3f(point.x, point.y, point.z);
 	glEnd();
 }
 
