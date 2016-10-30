@@ -19,7 +19,7 @@ void Render(const Sphere& sphere);
 void Render(const AABB& aabb);
 void Render(const OBB& obb);
 void Render(const Plane& plane); // TODO
-void Render(const Triangle& triangle); // TODO
+void Render(const Triangle& triangle);
 
 // Generic Primitives
 void FixedFunctionSphere(int numDivisions, float radius);

@@ -17,6 +17,20 @@
 	#define M_PI 3.14159265358979323846f
 #endif
 
+void Render(const Triangle& triangle) {
+	glBegin(GL_TRIANGLES);
+
+	glVertex3f(triangle.a.x, triangle.a.y, triangle.a.z);
+	glVertex3f(triangle.b.x, triangle.b.y, triangle.b.z);
+	glVertex3f(triangle.c.x, triangle.c.y, triangle.c.z);
+
+	glVertex3f(triangle.a.x, triangle.a.y, triangle.a.z);
+	glVertex3f(triangle.c.x, triangle.c.y, triangle.c.z);
+	glVertex3f(triangle.b.x, triangle.b.y, triangle.b.z);
+
+	glEnd();
+}
+
 void Render(const Circle& circle) {
 	glBegin(GL_LINE_LOOP);
 
