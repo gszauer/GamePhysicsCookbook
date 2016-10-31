@@ -17,6 +17,21 @@
 	#define M_PI 3.14159265358979323846f
 #endif
 
+void Render(const Mesh& mesh) {
+	glBegin(GL_TRIANGLES);
+
+	for (int i = 0; i < mesh.numTriangles; ++i) {
+		vec3 normal = Normalized(Cross(mesh.triangles[i].c - mesh.triangles[i].a, mesh.triangles[i].b - mesh.triangles[i].a));
+		glNormal3fv(normal.asArray);
+
+		glVertex3fv(mesh.triangles[i].a.asArray);
+		glVertex3fv(mesh.triangles[i].b.asArray);
+		glVertex3fv(mesh.triangles[i].c.asArray);
+	}
+
+	glEnd();
+}
+
 void Render(const Triangle& triangle) {
 	glBegin(GL_TRIANGLES);
 
@@ -135,6 +150,17 @@ void Render(const Rectangle2D& rect) {
 	glVertex3f(max[0], min[1], 0.0f);
 	glVertex3f(min[0], min[1], 0.0f);
 	glEnd();
+}
+
+void Render(const BVHNode& bvh) {
+	if (bvh.children == 0) {
+		Render(bvh.bounds);
+	}
+	else {
+		for (int i = 0; i < 8; ++i) {
+			Render(bvh.children[i]);
+		}
+	}
 }
 
 void Render(const OrientedRectangle& rect) {
@@ -348,7 +374,7 @@ void FixedFunctionCylinder(int slices, float height, float radius) {
 		double x = cos(angle);
 		double z = sin(angle);
 
-		float norm[] = { x, 0.0f, z };
+		float norm[] = { (float)x, 0.0f, (float)z };
 		float d = sqrtf(norm[0] * norm[0] + norm[1] * norm[1] + norm[2] * norm[2]);
 		norm[0] /= d; norm[1] /= d; norm[2] /= d;
 
@@ -356,8 +382,8 @@ void FixedFunctionCylinder(int slices, float height, float radius) {
 		z *= radius;
 
 		glNormal3f(norm[0], norm[1], norm[2]); 
-		glVertex3f(x, height, z);  
-		glVertex3f(x, -height, z);
+		glVertex3f((float)x, (float)height, (float)z);
+		glVertex3f((float)x, (float)(-height), (float)z);
 	}
 	glEnd();
 
@@ -368,7 +394,7 @@ void FixedFunctionCylinder(int slices, float height, float radius) {
 		double angle = twopi_slices * (float)i;
 		double x = cos(angle) * radius;
 		double z = sin(angle) * radius;
-		glVertex3f(x, height, z);
+		glVertex3f((float)x, (float)height, (float)z);
 	}
 	glEnd();
 
@@ -379,7 +405,7 @@ void FixedFunctionCylinder(int slices, float height, float radius) {
 		double angle = twopi_slices * (float)i;
 		double x = cos(angle) * radius;
 		double z = sin(angle) * radius;
-		glVertex3f(x, -height, z);
+		glVertex3f((float)x, (float)(-height), (float)z);
 	}
 	glEnd();
 }
@@ -480,8 +506,8 @@ void FixedFunctionPlane() {
 }
 
 void FixedFunctionOrigin(bool depthTest, bool twoSided) {
-	bool isLit = glIsEnabled(GL_LIGHTING);
-	bool depthOn = glIsEnabled(GL_DEPTH_TEST);
+	bool isLit = glIsEnabled(GL_LIGHTING) == GL_TRUE;
+	bool depthOn = glIsEnabled(GL_DEPTH_TEST) == GL_TRUE;
 
 	if (isLit) {
 		glDisable(GL_LIGHTING);

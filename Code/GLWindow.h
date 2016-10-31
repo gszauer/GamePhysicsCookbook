@@ -4,6 +4,11 @@
 #include "IWindow.h"
 #include "matrices.h"
 
+// TODO: Re-Design whole system to be OpenGL 2.1 specific!
+// This will eliminate GLEW as a dependency and make porting
+// to other platforms MUCH easyer. Should also help with
+// IMGUI window implementation!
+
 class GLWindow : public IWindow {
 protected:
 	float m_nFOV;

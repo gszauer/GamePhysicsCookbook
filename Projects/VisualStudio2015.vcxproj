@@ -145,6 +145,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\PhysicsBookDraftCode\Physics\Geometry3D.h" />
+    <ClInclude Include="..\..\PhysicsBookDraftCode\Physics\ObjLoader.h" />
+    <ClInclude Include="..\..\PhysicsBookDraftCode\Physics\tiny_obj_loader.h" />
     <ClInclude Include="..\Code\FixedFunctionPrimitives.h" />
     <ClInclude Include="..\Code\Geometry2D.h" />
     <ClInclude Include="..\Code\GLWindow.h" />
@@ -156,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\PhysicsBookDraftCode\Physics\Geometry3D.cpp" />
+    <ClCompile Include="..\..\PhysicsBookDraftCode\Physics\ObjLoader.cpp" />
     <ClCompile Include="..\Code\FixedFunctionPrimitives.cpp" />
     <ClCompile Include="..\Code\Geometry2D.cpp" />
     <ClCompile Include="..\Code\GLWindow.cpp" />

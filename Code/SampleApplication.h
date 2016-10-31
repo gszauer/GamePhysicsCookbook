@@ -19,6 +19,7 @@ public:
 	virtual void OnRender();
 	virtual void OnInitialize();
 	virtual void OnUpdate(float deltaTime);
+	virtual void OnShutdown();
 
 public:
 	float random(float min, float max);

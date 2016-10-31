@@ -58,7 +58,7 @@ typedef struct BoundingShape {
 	inline BoundingShape() :
 		numCircles(0), circles(0),
 		numRectangles(0), rectangles(0) { }
-};
+} BoundingShape;
 
 typedef struct Interval2D {
 	float min;

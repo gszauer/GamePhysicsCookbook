@@ -2,7 +2,8 @@
 #define _H_FIXED_FUNCTION_PRIMITIVES_
 
 #include "Geometry2D.h"
-#include "C:\Code\PhysicsBookDraftCode\Physics\Geometry3D.h"
+#include "../../PhysicsBookDraftCode/Physics/Geometry3D.h"
+#include "../../PhysicsBookDraftCode/Physics/ObjLoader.h"
 
 // 2D Geometry
 void Render(const Point2D& point); 
@@ -10,6 +11,7 @@ void Render(const Line2D& line);
 void Render(const Circle& circle);
 void Render(const Rectangle2D& rect); 
 void Render(const OrientedRectangle& rect);
+void Render(const BVHNode& bvh);
 
 // 3D Geometry
 void Render(const Point& point);
@@ -20,6 +22,7 @@ void Render(const AABB& aabb);
 void Render(const OBB& obb);
 void Render(const Plane& plane); // TODO
 void Render(const Triangle& triangle);
+void Render(const Mesh& mesh);
 
 // Generic Primitives
 void FixedFunctionSphere(int numDivisions, float radius);

@@ -19,34 +19,9 @@ static SampleApplication debugInstance("Sample Application", 800, 600);
 // TODO: REMOVE
 mat4 perspView;
 #include <iostream>
-Triangle testTri(Point(-1.0f, 1.0f, 0.0f), Point(1.0f, 1.0f, 0.0f), Point(0.0f, -1.0f, 0.0f));
-Point rando(0.0f, 0.0f, 0.0f);
-bool running = false;
-//Sphere s(vec3(1.0f, 0.5f, 0.0f), 1.0f);
-OBB obb(vec3(1, 5, 0), vec3(1, 1, 1));
-float rX = 0.0f;
-float rY = 0.0f;
-float rZ = 0.0f;
 
-/*Ray rays[] = {
-	Ray(vec3(0.0f, -5.0f, 0.0f), vec3(1.0f, 0.0f, 0.0f)),
-	Ray(vec3(-0.1f, -5.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)),
-	Ray(vec3(0.0f, -5.0f, 0.0f), vec3(0.0f, 0.0f, 1.0f)),
-	Ray(vec3(1.0f, -5.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)),
-	Ray(vec3(1.1f, 0.6f, 0.0f), vec3(0.5f, 0.5f, 0.0f)),
-	Ray(vec3(3.0f, -3.0f, 0.0f), vec3(-0.5f, 0.5f, 0.0f)),
-	Ray(vec3(2.0f, -2.0f, 0.0f), vec3(-0.6f, 1.0, 0.0f)),
-};*/
-Line lines[]{
-	Line(vec3(0.0f, -5.0f, 0.0f), vec3(10.0f, -5.0f, 0.0f)),
-	Line(vec3(-0.1f, -5.0f, 0.0f), vec3(-0.1f, 10.0f, 0.0f)),
-	Line(vec3(0.0f, -5.0f, 0.0f), vec3(0.0f, -5.0f, 10.0f)),
-	Line(vec3(1.0f, -5.0f, 0.0f), vec3(1.0f, 10.0f, 0.0f)),
-	Line(vec3(1.1f, 0.6f, 0.0f), vec3(10.0f, 10.0f, 0.0f)),
-	Line(vec3(3.0f, -3.0f, 0.0f), vec3(-5.0f, 5.0f, 0.0f)),
-	Line(vec3(2.0f, -2.0f, 0.0f), vec3(-6.0f, 10.0, 0.0f)),
-};
-int numObjects = 7;
+//Triangle triangle(Point(-1.0f, 5.0f, 0.0f), Point(2.0f, 2.0f, -3.0f), Point(5.0f, 5.0f, 0.0f));
+Mesh meshObject;
 // END TODO
 
 float SampleApplication::random(float min, float max) {
@@ -71,7 +46,7 @@ void SampleApplication::OnInitialize() {
 	glPointSize(3.0f);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	//glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 
 	float val[] = { 0.5f, 1.0f, -1.5f, 0.0f };
@@ -83,67 +58,34 @@ void SampleApplication::OnInitialize() {
 	glLightfv(GL_LIGHT0, GL_SPECULAR, val);
 
 	perspView = GetView();
+	LoadMesh("suzane.obj", &meshObject);
+	AccelerateMesh(meshObject);
+}
+
+void SampleApplication::OnShutdown() {
+	FreeMesh(&meshObject);
+	FreeBVHNode(meshObject.accelerator);
+	delete meshObject.accelerator;
 }
 
 void SampleApplication::OnRender() {
 	GLWindow::OnRender();
 
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glColor3f(0.0f, 0.0f, 1.0f);
-	Render(testTri);
+	Render(meshObject);
+
 	glColor3f(1.0f, 0.0f, 0.0f);
-	Render(rando);
-
-	//FixedFunctionOrigin(true, false);
-
-
-	return;
-
-	glColor3f(0.0f, 0.0f, 1.0f);
-	Render(obb);
-
-	for (int i = 0; i < numObjects; ++i) {
-		glColor3f(1.0f, 0.0f, 0.0f);
-		float t = Linetest(obb, lines[i]);
-		if (t > 0.0f) {
-			glColor3f(1.0f, 0.0f, 1.0f);
-			/*Point intersection = rays[i].origin + rays[i].direction *t;
-			Render(intersection);
-			glColor3f(0.0f, 1.0f, 0.0f);*/
-		}
-		Render(lines[i]);
-	}
+	glDisable(GL_LIGHTING);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	Render(*meshObject.accelerator);
+	glEnable(GL_LIGHTING);
 
 	FixedFunctionOrigin(true, false);
 }
 
 void SampleApplication::OnUpdate(float deltaTime) {
 	GLWindow::OnUpdate(deltaTime);
-
-	
-	if (running) {
-		rando = Point(random(-5.0f, 5.0f), random(-5.0f, 5.0f), random(-1.0f, -1.5f));
-		rando.z = 0.0f;
-	}
-	else if (KeyDown(KEY_SPACE)) {
-		running = true;
-		rando = Point(random(-5.0f, 5.0f), random(-5.0f, 5.0f), random(-5.0f, 5.0f));
-		std::cout << "Running\n";
-	}
-	if (PointInTriangle(rando, testTri) && running) {
-		std::cout << "Point: " << rando << " is in triangle!\n";
-		running = false;
-	}
-
-	rX += 60.0f * deltaTime;
-	rY += 30.0f * deltaTime;
-	rZ += 15.0f * deltaTime;
-
-	while (rX > 360.0f) rX -= 360.0f;
-	while (rY > 360.0f) rY -= 360.0f;
-	while (rZ > 360.0f) rZ -= 360.0f;
-
-	obb.orientation = Rotation3x3(rX, rY, rZ);
-
 
 	if (KeyDown(KEY_ONE)) {
 		cameraDist = -10.0f;
