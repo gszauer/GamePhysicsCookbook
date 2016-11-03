@@ -25,21 +25,21 @@ Mesh meshObject;
 // END TODO
 
 float SampleApplication::random(float min, float max) {
-	// this  function assumes max > min, you may want 
-	// more robust error checking for a non-debug build
-	float random = ((float)rand()) / (float)RAND_MAX;
+// this  function assumes max > min, you may want 
+// more robust error checking for a non-debug build
+float random = ((float)rand()) / (float)RAND_MAX;
 
-	// generate (in your case) a float between 0 and (4.5-.78)
-	// then add .78, giving you a float between .78 and 4.5
-	float range = max - min;
-	return (random*range) + min;
+// generate (in your case) a float between 0 and (4.5-.78)
+// then add .78, giving you a float between .78 and 4.5
+float range = max - min;
+return (random*range) + min;
 }
 
 void SampleApplication::OnInitialize() {
 	GLWindow::OnInitialize();
 	cameraDist = -10.0f;
 	matView = LookAt(vec3(cameraPos.x, cameraPos.y, cameraDist), vec3(), vec3(0.0f, 1.0f, 0.0f));
-	//glDisable(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
 	//glDisable(GL_DEPTH_TEST);
 	glEnable(GL_DEPTH_TEST);
 
@@ -60,6 +60,8 @@ void SampleApplication::OnInitialize() {
 	perspView = GetView();
 	LoadMesh("suzane.obj", &meshObject);
 	AccelerateMesh(meshObject);
+
+	SetClearColor(1, 1, 1);
 }
 
 void SampleApplication::OnShutdown() {
@@ -73,7 +75,7 @@ void SampleApplication::OnRender() {
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glColor3f(0.0f, 0.0f, 1.0f);
-	Render(meshObject);
+	//Render(meshObject);
 
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glDisable(GL_LIGHTING);
@@ -81,7 +83,7 @@ void SampleApplication::OnRender() {
 	Render(*meshObject.accelerator);
 	glEnable(GL_LIGHTING);
 
-	FixedFunctionOrigin(true, false);
+	//FixedFunctionOrigin(true, false);
 }
 
 void SampleApplication::OnUpdate(float deltaTime) {
@@ -96,8 +98,9 @@ void SampleApplication::OnUpdate(float deltaTime) {
 		cameraDist = -14.0f;
 	}
 	else if (KeyDown(KEY_THREE)) {
-		float size = 5.5f;
-		SetOrtho(-size, size, -size, size, 100, -100);
+		float size = 2.0f;
+		float aspect = (float)m_nWidth / (float)m_nHeight;
+		SetOrtho(-size * aspect, size * aspect, -size, size, 100, -100);
 		//SetOrtho(0, m_nWidth, 0, m_nHeight, 0.01f, 1000.0f);
 	}
 	else if (KeyDown(KEY_FOUR)) {

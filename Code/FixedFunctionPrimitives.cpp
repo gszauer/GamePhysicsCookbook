@@ -136,6 +136,15 @@ void Render(const AABB& aabb) {
 	glPopMatrix();
 }
 
+void RenderWithQuads(const AABB& aabb) {
+	glPushMatrix();
+
+	glTranslatef(aabb.position.x, aabb.position.y, aabb.position.z);
+	FixedFunctionCubeQuads(aabb.size.x, aabb.size.y, aabb.size.z);
+
+	glPopMatrix();
+}
+
 void Render(const Rectangle2D& rect) {
 	vec2 min = GetMin(rect);
 	vec2 max = GetMax(rect);
@@ -154,7 +163,7 @@ void Render(const Rectangle2D& rect) {
 
 void Render(const BVHNode& bvh) {
 	if (bvh.children == 0) {
-		Render(bvh.bounds);
+		RenderWithQuads(bvh.bounds);
 	}
 	else {
 		for (int i = 0; i < 8; ++i) {
@@ -262,6 +271,69 @@ void FixedFunctionSphere(int numDivisions, float radius) {
 
 void FixedFunctionCube() {
 	FixedFunctionCube(1.0f, 1.0f, 1.0f);
+}
+
+void FixedFunctionCubeQuads(float extentsX, float extentsY, float extentsZ) {
+	float min[] = { -extentsX, -extentsY, -extentsZ };
+	float max[] = { +extentsX, +extentsY, +extentsZ };
+
+	glBegin(GL_QUADS);
+
+#if 1
+	// Top!
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	/*0*/glVertex3f(min[0], max[1], min[2]);
+	/*1*/glVertex3f(max[0], max[1], min[2]);
+	/*2*/glVertex3f(max[0], max[1], max[2]);
+	/*3*/glVertex3f(min[0], max[1], max[2]);
+#endif
+
+#if 1
+	// Front!
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	/*0*/glVertex3f(min[0], max[1], max[2]);
+	/*1*/glVertex3f(max[0], max[1], max[2]);
+	/*2*/glVertex3f(max[0], min[1], max[2]);
+	/*3*/glVertex3f(min[0], min[1], max[2]);
+#endif
+
+#if 1
+	// Left
+	glNormal3f(-1.0f, 0.0f, 0.0f);
+	/*0*/glVertex3f(min[0], max[1], max[2]);
+	/*3*/glVertex3f(min[0], min[1], max[2]);
+	/*2*/glVertex3f(min[0], min[1], min[2]);
+	/*1*/glVertex3f(min[0], max[1], min[2]);
+#endif
+
+#if 1
+	// Bottom!
+	glNormal3f(0.0f, -1.0f, 0.0f);
+	/*0*/glVertex3f(min[0], min[1], min[2]);
+	/*3*/glVertex3f(min[0], min[1], max[2]);
+	/*2*/glVertex3f(max[0], min[1], max[2]);
+	/*1*/glVertex3f(max[0], min[1], min[2]);
+#endif
+
+#if 1
+	// Back!
+	glNormal3f(0.0f, 0.0f, -1.0f);
+	/*0*/glVertex3f(min[0], max[1], min[2]);
+	/*3*/glVertex3f(min[0], min[1], min[2]);
+	/*2*/glVertex3f(max[0], min[1], min[2]);
+	/*1*/glVertex3f(max[0], max[1], min[2]);
+#endif
+
+#if 1
+	// Right
+	glNormal3f(1.0f, 0.0f, 0.0f);
+	/*0*/glVertex3f(max[0], max[1], max[2]);
+	/*1*/glVertex3f(max[0], max[1], min[2]);
+	/*2*/glVertex3f(max[0], min[1], min[2]);
+	/*3*/glVertex3f(max[0], min[1], max[2]);
+#endif
+
+	glEnd();
 }
 
 void FixedFunctionCube(float extentsX, float extentsY, float extentsZ) {

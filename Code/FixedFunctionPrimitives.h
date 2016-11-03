@@ -19,6 +19,7 @@ void Render(const Line& line);
 void Render(const Ray& ray);
 void Render(const Sphere& sphere);
 void Render(const AABB& aabb);
+void RenderWithQuads(const AABB& aabb);
 void Render(const OBB& obb);
 void Render(const Plane& plane); // TODO
 void Render(const Triangle& triangle);
@@ -32,6 +33,7 @@ void FixedFunctionCylinder(int slices, float height, float radius);
 void FixedFunctionPlane(float size, int subdivs);
 void FixedFunctionOrigin(bool depthTest, bool twoSided);
 void FixedFunctionCone(int subdiv, float height, float radius);
+void FixedFunctionCubeQuads(float extentsX, float extentsY, float extentsZ);
 
 // Conveniance function
 void FixedFunctionTorus(float outerRaidus, float innerRadius);
