@@ -32,6 +32,18 @@ void Render(const Mesh& mesh) {
 	glEnd();
 }
 
+void Render(const Model& model) {
+	glPushMatrix();
+
+	mat4 world = GetWorldMatrix(model);
+	glMultMatrixf(world.asArray);
+	if (model.GetMesh() != 0) {
+		Render(*(model.GetMesh()));
+	}
+
+	glPopMatrix();
+}
+
 void Render(const Triangle& triangle) {
 	glBegin(GL_TRIANGLES);
 

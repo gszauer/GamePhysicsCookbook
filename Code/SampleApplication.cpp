@@ -15,31 +15,34 @@
 
 static SampleApplication debugInstance("Sample Application", 800, 600);
 
-
 // TODO: REMOVE
 mat4 perspView;
 #include <iostream>
-
-//Triangle triangle(Point(-1.0f, 5.0f, 0.0f), Point(2.0f, 2.0f, -3.0f), Point(5.0f, 5.0f, 0.0f));
 Mesh meshObject;
+Model modelObject;
+Model parentObject;
+AABB aabb;
+OBB obb;
 // END TODO
 
 float SampleApplication::random(float min, float max) {
-// this  function assumes max > min, you may want 
-// more robust error checking for a non-debug build
-float random = ((float)rand()) / (float)RAND_MAX;
+	if (max < min) {
+		float t = min;
+		min = max;
+		max = t;
+	}
 
-// generate (in your case) a float between 0 and (4.5-.78)
-// then add .78, giving you a float between .78 and 4.5
-float range = max - min;
-return (random*range) + min;
+	float random = ((float)rand()) / (float)RAND_MAX;
+	
+	float range = max - min;
+	return (random*range) + min;
 }
 
 void SampleApplication::OnInitialize() {
 	GLWindow::OnInitialize();
 	cameraDist = -10.0f;
 	matView = LookAt(vec3(cameraPos.x, cameraPos.y, cameraDist), vec3(), vec3(0.0f, 1.0f, 0.0f));
-	glDisable(GL_CULL_FACE);
+	//glDisable(GL_CULL_FACE);
 	//glDisable(GL_DEPTH_TEST);
 	glEnable(GL_DEPTH_TEST);
 
@@ -57,17 +60,28 @@ void SampleApplication::OnInitialize() {
 	val[0] = 1.0f; val[2] = 1.0f;
 	glLightfv(GL_LIGHT0, GL_SPECULAR, val);
 
+
+	parentObject.position = vec3(2, 0, 0);
+	parentObject.rotation = vec3(0.0f, 90.0f, 0.0f);
+
 	perspView = GetView();
 	LoadMesh("suzane.obj", &meshObject);
-	AccelerateMesh(meshObject);
+	//AccelerateMesh(meshObject);
+	modelObject.SetContent(&meshObject);
+	modelObject.position = vec3(0, 0, -2);
+	//modelObject.rotation = vec3(0.0f, 0.0f, 45.0f);
+	modelObject.parent = &parentObject;
+	//SetClearColor(1, 1, 1);
 
-	SetClearColor(1, 1, 1);
+	aabb = FromMinMax(vec3(0, 0, 0), vec3(2, 2, 2));
+	obb.position = vec3(-1.3, 2, 0);
+	obb.orientation = Rotation3x3(0, 0, 45.0f);
 }
 
 void SampleApplication::OnShutdown() {
 	FreeMesh(&meshObject);
-	FreeBVHNode(meshObject.accelerator);
-	delete meshObject.accelerator;
+	//FreeBVHNode(meshObject.accelerator);
+	//delete meshObject.accelerator;
 }
 
 void SampleApplication::OnRender() {
@@ -75,15 +89,42 @@ void SampleApplication::OnRender() {
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glColor3f(0.0f, 0.0f, 1.0f);
-	//Render(meshObject);
+	float val[] = {0, 1, 0, 0 };
+	glLightfv(GL_LIGHT0, GL_AMBIENT, val);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, val);
+	Render(modelObject);
 
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glColor3f(1.0f, 0.0f, 0.0f);
+	val[0] = 1; val[1] = 0;
+	glLightfv(GL_LIGHT0, GL_AMBIENT, val);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, val);
+	Render(GetOBB(modelObject));
+
+	/*glColor3f(0.0f, 0.0f, 1.0f);
+	val[0] = 0; val[2] = 1;
+	glLightfv(GL_LIGHT0, GL_AMBIENT, val);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, val);
+	Render(modelObject.GetBounds());
+	Render(*modelObject.GetMesh());*/
+
+	static bool print = true;
+	if (print && ModelAABB(modelObject, aabb)) {
+		std::cout << "AABB intersection!\n";
+	}
+	if (print && ModelOBB(modelObject, obb)) {
+		std::cout << "OBB intersection!\n";
+	}
+
+	print = false;
+
+	/*glColor3f(1.0f, 0.0f, 0.0f);
 	glDisable(GL_LIGHTING);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	Render(*meshObject.accelerator);
-	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHTING);*/
 
-	//FixedFunctionOrigin(true, false);
+	FixedFunctionOrigin(true, false);
 }
 
 void SampleApplication::OnUpdate(float deltaTime) {

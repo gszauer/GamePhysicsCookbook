@@ -11,7 +11,6 @@ void Render(const Line2D& line);
 void Render(const Circle& circle);
 void Render(const Rectangle2D& rect); 
 void Render(const OrientedRectangle& rect);
-void Render(const BVHNode& bvh);
 
 // 3D Geometry
 void Render(const Point& point);
@@ -23,7 +22,10 @@ void RenderWithQuads(const AABB& aabb);
 void Render(const OBB& obb);
 void Render(const Plane& plane); // TODO
 void Render(const Triangle& triangle);
+
 void Render(const Mesh& mesh);
+void Render(const BVHNode& bvh);
+void Render(const Model& model);
 
 // Generic Primitives
 void FixedFunctionSphere(int numDivisions, float radius);
