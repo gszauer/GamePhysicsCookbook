@@ -2,9 +2,13 @@
 #include <cmath>
 #include <cfloat>
 
-// http://realtimecollisiondetection.net/pubs/Tolerances/
-#define CMP(x, y) \
-	(fabsf(x - y) <= FLT_EPSILON * fmaxf(1.0f, fmaxf(fabsf(x), fabsf(y))))
+#ifdef DO_SANITY_TESTS
+	#include <iostream>
+	#include "Compare.h"
+#else
+	#define CMP(x, y) \
+		(fabsf(x - y) <= FLT_EPSILON * fmaxf(1.0f, fmaxf(fabsf(x), fabsf(y))))
+#endif
 
 bool operator==(const vec2& l, const vec2& r) { 
 	return CMP(l.x, r.x) && CMP(l.y, r.y);

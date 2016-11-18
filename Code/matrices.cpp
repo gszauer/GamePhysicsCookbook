@@ -2,20 +2,13 @@
 #include <cmath>
 #include <cfloat>
 
-//#define DO_SANITY_TESTS
-
 #ifdef DO_SANITY_TESTS
 	#include <iostream>
-
-	#ifdef FLT_EPSILON
-		#undef FLT_EPSILON
-	#endif
-	#define FLT_EPSILON 0.0000005f
-#endif 
-
-// http://realtimecollisiondetection.net/pubs/Tolerances/
-#define CMP(x, y) \
-	(fabsf(x - y) <= FLT_EPSILON * fmaxf(1.0f, fmaxf(fabsf(x), fabsf(y))))
+	#include "Compare.h"
+#else
+	#define CMP(x, y) \
+		(fabsf(x - y) <= FLT_EPSILON * fmaxf(1.0f, fmaxf(fabsf(x), fabsf(y))))
+#endif
 
 #ifndef NO_EXTRAS
 bool operator==(const mat2& l, const mat2& r) {
@@ -759,8 +752,23 @@ mat4 Projection(float fov, float aspect, float zNear, float zFar) {
 	return result;
 }
 
+// Derived following: http://www.songho.ca/opengl/gl_projectionmatrix.html
 mat4 Ortho(float left, float right, float bottom, float top, float zNear, float zFar) {
-	float w = right - left;
+	float _11 =  2.0f / (right - left);
+	float _22 =  2.0f / (top - bottom);
+	float _33 = -2.0f / (zFar - zNear);
+	float _41 = -((right + left) / (right - left));
+	float _42 = -((top + bottom) / (top - bottom));
+	float _43 = -((zFar + zNear) / (zFar - zNear));
+
+	return mat4(
+		 _11, 0.0f, 0.0f, 0.0f,
+		0.0f,  _22, 0.0f, 0.0f,
+		0.0f, 0.0f,  _33, 0.0f,
+		 _41,  _42,  _43, 1.0f
+	); 
+
+	/*float w = right - left;
 	float h = bottom - top;
 
 	return mat4(
@@ -768,5 +776,5 @@ mat4 Ortho(float left, float right, float bottom, float top, float zNear, float 
 		0.0f, h * 0.5f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f / (zFar - zNear), 0.0f,
 		0.0f, 0.0f, zNear / (zNear - zFar), 1.0f
-	);
+	);*/
 }

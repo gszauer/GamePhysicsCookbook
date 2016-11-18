@@ -3,8 +3,13 @@
 #include <cmath>
 #include <cfloat>
 
-#define CMP(x, y) \
-	(fabsf(x - y) <= FLT_EPSILON * fmaxf(1.0f, fmaxf(fabsf(x), fabsf(y))))
+#ifdef DO_SANITY_TESTS
+	#include <iostream>
+	#include "Compare.h"
+#else
+	#define CMP(x, y) \
+		(fabsf(x - y) <= FLT_EPSILON * fmaxf(1.0f, fmaxf(fabsf(x), fabsf(y))))
+#endif
 
 #define CLAMP(number, minimum, maximum) \
 	number = (number < minimum) ? minimum : \

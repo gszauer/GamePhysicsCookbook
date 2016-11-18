@@ -89,15 +89,6 @@ void GLWindow::OnResize(int width, int height) {
 	}
 	else if (matMode == 1) {
 		projection = Ortho(m_nLeft, m_nRight, m_nBottom, m_nTop, m_nNear, m_nFar);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(m_nLeft, m_nRight, m_nBottom, m_nTop, m_nNear, m_nFar);
-		float proj[16];
-		glGetFloatv(GL_PROJECTION_MATRIX, proj);
-		for (int i = 0; i < 16; ++i) {
-			projection.asArray[i] = proj[i];
-		}
-		// TODO: At some point i need to deal with this shit!
 	}
 	else {
 		projection = matProj;

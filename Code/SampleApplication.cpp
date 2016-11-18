@@ -23,6 +23,7 @@ Model modelObject;
 Model parentObject;
 AABB aabb;
 OBB obb;
+Scene* scene;
 // END TODO
 
 float SampleApplication::random(float min, float max) {
@@ -76,9 +77,13 @@ void SampleApplication::OnInitialize() {
 	aabb = FromMinMax(vec3(0, 0, 0), vec3(2, 2, 2));
 	obb.position = vec3(-1.3, 2, 0);
 	obb.orientation = Rotation3x3(0, 0, 45.0f);
+
+	scene = new Scene();
+	scene->Accelerate(vec3(), 500);
 }
 
 void SampleApplication::OnShutdown() {
+	delete scene;
 	FreeMesh(&meshObject);
 	//FreeBVHNode(meshObject.accelerator);
 	//delete meshObject.accelerator;
