@@ -211,8 +211,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 		glGetIntegerv(GL_MINOR_VERSION, &OpenGLVersion[1]);
 	}
 #endif
-	pWindowInstance->SetInt("glMajor", OpenGLVersion[0]);
-	pWindowInstance->SetInt("glMinor", OpenGLVersion[1]);
+	//pWindowInstance->SetInt("glMajor", OpenGLVersion[0]);
+	//pWindowInstance->SetInt("glMinor", OpenGLVersion[1]);
 	std::cout << "OpenGL context: " << OpenGLVersion[0] << ", " << OpenGLVersion[1] << "\n";
 	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << "\n";
 #ifdef USE_GLEW

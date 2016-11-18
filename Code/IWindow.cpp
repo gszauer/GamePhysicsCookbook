@@ -4,14 +4,19 @@
 
 IWindow* IWindow::g_pSingleton = 0;
 
-#define I_WINDOW_CPP_GENERIC_DEFAULT_LENGTH 5 
-#define I_WINDOW_CPP_GENERIC_EXPAND_BY 10
-
-#define I_WINDOW_CPP_DEFAULTS(w, h) \
-	m_bQuitFlag(false), m_bFullscreenFlag(false), m_nWidth(w), m_nHeight(h), \
-	m_szTitle(0), m_bTitleDirty(false), m_vGenericIntegerValues(0), \
-	m_vGenericIntegerNames(0),m_nGenericIntegerCount(0), m_nGenericIntegerLength(0), \
-	m_nTargetFPS(30), m_nFixedFPS(30)
+#if ENABLE_USER_DATA
+	#define I_WINDOW_CPP_GENERIC_DEFAULT_LENGTH 5 
+	#define I_WINDOW_CPP_GENERIC_EXPAND_BY 10
+	#define I_WINDOW_CPP_DEFAULTS(w, h) \
+		m_bQuitFlag(false), m_bFullscreenFlag(false), m_nWidth(w), m_nHeight(h), \
+		m_szTitle(0), m_bTitleDirty(false), m_vGenericIntegerValues(0), \
+		m_vGenericIntegerNames(0),m_nGenericIntegerCount(0), m_nGenericIntegerLength(0), \
+		m_nTargetFPS(30), m_nFixedFPS(30)
+#else 
+	#define I_WINDOW_CPP_DEFAULTS(w, h) \
+		m_bQuitFlag(false), m_bFullscreenFlag(false), m_nWidth(w), m_nHeight(h), \
+		m_szTitle(0), m_bTitleDirty(false), m_nTargetFPS(30), m_nFixedFPS(30)
+#endif
 
 IWindow::IWindow() : I_WINDOW_CPP_DEFAULTS(800, 600) {
 	if (g_pSingleton != 0) {
@@ -22,7 +27,9 @@ IWindow::IWindow() : I_WINDOW_CPP_DEFAULTS(800, 600) {
 	SetTitle("Platform Window");
 	m_bTitleDirty = true;
 
+#if ENABLE_USER_DATA
 	InitGenericIntegers();
+#endif
 
 	g_pSingleton = this;
 };
@@ -36,7 +43,9 @@ IWindow::IWindow(const char* title) : I_WINDOW_CPP_DEFAULTS(800, 600) {
 	SetTitle(title);
 	m_bTitleDirty = true;
 
+#if ENABLE_USER_DATA
 	InitGenericIntegers();
+#endif
 
 	g_pSingleton = this;
 }
@@ -49,7 +58,10 @@ IWindow::IWindow(const char* title, int width, int height) : I_WINDOW_CPP_DEFAUL
 
 	SetTitle(title);
 	m_bTitleDirty = false;
+
+#if ENABLE_USER_DATA
 	InitGenericIntegers();
+#endif
 
 	g_pSingleton = this;
 }
@@ -83,6 +95,7 @@ void CleanupMemory(IWindow* window) {
 	}
 	window->m_szTitle = 0;
 
+#if ENABLE_USER_DATA
 	if (window->m_vGenericIntegerValues != 0) {
 		free(window->m_vGenericIntegerValues);
 	}
@@ -96,6 +109,7 @@ void CleanupMemory(IWindow* window) {
 		free(window->m_vGenericIntegerNames);
 	}
 	window->m_vGenericIntegerNames = 0;
+#endif
 }
 
 IWindow::~IWindow() {
@@ -131,6 +145,7 @@ bool IWindow::GetFullScreen() {
 	return m_bFullscreenFlag;
 }
 
+#if ENABLE_USER_DATA
 void IWindow::InitGenericIntegers() {
 	m_nGenericIntegerCount = 0;
 	m_nGenericIntegerLength = I_WINDOW_CPP_GENERIC_DEFAULT_LENGTH;
@@ -212,6 +227,7 @@ bool IWindow::HasInt(const char* name) {
 	}
 	return false;
 }
+#endif
 
 void IWindow::SetTargetFPS(int target) {
 	m_nTargetFPS = target;

@@ -42,7 +42,7 @@ float SampleApplication::random(float min, float max) {
 void SampleApplication::OnInitialize() {
 	GLWindow::OnInitialize();
 	cameraDist = -10.0f;
-	matView = LookAt(vec3(cameraPos.x, cameraPos.y, cameraDist), vec3(), vec3(0.0f, 1.0f, 0.0f));
+	camera.LookAt(vec3(cameraPos.x, cameraPos.y, cameraDist), vec3(), vec3(0.0f, 1.0f, 0.0f));
 	//glDisable(GL_CULL_FACE);
 	//glDisable(GL_DEPTH_TEST);
 	glEnable(GL_DEPTH_TEST);
@@ -146,8 +146,7 @@ void SampleApplication::OnUpdate(float deltaTime) {
 	else if (KeyDown(KEY_THREE)) {
 		float size = 2.0f;
 		float aspect = (float)m_nWidth / (float)m_nHeight;
-		SetOrtho(-size * aspect, size * aspect, -size, size, 100, -100);
-		//SetOrtho(0, m_nWidth, 0, m_nHeight, 0.01f, 1000.0f);
+		SetOrtho(size * aspect, size, 100, -100);
 	}
 	else if (KeyDown(KEY_FOUR)) {
 		SetPerspective(60.0f, 0.01f, 1000.0f);
@@ -173,5 +172,7 @@ void SampleApplication::OnUpdate(float deltaTime) {
 		cameraPos.x += 5.0f * deltaTime;
 	}
 
-	matView = LookAt(vec3(cameraPos.x, cameraPos.y, cameraDist), vec3(), vec3(0.0f, 1.0f, 0.0f));
+	camera.LookAt(vec3(cameraPos.x, cameraPos.y, cameraDist), vec3(), vec3(0.0f, 1.0f, 0.0f));
+	//camera.position = vec3(cameraPos.x, cameraPos.y, cameraDist);
+	// camera.rotation
 }

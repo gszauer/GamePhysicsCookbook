@@ -100,7 +100,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>USE_GLEW;_DEBUG;DO_SANITY_TESTS;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;DO_SANITY_TESTS;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,7 +133,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>USE_GLEW;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\PhysicsBookDraftCode\Physics\Camera.h" />
     <ClInclude Include="..\..\PhysicsBookDraftCode\Physics\Geometry3D.h" />
     <ClInclude Include="..\..\PhysicsBookDraftCode\Physics\ObjLoader.h" />
     <ClInclude Include="..\..\PhysicsBookDraftCode\Physics\Scene.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="..\Code\vectors.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\PhysicsBookDraftCode\Physics\Camera.cpp" />
     <ClCompile Include="..\..\PhysicsBookDraftCode\Physics\Geometry3D.cpp" />
     <ClCompile Include="..\..\PhysicsBookDraftCode\Physics\ObjLoader.cpp" />
     <ClCompile Include="..\..\PhysicsBookDraftCode\Physics\Scene.cpp" />

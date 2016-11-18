@@ -778,3 +778,25 @@ mat4 Ortho(float left, float right, float bottom, float top, float zNear, float 
 		0.0f, 0.0f, zNear / (zNear - zFar), 1.0f
 	);*/
 }
+
+vec3 Decompose(const mat3& rot1) {
+	mat3 rot = Transpose(rot1);
+
+	float sy = sqrt(rot._11 * rot._11 + rot._21 * rot._21);
+
+	bool singular = sy < 1e-6; // If
+
+	float x, y, z;
+	if (!singular) {
+		x = atan2(rot._32, rot._33);
+		y = atan2(-rot._31, sy);
+		z = atan2(rot._21, rot._11);
+	}
+	else {
+		x = atan2(-rot._23, rot._22);
+		y = atan2(-rot._31, sy);
+		z = 0;
+	}
+
+	return vec3(x, y, z);
+}

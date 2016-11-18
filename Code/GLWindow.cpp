@@ -25,41 +25,23 @@ GLWindow::GLWindow(const char* title, int width, int height)
 	mouseButtonState = 0;
 	memset(keyboardState, false, sizeof(bool) * 256);
 	m_vecMousePos = vec2(0.0f, 0.0f);
-	m_nFOV = 60.0f;
-	m_nNear = 0.01f;
-	m_nFar = 1000.0f;
-	matMode = 0;
-	matView = LookAt(vec3(5.0f, 5.0f, -5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+	
+	camera = CreatePerspective(60.0f, (float)width / (float)height, 0.01f, 1000.0f);
 }
 
 void GLWindow::SetPerspective(float fov, float zNear, float zFar) {
-	m_nFOV = fov;
-	m_nNear = zNear;
-	m_nFar = zFar;
-	matMode = 0;
-	OnResize(m_nWidth, m_nHeight);
+	camera.Perspective(fov, camera.GetAspect(), zNear, zFar);
 }
 
-void GLWindow::SetOrtho(float left, float right, float bottom, float top, float zNear, float zFar) {
-	m_nNear = zNear;
-	m_nFar = zFar;
-	m_nLeft = left;
-	m_nRight = right;
-	m_nTop = top;
-	m_nBottom = bottom;
-	matMode = 1;
-	OnResize(m_nWidth, m_nHeight);
+void GLWindow::SetOrtho(float width, float height, float zNear, float zFar) {
+	camera.Orthographic(width, height, zNear, zFar);
 }
-
 
 void GLWindow::SetClearColor(float r, float g, float b) {
 	r = Clamp01(r);
 	b = Clamp01(b);
 	g = Clamp01(g);
 	glClearColor(r, g, b, 1.0f);
-
-	SetInt("glMajor", 2);
-	SetInt("glMinor", 1);
 }
 
 void GLWindow::OnInitialize() {
@@ -75,45 +57,31 @@ void GLWindow::OnInitialize() {
 void GLWindow::OnRender() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+	mat4 view = camera.GetViewMatrix();
+
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(matView.asArray);
+	glLoadMatrixf(view.asArray);
 }
 
 void GLWindow::OnResize(int width, int height) {
 	glViewport(0, 0, width, height);
-	float aspect = (float)width / (float)height;
-	
-	mat4 projection;
-	if (matMode == 0) {
-		projection = Projection(m_nFOV, aspect, m_nNear, m_nFar);
-	}
-	else if (matMode == 1) {
-		projection = Ortho(m_nLeft, m_nRight, m_nBottom, m_nTop, m_nNear, m_nFar);
-	}
-	else {
-		projection = matProj;
-	}
+	camera.Resize(width, height);
+
+	mat4 projection = camera.GetProjectionMatrix();
+	mat4 view = camera.GetViewMatrix();
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(projection.asArray);
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(matView.asArray);
+	glLoadMatrixf(view.asArray);
 }
 
 void GLWindow::SetProjection(const mat4& proj) {
-	matProj = proj;
-	matMode = 2;
+	camera.SetProjection(proj);
 }
 
 mat4 GLWindow::GetProjection() {
-	if (matMode == 0) {
-		float aspect = (float)m_nWidth / (float)m_nHeight;
-		matProj = Projection(m_nFOV, aspect, m_nNear, m_nFar);
-	}
-	else if (matMode == 1) {
-		matProj = Ortho(m_nLeft, m_nRight, m_nBottom, m_nTop, m_nNear, m_nFar);
-	}
-	return matProj;
+	return camera.GetProjectionMatrix();
 }
 
 void GLWindow::OnMouseMove(int x, int y) { 
@@ -137,12 +105,8 @@ void GLWindow::OnKeyUp(int keyCode) {
 	keyboardState[KeyIndex(keyCode)] = false;
 }
 
-void GLWindow::SetView(const mat4& view) {
-	matView = view;
-}
-
 mat4 GLWindow::GetView() {
-	return matView;
+	return camera.GetViewMatrix();
 }
 
 vec2 GLWindow::GetMousePosition() {

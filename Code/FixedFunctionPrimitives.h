@@ -7,6 +7,7 @@
 #include "../../PhysicsBookDraftCode/Physics/Geometry3D.h"
 #include "../../PhysicsBookDraftCode/Physics/ObjLoader.h"
 #include "../../PhysicsBookDraftCode/Physics/Scene.h"
+#include "../../PhysicsBookDraftCode/Physics/Camera.h"
 
 
 // 2D Geometry

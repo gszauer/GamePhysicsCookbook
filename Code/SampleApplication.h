@@ -4,6 +4,7 @@
 #include "GLWindow.h"
 #include "vectors.h"
 
+
 class SampleApplication : public GLWindow {
 protected:
 	vec2 cameraPos;

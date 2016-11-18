@@ -6,7 +6,9 @@ class IWindow {
 private:
 	IWindow(const IWindow&) {}
 	IWindow& operator=(const IWindow&) {}
+#if ENABLE_USER_DATA
 	void InitGenericIntegers();
+#endif
 protected:
 	static IWindow* g_pSingleton;
 	bool m_bQuitFlag;
@@ -17,10 +19,12 @@ protected:
 	char* m_szTitle;
 	bool m_bTitleDirty;
 
+#if ENABLE_USER_DATA
 	int* m_vGenericIntegerValues;
 	char** m_vGenericIntegerNames;
 	int m_nGenericIntegerCount; // Active
 	int m_nGenericIntegerLength; // Total
+#endif
 
 	int m_nTargetFPS;
 	int m_nFixedFPS;
@@ -68,9 +72,11 @@ public:
 	int GetTargetFPS();
 	int GetFixedFPS();
 
+#if ENABLE_USER_DATA
 	void SetInt(const char* name, int value);
 	int GetInt(const char* name, int default);
 	bool HasInt(const char* name);
+#endif
 };
 
 void CleanupMemory(IWindow* window);
