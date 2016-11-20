@@ -34,6 +34,7 @@ float SampleApplication::random(float min, float max) {
 
 void SampleApplication::OnInitialize() {
 	GLWindow::OnInitialize();
+	m_prevMousePos = vec2(0.0f, 0.0f);
 
 	camera.Perspective(60.0f, (float)m_nWidth / (float)m_nHeight, 0.01f, 1000.0f);
 
@@ -131,7 +132,7 @@ void SampleApplication::OnRender() {
 void SampleApplication::OnUpdate(float deltaTime) {
 	GLWindow::OnUpdate(deltaTime);
 
-	if (KeyDown(KEY_ONE)) {
+	/*if (KeyDown(KEY_ONE)) {
 		cameraDist = -10.0f;
 		cameraPos = vec2();
 	}
@@ -166,11 +167,28 @@ void SampleApplication::OnUpdate(float deltaTime) {
 	}
 	else if (KeyDown(KEY_RIGHT_ARROW)) {
 		cameraPos.x += 5.0f * deltaTime;
+	}*/
+
+
+	bool leftDown = MouseButonDown(MOUSE_LEFT);
+	bool middleDown = MouseButonDown(MOUSE_MIDDLE);
+	bool rightDown = MouseButonDown(MOUSE_RIGHT);
+
+	vec2 mousePos = GetMousePosition();
+	vec2 mouseDelta = mousePos - m_prevMousePos;
+	mouseDelta.x /= (float)GetWidth();
+	mouseDelta.y /= (float)GetHeight();
+	
+	if (rightDown) { // Rotation logic
+		camera.Rotate(mouseDelta, deltaTime);
+	}
+	else if (middleDown) { // Zoom logic
+		camera.Zoom(mouseDelta.y, deltaTime);
+	}
+	else if (leftDown) { // Move logic
+		camera.Pan(mouseDelta, deltaTime);
 	}
 
-	//camera.LookAt(vec3(cameraPos.x, cameraPos.y, cameraDist), vec3(), vec3(0.0f, 1.0f, 0.0f));
-	//camera.position = vec3(cameraPos.x, cameraPos.y, cameraDist);
-	// camera.rotation
-
 	camera.Update(deltaTime);
+	m_prevMousePos = mousePos;
 }

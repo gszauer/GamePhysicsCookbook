@@ -11,6 +11,7 @@ class SampleApplication : public GLWindow {
 protected:
 	vec2 cameraPos;
 	float cameraDist;
+	vec2 m_prevMousePos;
 public:
 	OrbitCamera camera;
 
