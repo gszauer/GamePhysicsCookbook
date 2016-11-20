@@ -4,10 +4,6 @@
 	#include <crtdbg.h>
 #endif
 
-// Undef this if you don't want to use GLEW. 
-// Only GL 1.1 will be usable without it!
-// #define USE_GLEW - DEFINED IN PROJECT!
-
 // If you don't want a console window define this
 
 // Only change if you know what you are doing
@@ -22,11 +18,7 @@
 #include <windows.h>
 #include <windowsx.h>
 
-#ifdef USE_GLEW
-#include <GL\glew.h>
-#include <GL\wglew.h>
-#endif
-#include <gl\GL.h>
+#include "glad/glad.h"
 
 #include <string>
 #include <iostream>
@@ -38,7 +30,6 @@
 
 // I set all of these settings in the "Project Settings" of visual studio
 // #pragma comment(lib, "opengl32.lib") 
-// #pragma comment(lib, "glew32.lib") 
 // #pragma comment(linker,"/SUBSYSTEM:CONSOLE")
 // #pragma comment(linker,"/SUBSYSTEM:WINDOWS")
 
@@ -63,7 +54,10 @@ double GetMilliseconds();
 // https://www.opengl.org/archives/resources/code/samples/win32_tutorial/
 // https://msdn.microsoft.com/en-us/library/bb384843.aspx?f=255&MSPPError=-2147217396
 // https://gist.github.com/gszauer/5718416
-// http://glew.sourceforge.net/basic.html
+// Glad loader: http://glad.dav1d.de/
+// Glad tutorial: https://github.com/Dav1dde/glad
+// Gl3w loader: https://github.com/skaslev/gl3w
+// GLLoadGen loader: https://bitbucket.org/alfonse/glloadgen/wiki/Home
 
 int main(int argc, const char** argv) {
 	IWindow* pWindowInstance = IWindow::GetInstance();
@@ -145,80 +139,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 	HDC hdc = GetDC(hwnd);
 	HGLRC hglrc = OpenGLBindContext(hdc);
 
-#ifdef USE_GLEW
-	if (pWindowInstance->HasInt("glMajor")) {
-		if (pWindowInstance->HasInt("glMinor")) {
-			int major = pWindowInstance->GetInt("glMajor", 1);
-			int minor = pWindowInstance->GetInt("glMinor", 1);
-
-			std::cout << "Requesting OpenGL " << major << "." << minor << " context\n";
-
-			GLenum err = glewInit();
-			if (GLEW_OK != err) {
-				std::cout << "Error initializing glew: " << glewGetErrorString(err) << "\n";
-			}
-			else {
-				char version_string[256];
-				memset(version_string, 0, sizeof(char) * 256);
-				sprintf(version_string, "GL_VERSION_%d_%d", major, minor);
-
-				if (!glewIsSupported(version_string)) {
-					std::cout << "GLEW, Requested version is not supported: " << version_string << "\n";
-				}
-				else {
-					int attribs[] =
-					{
-						WGL_CONTEXT_MAJOR_VERSION_ARB, major,
-						WGL_CONTEXT_MINOR_VERSION_ARB, minor,
-						WGL_CONTEXT_FLAGS_ARB, 0,
-						0
-					};
-
-					// Needed to create 3X or higher context
-					if (wglewIsSupported("WGL_ARB_create_context") == 1) {
-						HGLRC glewrc = wglCreateContextAttribsARB(hdc, 0, attribs);
-
-						wglMakeCurrent(NULL, NULL);
-						wglDeleteContext(hglrc);
-
-						wglMakeCurrent(hdc, glewrc);
-						hglrc = glewrc;
-					}
-					else {
-						std::cout << "WGL_ARB_create_context is not supported\n";
-					}
-				}
-			}
-		}
+	if (!gladLoadGL()) {
+		std::cout << "Could not instantiate GLAD OpenGL 2.1 context\n";
+		exit(-1);
+	}
+	else if (GLVersion.major < 2) {
+		std::cout << "Your system doesn't support OpenGL >= 2!\n";
+		return -1;
 	}
 
-	glGetError(); // Clear error flag
-#endif
-	int OpenGLVersion[2] = { 1, 1 };
-#ifdef USE_GLEW
-	glGetIntegerv(GL_MAJOR_VERSION, &OpenGLVersion[0]);
-	if (glGetError() == GL_INVALID_ENUM) { // Only works with 3X
-#endif
-		// Provide a 2x & below fallback!
-		char major_string[2] = { glGetString(GL_VERSION)[0], '\0' };
-		OpenGLVersion[0] = atoi(major_string);
-		char minor_string[2] = { glGetString(GL_VERSION)[2], '\0' };
-		OpenGLVersion[1] = atoi(minor_string);
-#ifdef USE_GLEW
-
-	}
-	else {
-		glGetIntegerv(GL_MINOR_VERSION, &OpenGLVersion[1]);
-	}
-#endif
-	//pWindowInstance->SetInt("glMajor", OpenGLVersion[0]);
-	//pWindowInstance->SetInt("glMinor", OpenGLVersion[1]);
-	std::cout << "OpenGL context: " << OpenGLVersion[0] << ", " << OpenGLVersion[1] << "\n";
+	std::cout << "OpenGL Context: " << GLVersion.major << ", " << GLVersion.minor << "\n";
 	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << "\n";
-#ifdef USE_GLEW
-	std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n";
-#endif
-	std::cout << "OpenGL vendor: " << glGetString(GL_VENDOR) << "\n";
+	std::cout << "GLSL Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n";
 
 	pWindowInstance->OnInitialize();
 
@@ -337,7 +269,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
 	case WM_SIZE:
 		width = LOWORD(lParam);
 		height = HIWORD(lParam);
-		pWindowInstance->OnResize(width, height);
 
 		GetClientRect(hwnd, &clientRect);
 		GetWindowRect(hwnd, &borderRect);

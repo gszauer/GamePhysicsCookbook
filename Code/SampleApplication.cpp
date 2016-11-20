@@ -4,11 +4,7 @@
 #include <windowsx.h>
 #include <cstdlib>
 
-#ifdef USE_GLEW
-#include <GL\glew.h>
-#include <GL\wglew.h>
-#endif
-#include <gl\GL.h>
+#include "glad/glad.h"
 
 #include "SampleApplication.h"
 #include"FixedFunctionPrimitives.h"
@@ -16,13 +12,10 @@
 static SampleApplication debugInstance("Sample Application", 800, 600);
 
 // TODO: REMOVE
-mat4 perspView;
 #include <iostream>
 Mesh meshObject;
 Model modelObject;
-Model parentObject;
-AABB aabb;
-OBB obb;
+AABB ground;
 Scene* scene;
 // END TODO
 
@@ -41,8 +34,11 @@ float SampleApplication::random(float min, float max) {
 
 void SampleApplication::OnInitialize() {
 	GLWindow::OnInitialize();
+
+	camera.Perspective(60.0f, (float)m_nWidth / (float)m_nHeight, 0.01f, 1000.0f);
+
 	cameraDist = -10.0f;
-	camera.LookAt(vec3(cameraPos.x, cameraPos.y, cameraDist), vec3(), vec3(0.0f, 1.0f, 0.0f));
+	//camera.LookAt(vec3(cameraPos.x, cameraPos.y, cameraDist), vec3(), vec3(0.0f, 1.0f, 0.0f));
 	//glDisable(GL_CULL_FACE);
 	//glDisable(GL_DEPTH_TEST);
 	glEnable(GL_DEPTH_TEST);
@@ -62,21 +58,12 @@ void SampleApplication::OnInitialize() {
 	glLightfv(GL_LIGHT0, GL_SPECULAR, val);
 
 
-	parentObject.position = vec3(2, 0, 0);
-	parentObject.rotation = vec3(0.0f, 90.0f, 0.0f);
-
-	perspView = GetView();
-	LoadMesh("suzane.obj", &meshObject);
-	//AccelerateMesh(meshObject);
+	
+	LoadMesh("Assets/suzane.mdl", &meshObject);
 	modelObject.SetContent(&meshObject);
-	modelObject.position = vec3(0, 0, -2);
-	//modelObject.rotation = vec3(0.0f, 0.0f, 45.0f);
-	modelObject.parent = &parentObject;
-	//SetClearColor(1, 1, 1);
-
-	aabb = FromMinMax(vec3(0, 0, 0), vec3(2, 2, 2));
-	obb.position = vec3(-1.3, 2, 0);
-	obb.orientation = Rotation3x3(0, 0, 45.0f);
+	modelObject.position = vec3(0, 0, 0.0);
+	modelObject.rotation = vec3(0.0f, 0.0f, 0.0f);
+	ground = FromMinMax(vec3(-5, -2, -5), vec3(5, -1, 5));
 
 	scene = new Scene();
 	scene->Accelerate(vec3(), 500);
@@ -89,8 +76,26 @@ void SampleApplication::OnShutdown() {
 	//delete meshObject.accelerator;
 }
 
+void SampleApplication::OnResize(int width, int height) {
+	GLWindow::OnResize(width, height);
+
+	mat4 projection = camera.GetProjectionMatrix();
+	mat4 view = camera.GetViewMatrix();
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(projection.asArray);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(view.asArray);
+}
+
 void SampleApplication::OnRender() {
 	GLWindow::OnRender();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(camera.GetViewMatrix().asArray);
+
+	mat4 debugMat = LookAt(vec3(0.0f, 0.0f, -15.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+	//glLoadMatrixf(debugMat.asArray);
+
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glColor3f(0.0f, 0.0f, 1.0f);
@@ -106,22 +111,13 @@ void SampleApplication::OnRender() {
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, val);
 	Render(GetOBB(modelObject));
 
-	/*glColor3f(0.0f, 0.0f, 1.0f);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glColor3f(0.0f, 0.0f, 1.0f);
 	val[0] = 0; val[2] = 1;
 	glLightfv(GL_LIGHT0, GL_AMBIENT, val);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, val);
-	Render(modelObject.GetBounds());
-	Render(*modelObject.GetMesh());*/
+	Render(ground);
 
-	static bool print = true;
-	if (print && ModelAABB(modelObject, aabb)) {
-		std::cout << "AABB intersection!\n";
-	}
-	if (print && ModelOBB(modelObject, obb)) {
-		std::cout << "OBB intersection!\n";
-	}
-
-	print = false;
 
 	/*glColor3f(1.0f, 0.0f, 0.0f);
 	glDisable(GL_LIGHTING);
@@ -146,10 +142,10 @@ void SampleApplication::OnUpdate(float deltaTime) {
 	else if (KeyDown(KEY_THREE)) {
 		float size = 2.0f;
 		float aspect = (float)m_nWidth / (float)m_nHeight;
-		SetOrtho(size * aspect, size, 100, -100);
+		camera.Orthographic(size * aspect, size, 100, -100);
 	}
 	else if (KeyDown(KEY_FOUR)) {
-		SetPerspective(60.0f, 0.01f, 1000.0f);
+		camera.Perspective(60.0f, camera.GetAspect(), 0.01f, 1000.0f);
 	}
 
 	if (MouseButonDown(MOUSE_LEFT)) {
@@ -172,7 +168,9 @@ void SampleApplication::OnUpdate(float deltaTime) {
 		cameraPos.x += 5.0f * deltaTime;
 	}
 
-	camera.LookAt(vec3(cameraPos.x, cameraPos.y, cameraDist), vec3(), vec3(0.0f, 1.0f, 0.0f));
+	//camera.LookAt(vec3(cameraPos.x, cameraPos.y, cameraDist), vec3(), vec3(0.0f, 1.0f, 0.0f));
 	//camera.position = vec3(cameraPos.x, cameraPos.y, cameraDist);
 	// camera.rotation
+
+	camera.Update(deltaTime);
 }

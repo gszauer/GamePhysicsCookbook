@@ -105,7 +105,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -140,7 +140,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -152,6 +152,8 @@
     <ClInclude Include="..\Code\Compare.h" />
     <ClInclude Include="..\Code\FixedFunctionPrimitives.h" />
     <ClInclude Include="..\Code\Geometry2D.h" />
+    <ClInclude Include="..\Code\glad\glad.h" />
+    <ClInclude Include="..\Code\glad\khrplatform.h" />
     <ClInclude Include="..\Code\GLWindow.h" />
     <ClInclude Include="..\Code\IMGUIWindow.h" />
     <ClInclude Include="..\Code\IWindow.h" />
@@ -166,6 +168,7 @@
     <ClCompile Include="..\..\PhysicsBookDraftCode\Physics\Scene.cpp" />
     <ClCompile Include="..\Code\FixedFunctionPrimitives.cpp" />
     <ClCompile Include="..\Code\Geometry2D.cpp" />
+    <ClCompile Include="..\Code\glad\glad.c" />
     <ClCompile Include="..\Code\GLWindow.cpp" />
     <ClCompile Include="..\Code\IMGUIWindow.cpp" />
     <ClCompile Include="..\Code\IWindow.cpp" />

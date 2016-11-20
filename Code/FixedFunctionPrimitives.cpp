@@ -3,11 +3,7 @@
 #include <windows.h>
 #include <windowsx.h>
 
-#ifdef USE_GLEW
-#include <GL\glew.h>
-#include <GL\wglew.h>
-#endif
-#include <gl\GL.h>
+#include "glad/glad.h"
 
 #include <cmath>
 

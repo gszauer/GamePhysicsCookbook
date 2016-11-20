@@ -3,11 +3,7 @@
 #include <windows.h>
 #include <windowsx.h>
 
-#ifdef USE_GLEW
-#include <GL\glew.h>
-#include <GL\wglew.h>
-#endif
-#include <gl\GL.h>
+#include "glad/glad.h"
 
 #include "GLWindow.h"
 
@@ -25,16 +21,6 @@ GLWindow::GLWindow(const char* title, int width, int height)
 	mouseButtonState = 0;
 	memset(keyboardState, false, sizeof(bool) * 256);
 	m_vecMousePos = vec2(0.0f, 0.0f);
-	
-	camera = CreatePerspective(60.0f, (float)width / (float)height, 0.01f, 1000.0f);
-}
-
-void GLWindow::SetPerspective(float fov, float zNear, float zFar) {
-	camera.Perspective(fov, camera.GetAspect(), zNear, zFar);
-}
-
-void GLWindow::SetOrtho(float width, float height, float zNear, float zFar) {
-	camera.Orthographic(width, height, zNear, zFar);
 }
 
 void GLWindow::SetClearColor(float r, float g, float b) {
@@ -56,32 +42,10 @@ void GLWindow::OnInitialize() {
 
 void GLWindow::OnRender() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-	mat4 view = camera.GetViewMatrix();
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(view.asArray);
 }
 
 void GLWindow::OnResize(int width, int height) {
 	glViewport(0, 0, width, height);
-	camera.Resize(width, height);
-
-	mat4 projection = camera.GetProjectionMatrix();
-	mat4 view = camera.GetViewMatrix();
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(projection.asArray);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(view.asArray);
-}
-
-void GLWindow::SetProjection(const mat4& proj) {
-	camera.SetProjection(proj);
-}
-
-mat4 GLWindow::GetProjection() {
-	return camera.GetProjectionMatrix();
 }
 
 void GLWindow::OnMouseMove(int x, int y) { 
@@ -103,10 +67,6 @@ void GLWindow::OnKeyDown(int keyCode) {
 
 void GLWindow::OnKeyUp(int keyCode) {
 	keyboardState[KeyIndex(keyCode)] = false;
-}
-
-mat4 GLWindow::GetView() {
-	return camera.GetViewMatrix();
 }
 
 vec2 GLWindow::GetMousePosition() {
