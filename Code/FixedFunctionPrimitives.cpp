@@ -40,6 +40,51 @@ void Render(const Model& model) {
 	glPopMatrix();
 }
 
+void Render(const Frustum& frustum) {
+	vec3 NTL = Intersection(frustum.near, frustum.top, frustum.left);
+	vec3 NTR = Intersection(frustum.near, frustum.top, frustum.right);
+	vec3 NBL = Intersection(frustum.near, frustum.bottom, frustum.left);
+	vec3 NBR = Intersection(frustum.near, frustum.bottom, frustum.right);
+
+	vec3 FTL = Intersection(frustum.far, frustum.top, frustum.left);
+	vec3 FTR = Intersection(frustum.far, frustum.top, frustum.right);
+	vec3 FBL = Intersection(frustum.far, frustum.bottom, frustum.left);
+	vec3 FBR = Intersection(frustum.far, frustum.bottom, frustum.right);
+	
+	glBegin(GL_LINES);
+
+	// Near
+	glVertex3fv(NTL.asArray);
+	glVertex3fv(NTR.asArray);
+	glVertex3fv(NTR.asArray);
+	glVertex3fv(NBR.asArray);
+	glVertex3fv(NBR.asArray);
+	glVertex3fv(NBL.asArray);
+	glVertex3fv(NBL.asArray);
+	glVertex3fv(NTL.asArray);
+
+	// Far
+	glVertex3fv(FTL.asArray);
+	glVertex3fv(FTR.asArray);
+	glVertex3fv(FTR.asArray);
+	glVertex3fv(FBR.asArray);
+	glVertex3fv(FBR.asArray);
+	glVertex3fv(FBL.asArray);
+	glVertex3fv(FBL.asArray);
+	glVertex3fv(FTL.asArray);
+
+	glVertex3fv(NTL.asArray);
+	glVertex3fv(FTL.asArray);
+	glVertex3fv(NTR.asArray);
+	glVertex3fv(FTR.asArray);
+	glVertex3fv(NBL.asArray);
+	glVertex3fv(FBL.asArray);
+	glVertex3fv(NBR.asArray);
+	glVertex3fv(FBR.asArray);
+
+	glEnd();
+}
+
 void Render(const Triangle& triangle) {
 	glBegin(GL_TRIANGLES);
 

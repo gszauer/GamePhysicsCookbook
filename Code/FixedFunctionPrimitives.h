@@ -27,6 +27,7 @@ void RenderWithQuads(const AABB& aabb);
 void Render(const OBB& obb);
 void Render(const Plane& plane); // TODO
 void Render(const Triangle& triangle);
+void Render(const Frustum& frustum);
 
 void Render(const Mesh& mesh);
 void Render(const BVHNode& bvh);

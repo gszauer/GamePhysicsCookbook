@@ -103,21 +103,26 @@ void SampleApplication::OnRender() {
 	float val[] = {0, 1, 0, 0 };
 	glLightfv(GL_LIGHT0, GL_AMBIENT, val);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, val);
-	Render(modelObject);
+	//Render(modelObject);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glColor3f(1.0f, 0.0f, 0.0f);
 	val[0] = 1; val[1] = 0;
 	glLightfv(GL_LIGHT0, GL_AMBIENT, val);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, val);
-	Render(GetOBB(modelObject));
+	//Render(GetOBB(modelObject));
+
+	Camera c;
+	c.Perspective(60.0f, 1.3f, 1.0f, 2.0f);
+	c.SetWorld(Inverse(LookAt(vec3(2.0f, 2.0f, 2.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f))));
+	Render(c.GetFrustum());
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glColor3f(0.0f, 0.0f, 1.0f);
 	val[0] = 0; val[2] = 1;
 	glLightfv(GL_LIGHT0, GL_AMBIENT, val);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, val);
-	Render(ground);
+	//Render(ground);
 
 
 	/*glColor3f(1.0f, 0.0f, 0.0f);

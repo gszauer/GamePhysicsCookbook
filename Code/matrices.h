@@ -99,7 +99,7 @@ typedef struct mat3 {
 	inline mat3() {
 		_11 = _22 = _33 = 1.0f;
 		_12 = _13 = _21 = 0.0f;
-		_23 = _32 = _32 = 0.0f;
+		_23 = _31 = _32 = 0.0f;
 	}
 
 	inline mat3(float f11, float f12, float f13,
