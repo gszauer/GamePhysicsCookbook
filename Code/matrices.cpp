@@ -566,6 +566,29 @@ mat3 ZRotation3x3(float angle) {
 }
 
 #ifndef NO_EXTRAS
+mat3 FastInverse(const mat3& mat) {
+	return Transpose(mat);
+}
+
+mat4 FastInverse(const mat4& mat) {
+
+	mat4 inverse = Transpose(mat);
+	inverse._41 = inverse._14 = 0.0f;
+	inverse._42 = inverse._24 = 0.0f;
+	inverse._43 = inverse._34 = 0.0f;
+
+	vec3 right =	vec3(mat._11, mat._12, mat._13);
+	vec3 up =		vec3(mat._21, mat._22, mat._23);
+	vec3 forward =	vec3(mat._31, mat._32, mat._33);
+	vec3 position = vec3(mat._41, mat._42, mat._43);
+
+	inverse._41 = -Dot(right, position);
+	inverse._42 = -Dot(up, position);
+	inverse._43 = -Dot(forward, position);
+
+	return inverse;
+}
+
 mat4 Orthogonalize(const mat4& mat) {
 	vec3 xAxis(mat._11, mat._12, mat._13);
 	vec3 yAxis(mat._21, mat._22, mat._23);
@@ -725,7 +748,21 @@ mat4 LookAt(const vec3& position, const vec3& target, const vec3& up) {
 #endif
 }
 
+// https://msdn.microsoft.com/en-us/library/windows/desktop/bb147302(v=vs.85).aspx
 mat4 Projection(float fov, float aspect, float zNear, float zFar) {
+	/* https://msdn.microsoft.com/en-us/library/windows/desktop/bb205350(v=vs.85).aspx 
+	float yScale = 1.0f / tanf(DEG2RAD((fov * 0.5f)));
+	float xScale = yScale / aspect;
+	float zf = zFar;
+	float zn = zNear;
+
+	return mat4(
+		xScale,     0,          0,               0,
+		0,        yScale,       0,               0,
+		0,          0,       zf / (zf - zn),         1,
+		0,          0, - zn*zf / (zf - zn),     0
+	); */
+
 	float tanHalfFov = tanf(DEG2RAD((fov * 0.5f)));
 
 	mat4 result; // There are MANY different ways to derive a projection matrix!
@@ -748,6 +785,17 @@ mat4 Projection(float fov, float aspect, float zNear, float zFar) {
 		result._43 = -zNear * result._33; // - near * (far / range)
 		result._44 = 0.0f;
 #endif
+
+		/*float zn = zNear;
+		float zf = zFar;
+		float fovy = DEG2RAD(fov);
+
+		result._11 = 1.0f / (aspect * tanf(fovy / 2.0f));
+		result._22 = 1.0f / tanf(fovy / 2.0f);
+		result._33 = zf / (zf - zn);
+		result._34 = 1.0f;
+		result._43 = (zf * zn) / (zn - zf);
+		result._44 = 0.0f;*/
 
 	return result;
 }

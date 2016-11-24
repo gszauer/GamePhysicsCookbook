@@ -212,6 +212,9 @@ vec3 GetTranslation(const mat4& mat);
 mat4 Translate(float x, float y, float z);
 mat4 Translate(const vec3& pos);
 mat4 FromMat3(const mat3& mat);
+
+mat3 FastInverse(const mat3& mat);
+mat4 FastInverse(const mat4& mat);
 #endif
 
 mat4 Scale(float x, float y, float z);

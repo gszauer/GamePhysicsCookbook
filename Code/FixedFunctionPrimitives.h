@@ -2,6 +2,7 @@
 #define _H_FIXED_FUNCTION_PRIMITIVES_
 
 #include "Geometry2D.h"
+#include "matrices.h"
 
 // TODO: REMOVE THESE!
 #include "../../PhysicsBookDraftCode/Physics/Geometry3D.h"
@@ -28,6 +29,7 @@ void Render(const OBB& obb);
 void Render(const Plane& plane); // TODO
 void Render(const Triangle& triangle);
 void Render(const Frustum& frustum);
+void RenderNormals(const Frustum& frustum);
 
 void Render(const Mesh& mesh);
 void Render(const BVHNode& bvh);

@@ -40,6 +40,57 @@ void Render(const Model& model) {
 	glPopMatrix();
 }
 
+void RenderNormals(const Frustum& frustum) {
+	vec3 NTL = Intersection(frustum.near, frustum.top, frustum.left);
+	vec3 NTR = Intersection(frustum.near, frustum.top, frustum.right);
+	vec3 NBL = Intersection(frustum.near, frustum.bottom, frustum.left);
+	vec3 NBR = Intersection(frustum.near, frustum.bottom, frustum.right);
+
+	vec3 FTL = Intersection(frustum.far, frustum.top, frustum.left);
+	vec3 FTR = Intersection(frustum.far, frustum.top, frustum.right);
+	vec3 FBL = Intersection(frustum.far, frustum.bottom, frustum.left);
+	vec3 FBR = Intersection(frustum.far, frustum.bottom, frustum.right);
+
+	/*vec3 centers[] = {
+		(NTR + NTL + FTR + FTL) * 0.25f, // Top
+		(NBR + NBL + FBR + FBL) * 0.25f, // Bottom
+		(NTL + NBL + FTL + FBL) * 0.25f,// Left
+		(NTR + NBR + FTR + FBR) * 0.25f,// Right
+		(NTL + NTR + NBL + NBR) * 0.25f,// Near
+		(FTL + FTR + FBL + FBR) * 0.25f// Far
+	};*/
+
+	vec3 centers[] = {
+		frustum.planes[0].normal,
+		frustum.planes[1].normal,
+		frustum.planes[2].normal,
+		frustum.planes[3].normal,
+		frustum.planes[4].normal,
+		frustum.planes[5].normal,
+	};
+
+	glBegin(GL_LINES);
+	for (int i = 0; i < 6; ++i) {
+		vec3 p1 = centers[i] + frustum.planes[i].normal * 0.5f;
+		glVertex3fv(centers[i].asArray);
+		glVertex3fv(p1.asArray);
+	}
+	glEnd();
+
+	for (int i = 0; i < 6; ++i) {
+		vec3 p1 = centers[i] + frustum.planes[i].normal * 0.5f;
+		vec3 p2 = p1 + frustum.planes[i].normal * 0.25f;
+
+		mat4 orient = FastInverse(LookAt(p1, p2, vec3(0, 1, 0)));
+		mat4 rotate = Rotation(90.0f, 0.0f, 0.0f);
+
+		glPushMatrix();
+		glMultMatrixf((rotate * orient).asArray);
+		FixedFunctionCone(3, 3.0f, 0.1f);
+		glPopMatrix();
+	}
+}
+
 void Render(const Frustum& frustum) {
 	vec3 NTL = Intersection(frustum.near, frustum.top, frustum.left);
 	vec3 NTR = Intersection(frustum.near, frustum.top, frustum.right);
@@ -73,6 +124,7 @@ void Render(const Frustum& frustum) {
 	glVertex3fv(FBL.asArray);
 	glVertex3fv(FTL.asArray);
 
+	// Edges
 	glVertex3fv(NTL.asArray);
 	glVertex3fv(FTL.asArray);
 	glVertex3fv(NTR.asArray);
@@ -81,6 +133,7 @@ void Render(const Frustum& frustum) {
 	glVertex3fv(FBL.asArray);
 	glVertex3fv(NBR.asArray);
 	glVertex3fv(FBR.asArray);
+
 
 	glEnd();
 }
@@ -691,9 +744,9 @@ void FixedFunctionSubdivCone(float *v1, float *v2, int subdiv, float height, flo
 	if (subdiv == 0) {
 		// Bottom cover of the cone
 		glNormal3f(0.0f, -1.0f, 0.0f);
-		glVertex3fv(v0);
-		glVertex3fv(v2);
-		glVertex3fv(v1);
+		glVertex3f(v0[0] * radius, v0[1] * radius, v0[2] * radius);
+		glVertex3f(v2[0] * radius, v2[1] * radius, v2[2] * radius);
+		glVertex3f(v1[0] * radius, v1[1] * radius, v1[2] * radius);
 
 		v0[1] = height; // height of the cone, the tip on y axis
 		// Side cover of the cone
