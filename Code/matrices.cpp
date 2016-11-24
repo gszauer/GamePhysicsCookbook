@@ -766,7 +766,7 @@ mat4 Projection(float fov, float aspect, float zNear, float zFar) {
 	float tanHalfFov = tanf(DEG2RAD((fov * 0.5f)));
 
 	mat4 result; // There are MANY different ways to derive a projection matrix!
-
+	
 #if 0
 		result._11 = 1.0f / (aspect * tanHalfFov);
 		result._22 = 1.0f / tanHalfFov;
@@ -786,16 +786,7 @@ mat4 Projection(float fov, float aspect, float zNear, float zFar) {
 		result._44 = 0.0f;
 #endif
 
-		/*float zn = zNear;
-		float zf = zFar;
-		float fovy = DEG2RAD(fov);
-
-		result._11 = 1.0f / (aspect * tanf(fovy / 2.0f));
-		result._22 = 1.0f / tanf(fovy / 2.0f);
-		result._33 = zf / (zf - zn);
-		result._34 = 1.0f;
-		result._43 = (zf * zn) / (zn - zf);
-		result._44 = 0.0f;*/
+	// result._43 *= -1.0f;
 
 	return result;
 }

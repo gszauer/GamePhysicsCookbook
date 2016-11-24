@@ -51,23 +51,23 @@ void RenderNormals(const Frustum& frustum) {
 	vec3 FBL = Intersection(frustum.far, frustum.bottom, frustum.left);
 	vec3 FBR = Intersection(frustum.far, frustum.bottom, frustum.right);
 
-	/*vec3 centers[] = {
+	vec3 centers[] = {
 		(NTR + NTL + FTR + FTL) * 0.25f, // Top
 		(NBR + NBL + FBR + FBL) * 0.25f, // Bottom
 		(NTL + NBL + FTL + FBL) * 0.25f,// Left
 		(NTR + NBR + FTR + FBR) * 0.25f,// Right
 		(NTL + NTR + NBL + NBR) * 0.25f,// Near
 		(FTL + FTR + FBL + FBR) * 0.25f// Far
-	};*/
+	};
 
-	vec3 centers[] = {
+	/*vec3 centers[] = {
 		frustum.planes[0].normal,
 		frustum.planes[1].normal,
 		frustum.planes[2].normal,
 		frustum.planes[3].normal,
 		frustum.planes[4].normal,
 		frustum.planes[5].normal,
-	};
+	};*/
 
 	glBegin(GL_LINES);
 	for (int i = 0; i < 6; ++i) {

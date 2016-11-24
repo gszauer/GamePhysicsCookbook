@@ -256,6 +256,6 @@ mat4 LookAt(const vec3& position, const vec3& target, const vec3& up);
 mat4 Projection(float fov, float aspect, float zNear, float zFar);
 mat4 Ortho(float left, float right, float bottom, float top, float zNear, float zFar);
 
-vec3 Decompose(const mat3& rot); // TODO: THIS IS NEW!
+vec3 Decompose(const mat3& rot);
 
 #endif

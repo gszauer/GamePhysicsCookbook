@@ -17,11 +17,11 @@ Mesh meshObject;
 Model modelObject;
 AABB ground;
 Scene* scene;
-Point testPoints[] = {
-	Point(1, 1, 1),
-	Point(0, 0, -2),
-	Point(-1.5, 0, -2),
-	Point(-1, -1, -2),
+Sphere testPoints[] = {
+	Sphere(vec3(0.5f, 0.5f, 0.5f), 0.75f),
+	Sphere(vec3(0, 0, -2), 0.25f),
+	Sphere(vec3(-1.5, 0, -2), 1.0f),
+	Sphere(vec3(1, 1, 2), 1.0f),
 };
 int testSize = 4;
 // END TODO
@@ -101,46 +101,15 @@ void SampleApplication::OnRender() {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(camera.GetViewMatrix().asArray);
 
-	mat4 debugMat = LookAt(vec3(0.0f, 0.0f, -15.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-	//glLoadMatrixf(debugMat.asArray);
-
-
-	/*glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glColor3f(0.0f, 0.0f, 1.0f);
-	float val[] = {0, 1, 0, 0 };
-	glLightfv(GL_LIGHT0, GL_AMBIENT, val);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, val);*/
-	//Render(modelObject);
-
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glColor3f(0.0f, 0.0f, 1.0f);
-	//val[0] = 1; val[1] = 0;
-	//glLightfv(GL_LIGHT0, GL_AMBIENT, val);
-	//glLightfv(GL_LIGHT0, GL_DIFFUSE, val);
-	//Render(GetOBB(modelObject));
 
 	Camera c;
 	c.Perspective(60.0f, 1.3f, 1.0f, 2.0f);
-	//c.Orthographic(1, 1, 1, 2);
 	c.SetWorld(Inverse(LookAt(vec3(2.0f, 2.0f, 2.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f))));
 	Frustum f = c.GetFrustum();
 
 	Render(f);
 	RenderNormals(f);
-
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	//glColor3f(0.0f, 0.0f, 1.0f);
-	//val[0] = 0; val[2] = 1;
-	//glLightfv(GL_LIGHT0, GL_AMBIENT, val);
-	//glLightfv(GL_LIGHT0, GL_DIFFUSE, val);
-	//Render(ground);
-
-
-	/*glColor3f(1.0f, 0.0f, 0.0f);
-	glDisable(GL_LIGHTING);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	Render(*meshObject.accelerator);
-	glEnable(GL_LIGHTING);*/
 
 	for (int i = 0; i < testSize; ++i) {
 		if (Intersects(f, testPoints[i])) {
@@ -151,7 +120,6 @@ void SampleApplication::OnRender() {
 		}
 		Render(testPoints[i]);
 	}
-
 
 	FixedFunctionOrigin(true, false);
 }
