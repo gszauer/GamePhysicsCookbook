@@ -17,11 +17,20 @@ Mesh meshObject;
 Model modelObject;
 AABB ground;
 Scene* scene;
-Sphere testPoints[] = {
-	Sphere(vec3(0.5f, 0.5f, 0.5f), 0.75f),
-	Sphere(vec3(0, 0, -2), 0.25f),
-	Sphere(vec3(-1.5, 0, -2), 1.0f),
-	Sphere(vec3(1, 1, 2), 1.0f),
+AABB testPoints[] = {
+	/*OBB(Point(0, 0, 0), vec3(0.5, 0.5, 0.5)),
+	OBB(Point(2, 2, 2), vec3(1, 1, 1)),
+	OBB(Point(1, 1, 1), vec3(0.1, 0.1, 0.1)),
+	OBB(Point(1, 1, 1), vec3(4, 4, 4)),*/
+	
+	/*OBB(Point(0, 0, 0), vec3(0.5, 0.5, 0.5), Rotation3x3(0.0f, 0.0f, 45.0f)),
+	OBB(Point(2, 2, 2), vec3(1, 1, 1), Rotation3x3(45.0f, 0.0f, 45.0f)),
+	OBB(Point(1, 1, 1), vec3(0.1, 0.1, 0.1), Rotation3x3(45.0f, 0.0f, 0.0f)),*/
+
+	AABB(Point(0, 0, 0), vec3(0.5f, 0.5f, 0.5f)),
+	AABB(Point(2, 2, 2), vec3(1, 1, 1)),
+	AABB(Point(1, 1, 1), vec3(0.1, 0.1, 0.1)),
+	AABB(Point(1, 1, 1), vec3(4, 4, 4)),
 };
 int testSize = 4;
 // END TODO
@@ -126,45 +135,7 @@ void SampleApplication::OnRender() {
 
 void SampleApplication::OnUpdate(float deltaTime) {
 	GLWindow::OnUpdate(deltaTime);
-
-	/*if (KeyDown(KEY_ONE)) {
-		cameraDist = -10.0f;
-		cameraPos = vec2();
-	}
-	else if (KeyDown(KEY_TWO)) {
-		cameraPos = vec2(14, 14);
-		cameraDist = -14.0f;
-	}
-	else if (KeyDown(KEY_THREE)) {
-		float size = 2.0f;
-		float aspect = (float)m_nWidth / (float)m_nHeight;
-		camera.Orthographic(size * aspect, size, 100, -100);
-	}
-	else if (KeyDown(KEY_FOUR)) {
-		camera.Perspective(60.0f, camera.GetAspect(), 0.01f, 1000.0f);
-	}
-
-	if (MouseButonDown(MOUSE_LEFT)) {
-		cameraDist += 3.0f * deltaTime;
-	} else if (MouseButonDown(MOUSE_RIGHT)) {
-		cameraDist -= 3.0f * deltaTime;
-	}
-
-	if (KeyDown(KEY_DOWN_ARROW)) {
-		cameraPos.y += -5.0f * deltaTime;
-	}
-	else if (KeyDown(KEY_UP_ARROW)) {
-		cameraPos.y += 5.0f * deltaTime;
-	}
-
-	if (KeyDown(KEY_LEFT_ARROW)) {
-		cameraPos.x += -5.0f * deltaTime;
-	}
-	else if (KeyDown(KEY_RIGHT_ARROW)) {
-		cameraPos.x += 5.0f * deltaTime;
-	}*/
-
-
+	
 	bool leftDown = MouseButonDown(MOUSE_LEFT);
 	bool middleDown = MouseButonDown(MOUSE_MIDDLE);
 	bool rightDown = MouseButonDown(MOUSE_RIGHT);
