@@ -40,7 +40,9 @@ void SampleApplication::OnInitialize() {
 	GLWindow::OnInitialize();
 	m_prevMousePos = vec2(0.0f, 0.0f);
 
-	camera.Perspective(60.0f, (float)m_nWidth / (float)m_nHeight, 0.01f, 1000.0f);
+	float aspect = (float)m_nWidth / (float)m_nHeight;
+	//camera.Perspective(60.0f, (float)m_nWidth / (float)m_nHeight, 0.01f, 1000.0f);
+	camera.Orthographic(10 * aspect, 10, 0.01f, 1000.0f);
 
 	cameraDist = -10.0f;
 	//camera.LookAt(vec3(cameraPos.x, cameraPos.y, cameraDist), vec3(), vec3(0.0f, 1.0f, 0.0f));
@@ -51,7 +53,7 @@ void SampleApplication::OnInitialize() {
 	glPointSize(3.0f);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 
 	float val[] = { 0.5f, 1.0f, -1.5f, 0.0f };
@@ -100,54 +102,23 @@ void SampleApplication::OnRender() {
 	glLoadMatrixf(camera.GetViewMatrix().asArray);
 
 
-	if (doRaycast) {
-		doRaycast = false;
-		cast = GetPickRay(castMouse, vec2(0.0f, 0.0f), vec2(GetWidth(), GetHeight()), camera.GetViewMatrix(), camera.GetProjectionMatrix());
-	}
+	
 
-	glDisable(GL_LIGHTING);
-	glColor3f(0.0f, 0.0f, 1.0f);
-	Render(ground);
-	glColor3f(1.0f, 0.0f, 1.0f);
-	Render(cast);
-	glEnable(GL_LIGHTING);
+	
+	Camera c;
+	//c.SetWorld(Inverse(LookAt(vec3(2.0f, 2.0f, 2.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f))));
+	c.SetWorld(Inverse(LookAt(vec3(0, 0, 0), vec3(0.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f))));
+	
+	//glColor3f(0.0f, 0.0f, 1.0f);
+	//c.Orthographic(5.0f, 5.0f, 0.5f, 3.0f);
+	//Render(c.GetFrustum());
 
-	std::vector<Model*> visible = scene->Cull(camera.GetFrustum());
-	Model* castResult = scene->Raycast(cast);
-
-	for (int i = 0, size = visible.size(); i < size; ++i) {
-		float lightColor[] = { 0.0f, 1.0f, 0.0f, 1.0f };
-		if (visible[i] == castResult) {
-			lightColor[0] = 1.0f;
-			lightColor[1] = 0.0f;
-		}
-		glLightfv(GL_LIGHT0, GL_AMBIENT, lightColor);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor);
-
-		Render(*visible[i]);
-	}
-
-	/*Camera c;
+	glColor3f(0.0f, 1.0f, 0.0f);
 	c.Perspective(60.0f, 1.3f, 0.5f, 3.0f);
-	c.SetWorld(Inverse(LookAt(vec3(2.0f, 2.0f, 2.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f))));
-	Frustum f = c.GetFrustum();
+	Render(c.GetFrustum());
 
-	Render(f);*/
-	//RenderNormals(f);
-
-	/*for (int i = 0; i < testSize; ++i) {
-		if (Intersects(f, testPoints[i])) {
-			glColor3f(0.0f, 1.0f, 0.0f);
-		}
-		else {
-			glColor3f(1.0f, 0.0f, 0.0f);
-		}
-		//Render(testPoints[i]);
-	}*/
-
-	/*glColor3f(1.0f, 0.0f, 1.0f);
-	Ray r = GetPickRay(vec2(50.0f, 0.0f), vec2(0.0f, 0.0f), vec2(650.0f, 500.0f), c.GetViewMatrix(), c.GetProjectionMatrix());
-	Render(r);*/
+	RenderNormals(c.GetFrustum());
+	//Render(Point(2, 2, 2));
 
 	FixedFunctionOrigin(true, false);
 }
@@ -155,6 +126,17 @@ void SampleApplication::OnRender() {
 void SampleApplication::OnUpdate(float deltaTime) {
 	GLWindow::OnUpdate(deltaTime);
 	
+
+	if (KeyDown(KEY_ONE)) {
+		camera.SetWorld(Inverse(LookAt(vec3(0, 0, 15), vec3(0, 0, 0), vec3(0, 1, 0))));
+	}
+	if (KeyDown(KEY_TWO)) {
+		camera.SetWorld(Inverse(LookAt(vec3(0, 15, 0), vec3(0, 0, 0), vec3(0, 0, 1))));
+	}
+	if (KeyDown(KEY_THREE)) {
+		camera.SetWorld(Inverse(LookAt(vec3(15, 0, 0), vec3(0, 0, 0), vec3(0, 1, 0))));
+	}
+
 	bool leftDown = MouseButonDown(MOUSE_LEFT);
 	bool middleDown = MouseButonDown(MOUSE_MIDDLE);
 	bool rightDown = MouseButonDown(MOUSE_RIGHT);
@@ -178,6 +160,6 @@ void SampleApplication::OnUpdate(float deltaTime) {
 		camera.Pan(mouseDelta, deltaTime);
 	}
 
-	camera.Update(deltaTime);
+	//camera.Update(deltaTime);
 	m_prevMousePos = mousePos;
 }

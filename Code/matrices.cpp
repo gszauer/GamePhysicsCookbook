@@ -795,13 +795,15 @@ mat4 Projection(float fov, float aspect, float zNear, float zFar) {
 }
 
 // Derived following: http://www.songho.ca/opengl/gl_projectionmatrix.html
+// Above was wrong, it was OpenGL style, our matrices are DX style
+// Correct impl: https://msdn.microsoft.com/en-us/library/windows/desktop/bb205347(v=vs.85).aspx
 mat4 Ortho(float left, float right, float bottom, float top, float zNear, float zFar) {
-	float _11 =  2.0f / (right - left);
-	float _22 =  2.0f / (top - bottom);
-	float _33 = -2.0f / (zFar - zNear);
-	float _41 = -((right + left) / (right - left));
-	float _42 = -((top + bottom) / (top - bottom));
-	float _43 = -((zFar + zNear) / (zFar - zNear));
+	float _11 = 2.0f / (right - left);
+	float _22 = 2.0f / (top - bottom);
+	float _33 = 1.0f / (zFar - zNear);
+	float _41 = (left + right) / (left - right);
+	float _42 = (top + bottom) / (bottom - top);
+	float _43 = (zNear) / (zNear - zFar);
 
 	return mat4(
 		 _11, 0.0f, 0.0f, 0.0f,
@@ -809,6 +811,13 @@ mat4 Ortho(float left, float right, float bottom, float top, float zNear, float 
 		0.0f, 0.0f,  _33, 0.0f,
 		 _41,  _42,  _43, 1.0f
 	); 
+
+	/*
+	2 / (r - l)			0					0				0
+	0					2 / (t - b)			0				0
+	0					0					1 / (zf - zn)   0
+	(l + r) / (l - r)	(t + b) / (b - t)	zn / (zn - zf)  1
+	*/
 
 	/*float w = right - left;
 	float h = bottom - top;
