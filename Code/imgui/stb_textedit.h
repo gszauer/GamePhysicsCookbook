@@ -167,7 +167,6 @@
 //    STB_TEXTEDIT_K_TEXTSTART2          secondary keyboard input to move cursor to start of text
 //    STB_TEXTEDIT_K_TEXTEND2            secondary keyboard input to move cursor to end of text
 //
-// Todo:
 //    STB_TEXTEDIT_K_PGUP        keyboard input to move cursor up a page
 //    STB_TEXTEDIT_K_PGDOWN      keyboard input to move cursor down a page
 //
@@ -1048,7 +1047,6 @@ retry:
          break;
       }
 
-// @TODO:
 //    STB_TEXTEDIT_K_PGUP      - move cursor up a page
 //    STB_TEXTEDIT_K_PGDOWN    - move cursor down a page
    }

@@ -36,7 +36,7 @@ void GLWindow::OnInitialize() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	
-	// TODO: Set Default GL States!
+	// Set default OpenGL States
 	OnResize(m_nWidth, m_nHeight);
 }
 

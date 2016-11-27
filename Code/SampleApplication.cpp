@@ -3,27 +3,14 @@
 #include <windows.h>
 #include <windowsx.h>
 #include <cstdlib>
-
 #include "glad/glad.h"
-
 #include "SampleApplication.h"
 #include"FixedFunctionPrimitives.h"
-
 #include "imgui/imgui.h"
+#include <iostream>
 
 static SampleApplication debugInstance("Sample Application", 800, 600);
 
-// TODO: REMOVE
-#include <iostream>
-Mesh meshObject;
-Model modelObject;
-AABB ground;
-Scene* scene;
-
-bool doRaycast = false;
-Ray cast;
-vec2 castMouse;
-// END TODO
 
 float SampleApplication::random(float min, float max) {
 	if (max < min) {
@@ -43,13 +30,11 @@ void SampleApplication::OnInitialize() {
 	m_prevMousePos = vec2(0.0f, 0.0f);
 
 	float aspect = (float)m_nWidth / (float)m_nHeight;
-	//camera.Perspective(60.0f, (float)m_nWidth / (float)m_nHeight, 0.01f, 1000.0f);
-	camera.Orthographic(10 * aspect, 10, 0.01f, 1000.0f);
+	camera.Perspective(60.0f, (float)m_nWidth / (float)m_nHeight, 0.01f, 1000.0f);
+	//camera.Orthographic(10 * aspect, 10, 0.01f, 1000.0f);
 
 	cameraDist = -10.0f;
-	//camera.LookAt(vec3(cameraPos.x, cameraPos.y, cameraDist), vec3(), vec3(0.0f, 1.0f, 0.0f));
-	//glDisable(GL_CULL_FACE);
-	//glDisable(GL_DEPTH_TEST);
+
 	glEnable(GL_DEPTH_TEST);
 
 	glPointSize(3.0f);
@@ -158,7 +143,7 @@ void SampleApplication::OnRender() {
 void SampleApplication::OnUpdate(float deltaTime) {
 	GLWindow::OnUpdate(deltaTime);
 	
-
+	/*
 	if (KeyDown(KEY_ONE)) {
 		camera.SetWorld(Inverse(LookAt(vec3(0, 0, 15), vec3(0, 0, 0), vec3(0, 1, 0))));
 	}
@@ -168,6 +153,7 @@ void SampleApplication::OnUpdate(float deltaTime) {
 	if (KeyDown(KEY_THREE)) {
 		camera.SetWorld(Inverse(LookAt(vec3(15, 0, 0), vec3(0, 0, 0), vec3(0, 1, 0))));
 	}
+	*/
 
 	bool leftDown = MouseButonDown(MOUSE_LEFT);
 	bool middleDown = MouseButonDown(MOUSE_MIDDLE);
@@ -192,6 +178,6 @@ void SampleApplication::OnUpdate(float deltaTime) {
 		camera.Pan(mouseDelta, deltaTime);
 	}
 
-	//camera.Update(deltaTime);
+	camera.Update(deltaTime);
 	m_prevMousePos = mousePos;
 }

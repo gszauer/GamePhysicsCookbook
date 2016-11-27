@@ -3,8 +3,6 @@
 
 #include "GLWindow.h"
 #include "vectors.h"
-
-// TODO: Get Rid of this
 #include "Camera.h"
 
 class SampleApplication : public GLWindow {
@@ -12,6 +10,15 @@ protected:
 	vec2 cameraPos;
 	float cameraDist;
 	vec2 m_prevMousePos;
+
+	Mesh meshObject;
+	Model modelObject;
+	AABB ground;
+	class Scene* scene;
+
+	bool doRaycast = false;
+	Ray cast;
+	vec2 castMouse;
 public:
 	OrbitCamera camera;
 

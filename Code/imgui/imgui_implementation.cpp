@@ -3,17 +3,17 @@
 
 #include "../glad/glad.h"
 
-static HWND g_hWnd = 0;
-static INT64 g_Time = 0;
-static INT64 g_TicksPerSecond = 0;
-static GLuint g_FontTexture = 0;
+static HWND g_imgui_HWND = 0;
+static INT64 g_imgui_time = 0;
+static INT64 g_imgui_ticks_per_second = 0;
+static GLuint g_imgui_font_texture = 0;
 
 bool ImGui_Implementation_Init(void* hwnd) {
-	g_hWnd = (HWND)hwnd;
+	g_imgui_HWND = (HWND)hwnd;
 
-	if (!QueryPerformanceFrequency((LARGE_INTEGER *)&g_TicksPerSecond))
+	if (!QueryPerformanceFrequency((LARGE_INTEGER *)&g_imgui_ticks_per_second))
 		return false;
-	if (!QueryPerformanceCounter((LARGE_INTEGER *)&g_Time))
+	if (!QueryPerformanceCounter((LARGE_INTEGER *)&g_imgui_time))
 		return false;
 
 	ImGuiIO& io = ImGui::GetIO();
@@ -38,7 +38,7 @@ bool ImGui_Implementation_Init(void* hwnd) {
 	io.KeyMap[ImGuiKey_Z] = 'Z';
 
 	io.RenderDrawListsFn = ImGui_Implementation_RenderDrawLists;   // Alternatively you can set this to NULL and call ImGui::GetDrawData() after ImGui::Render() to get the same ImDrawData pointer.
-	io.ImeWindowHandle = g_hWnd;
+	io.ImeWindowHandle = g_imgui_HWND;
 
 	return true;
 }
@@ -53,14 +53,14 @@ bool ImGui_Implementation_CreateDeviceObjects() {
 															  // Upload texture to graphics system
 	GLint last_texture;
 	glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
-	glGenTextures(1, &g_FontTexture);
-	glBindTexture(GL_TEXTURE_2D, g_FontTexture);
+	glGenTextures(1, &g_imgui_font_texture);
+	glBindTexture(GL_TEXTURE_2D, g_imgui_font_texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
 	// Store our identifier
-	io.Fonts->TexID = (void *)(intptr_t)g_FontTexture;
+	io.Fonts->TexID = (void *)(intptr_t)g_imgui_font_texture;
 
 	// Restore state
 	glBindTexture(GL_TEXTURE_2D, last_texture);
@@ -71,14 +71,14 @@ bool ImGui_Implementation_CreateDeviceObjects() {
 void ImGui_Implementation_Shutdown() {
 	ImGui_Implementation_InvalidateDeviceObjects();
 	ImGui::Shutdown();
-	g_hWnd = 0;
+	g_imgui_HWND = 0;
 }
 
 void ImGui_Implementation_InvalidateDeviceObjects() {
-	if (g_FontTexture) {
-		glDeleteTextures(1, &g_FontTexture);
+	if (g_imgui_font_texture) {
+		glDeleteTextures(1, &g_imgui_font_texture);
 		ImGui::GetIO().Fonts->TexID = 0;
-		g_FontTexture = 0;
+		g_imgui_font_texture = 0;
 	}
 }
 
@@ -162,7 +162,7 @@ void ImGui_Implementation_RenderDrawLists(struct ImDrawData* draw_data) {
 }
 
 void ImGui_Implementation_NewFrame() {
-	if (!g_FontTexture) {
+	if (!g_imgui_font_texture) {
 		ImGui_Implementation_CreateDeviceObjects();
 	}
 
@@ -170,14 +170,14 @@ void ImGui_Implementation_NewFrame() {
 
 	// Setup display size (every frame to accommodate for window resizing)
 	RECT rect;
-	GetClientRect(g_hWnd, &rect);
+	GetClientRect(g_imgui_HWND, &rect);
 	io.DisplaySize = ImVec2((float)(rect.right - rect.left), (float)(rect.bottom - rect.top));
 
 	// Setup time step
 	INT64 current_time;
 	QueryPerformanceCounter((LARGE_INTEGER *)&current_time);
-	io.DeltaTime = (float)(current_time - g_Time) / g_TicksPerSecond;
-	g_Time = current_time;
+	io.DeltaTime = (float)(current_time - g_imgui_time) / g_imgui_ticks_per_second;
+	g_imgui_time = current_time;
 
 	// Read keyboard modifiers inputs
 	io.KeyCtrl = (GetKeyState(VK_CONTROL) & 0x8000) != 0;
@@ -198,7 +198,7 @@ void ImGui_Implementation_NewFrame() {
 	ImGui::NewFrame();
 }
 
-LRESULT ImGui_Implementation_WndProcHandler(HWND, UINT msg, WPARAM wParam, LPARAM lParam) {
+bool ImGui_Implementation_WndProcHandler(HWND, UINT msg, WPARAM wParam, LPARAM lParam) {
 	ImGuiIO& io = ImGui::GetIO();
 	switch (msg)
 	{
@@ -228,18 +228,21 @@ LRESULT ImGui_Implementation_WndProcHandler(HWND, UINT msg, WPARAM wParam, LPARA
 		io.MousePos.y = (signed short)(lParam >> 16);
 		return true;
 	case WM_KEYDOWN:
-		if (wParam < 256)
+		if (wParam < 256) {
 			io.KeysDown[wParam] = 1;
+		}
 		return true;
 	case WM_KEYUP:
-		if (wParam < 256)
+		if (wParam < 256) {
 			io.KeysDown[wParam] = 0;
+		}
 		return true;
 	case WM_CHAR:
 		// You can also use ToAscii()+GetKeyboardState() to retrieve characters.
-		if (wParam > 0 && wParam < 0x10000)
+		if (wParam > 0 && wParam < 0x10000) {
 			io.AddInputCharacter((unsigned short)wParam);
+		}
 		return true;
 	}
-	return 0;
+	return false;
 }

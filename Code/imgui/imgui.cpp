@@ -29,7 +29,7 @@
    - How can I load multiple fonts?
    - How can I display and input non-latin characters such as Chinese, Japanese, Korean, Cyrillic?
    - How can I use the drawing facilities without an ImGui window? (using ImDrawList API)
- - ISSUES & TODO-LIST
+ - ISSUES
  - CODE
 
 
@@ -106,21 +106,17 @@
         io.DisplaySize.y = 1280.0f;
         io.IniFilename = "imgui.ini";
         io.RenderDrawListsFn = my_render_function;  // Setup a render function, or set to NULL and call GetDrawData() after Render() to access the render data.
-        // TODO: Fill others settings of the io structure
 
         // Load texture atlas
         // There is a default font so you don't need to care about choosing a font yet
         unsigned char* pixels;
         int width, height;
         io.Fonts->GetTexDataAsRGBA32(pixels, &width, &height);
-        // TODO: At this points you've got a texture pointed to by 'pixels' and you need to upload that your your graphic system
-        // TODO: Store your texture pointer/identifier (whatever your engine uses) in 'io.Fonts->TexID'
 
         // Application main loop
         while (true)
         {
             // 1) get low-level inputs (e.g. on Win32, GetKeyboardState(), or poll your events, etc.)
-            // TODO: fill all fields of IO structure and call NewFrame
             ImGuiIO& io = ImGui::GetIO();
             io.DeltaTime = 1.0f/60.0f;
             io.MousePos = mouse_pos;
@@ -263,7 +259,7 @@
  ======================================
 
  Q: How can I help?
- A: - If you are experienced enough with ImGui and with C/C++, look at the todo list and see how you want/can help!
+ A: - If you are experienced enough with ImGui and with C/C++, look at the  list and see how you want/can help!
     - Become a Patron/donate. Convince your company to become a Patron or provide serious funding for development time.
 
  Q: How do I update to a newer version of ImGui?
@@ -461,7 +457,7 @@
  - tip: call and read the ShowTestWindow() code in imgui_demo.cpp for more example of how to use ImGui!
 
 
- ISSUES & TODO-LIST
+ ISSUES 
  ==================
  Issue numbers (#) refer to github issues listed at https://github.com/ocornut/imgui/issues
  The list below consist mostly of notes of things to do before they are requested/discussed by users (at that point it usually happens on the github)

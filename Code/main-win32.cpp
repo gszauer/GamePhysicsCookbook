@@ -255,9 +255,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
-	if (ImGui_Implementation_WndProcHandler(hwnd, iMsg, wParam, lParam)) {
-		return true;
-	}
+	bool skipDefault = ImGui_Implementation_WndProcHandler(hwnd, iMsg, wParam, lParam);
 
 	IWindow* pWindowInstance = IWindow::GetInstance();
 	int width, height;
@@ -333,6 +331,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
 		pWindowInstance->OnKeyUp(WParamToKeydef(wParam, shiftDown ^ capsOn));
 		break;
 	}
+	if (skipDefault) {
+		return true;
+	}
+
 	return DefWindowProc(hwnd, iMsg, wParam, lParam);
 }
 

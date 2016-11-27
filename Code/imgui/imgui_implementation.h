@@ -11,6 +11,6 @@ bool ImGui_Implementation_CreateDeviceObjects();
 void ImGui_Implementation_InvalidateDeviceObjects();
 void ImGui_Implementation_RenderDrawLists(struct ImDrawData* draw_data);
 void ImGui_Implementation_NewFrame();
-LRESULT ImGui_Implementation_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+bool ImGui_Implementation_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 #endif
