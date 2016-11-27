@@ -2,14 +2,10 @@
 #define _H_FIXED_FUNCTION_PRIMITIVES_
 
 #include "Geometry2D.h"
+#include "Geometry3D.h"
+#include "ObjLoader.h"
+#include "Scene.h"
 #include "matrices.h"
-
-// TODO: REMOVE THESE!
-#include "../../PhysicsBookDraftCode/Physics/Geometry3D.h"
-#include "../../PhysicsBookDraftCode/Physics/ObjLoader.h"
-#include "../../PhysicsBookDraftCode/Physics/Scene.h"
-#include "../../PhysicsBookDraftCode/Physics/Camera.h"
-
 
 // 2D Geometry
 void Render(const Point2D& point); 

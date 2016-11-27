@@ -144,37 +144,47 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\PhysicsBookDraftCode\Physics\Camera.h" />
-    <ClInclude Include="..\..\PhysicsBookDraftCode\Physics\Geometry3D.h" />
-    <ClInclude Include="..\..\PhysicsBookDraftCode\Physics\ObjLoader.h" />
-    <ClInclude Include="..\..\PhysicsBookDraftCode\Physics\Scene.h" />
-    <ClInclude Include="..\..\PhysicsBookDraftCode\Physics\tiny_obj_loader.h" />
+    <ClInclude Include="..\Code\Camera.h" />
     <ClInclude Include="..\Code\Compare.h" />
     <ClInclude Include="..\Code\FixedFunctionPrimitives.h" />
     <ClInclude Include="..\Code\Geometry2D.h" />
+    <ClInclude Include="..\Code\Geometry3D.h" />
     <ClInclude Include="..\Code\glad\glad.h" />
     <ClInclude Include="..\Code\glad\khrplatform.h" />
     <ClInclude Include="..\Code\GLWindow.h" />
-    <ClInclude Include="..\Code\IMGUIWindow.h" />
+    <ClInclude Include="..\Code\imgui\imconfig.h" />
+    <ClInclude Include="..\Code\imgui\imgui.h" />
+    <ClInclude Include="..\Code\imgui\imgui_implementation.h" />
+    <ClInclude Include="..\Code\imgui\imgui_internal.h" />
+    <ClInclude Include="..\Code\imgui\stb_rect_pack.h" />
+    <ClInclude Include="..\Code\imgui\stb_textedit.h" />
+    <ClInclude Include="..\Code\imgui\stb_truetype.h" />
     <ClInclude Include="..\Code\IWindow.h" />
     <ClInclude Include="..\Code\matrices.h" />
+    <ClInclude Include="..\Code\ObjLoader.h" />
+    <ClInclude Include="..\Code\QuadTree.h" />
     <ClInclude Include="..\Code\SampleApplication.h" />
+    <ClInclude Include="..\Code\Scene.h" />
+    <ClInclude Include="..\Code\tiny_obj_loader.h" />
     <ClInclude Include="..\Code\vectors.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\PhysicsBookDraftCode\Physics\Camera.cpp" />
-    <ClCompile Include="..\..\PhysicsBookDraftCode\Physics\Geometry3D.cpp" />
-    <ClCompile Include="..\..\PhysicsBookDraftCode\Physics\ObjLoader.cpp" />
-    <ClCompile Include="..\..\PhysicsBookDraftCode\Physics\Scene.cpp" />
+    <ClCompile Include="..\Code\Camera.cpp" />
     <ClCompile Include="..\Code\FixedFunctionPrimitives.cpp" />
     <ClCompile Include="..\Code\Geometry2D.cpp" />
+    <ClCompile Include="..\Code\Geometry3D.cpp" />
     <ClCompile Include="..\Code\glad\glad.c" />
     <ClCompile Include="..\Code\GLWindow.cpp" />
-    <ClCompile Include="..\Code\IMGUIWindow.cpp" />
+    <ClCompile Include="..\Code\imgui\imgui.cpp" />
+    <ClCompile Include="..\Code\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\Code\imgui\imgui_implementation.cpp" />
     <ClCompile Include="..\Code\IWindow.cpp" />
     <ClCompile Include="..\Code\main-win32.cpp" />
     <ClCompile Include="..\Code\matrices.cpp" />
+    <ClCompile Include="..\Code\ObjLoader.cpp" />
+    <ClCompile Include="..\Code\QuadTree.cpp" />
     <ClCompile Include="..\Code\SampleApplication.cpp" />
+    <ClCompile Include="..\Code\Scene.cpp" />
     <ClCompile Include="..\Code\vectors.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

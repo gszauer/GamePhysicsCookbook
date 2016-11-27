@@ -27,6 +27,8 @@
 
 #include "IWindow.h"
 #include "matrices.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_implementation.h"
 
 // I set all of these settings in the "Project Settings" of visual studio
 // #pragma comment(lib, "opengl32.lib") 
@@ -152,6 +154,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << "\n";
 	std::cout << "GLSL Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n";
 
+	ImGui_Implementation_Init(hwnd);
 	pWindowInstance->OnInitialize();
 
 	bool fullscreen = pWindowInstance->GetFullScreen();
@@ -184,6 +187,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+		ImGui_Implementation_NewFrame();
 
 		// Potentially change title
 		if (pWindowInstance->GetAndResetTitleDirtyFlag()) {
@@ -225,6 +229,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 		}
 
 		pWindowInstance->OnRender();
+		ImGui::Render();
 		SwapBuffers(hdc);
 
 		// Regulate FPS
@@ -237,8 +242,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 	}
 
 	pWindowInstance->OnShutdown();
+	ImGui_Implementation_Shutdown();
 	OpenGLUnbindContext(hwnd, hdc, hglrc);
-
 	
 	CleanupMemory(pWindowInstance);
 
@@ -250,6 +255,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
+	if (ImGui_Implementation_WndProcHandler(hwnd, iMsg, wParam, lParam)) {
+		return true;
+	}
+
 	IWindow* pWindowInstance = IWindow::GetInstance();
 	int width, height;
 

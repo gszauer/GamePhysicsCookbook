@@ -5,7 +5,7 @@
 #include "vectors.h"
 
 // TODO: Get Rid of this
-#include "../../PhysicsBookDraftCode/Physics/Camera.h"
+#include "Camera.h"
 
 class SampleApplication : public GLWindow {
 protected:
