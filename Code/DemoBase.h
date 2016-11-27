@@ -1,23 +1,33 @@
 #ifndef _H_DEMO_BASE_
 #define _H_DEMO_BASE_
 
+#include "Camera.h"
+
 class DemoBase {
 private: // Disable
 	DemoBase(const DemoBase&);
 	DemoBase& operator=(const DemoBase);
 protected:
-	bool show_help = false; // TODO: Include scene navigation instructions
-	// TODO: We should add the camera and shit here!
-	// TODO: Common Variables
+	bool show_help;
+	bool mouseLeftDown;
+	bool mouseRightDown;
+	bool mouseMiddleDown;
+	vec2 mouseDelta;
+	bool configHelpWindow;
 public:
-	inline DemoBase() { }
+	OrbitCamera camera;
+
+	DemoBase();
 	inline virtual ~DemoBase() { }
 
-	inline virtual void Initialize() { }
-	inline virtual void Render() { }
-	inline virtual void Update(float dt) { }
-	inline virtual void ImGUI() { }
+	virtual void Initialize(int width, int height);
+	virtual void Resize(int width, int height);
+	virtual void Render();
+	virtual void Update(float dt);
+	virtual void ImGUI();
 	inline virtual void Shutdown() { }
+
+	void SetMouseState(bool left, bool middle, bool right, const vec2& delta);
 };
 
 #endif 

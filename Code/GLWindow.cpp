@@ -88,3 +88,13 @@ bool GLWindow::KeyDown(int keyCode) {
 	}
 	return keyboardState[keyCode];
 }
+
+void GLWindow::SetGLProjection(float* projectionArray) {
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(projectionArray);
+}
+
+void GLWindow::SetGLModelView(float* mvArray) {
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(mvArray);
+}

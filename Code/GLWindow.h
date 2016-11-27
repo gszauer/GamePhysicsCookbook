@@ -28,6 +28,9 @@ public:
 	vec2 GetMousePosition();
 	bool MouseButonDown(int button);
 	bool KeyDown(int key);
+
+	void SetGLProjection(float* projectionArray);
+	void SetGLModelView(float* mvArray);
 };
 
 #endif

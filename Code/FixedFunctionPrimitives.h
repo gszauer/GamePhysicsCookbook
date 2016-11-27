@@ -22,7 +22,8 @@ void Render(const Sphere& sphere);
 void Render(const AABB& aabb);
 void RenderWithQuads(const AABB& aabb);
 void Render(const OBB& obb);
-void Render(const Plane& plane); // TODO
+void Render(const Plane& plane);
+void Render(const Plane& plane, float scale);
 void Render(const Triangle& triangle);
 void Render(const Frustum& frustum);
 void RenderNormals(const Frustum& frustum);
@@ -31,7 +32,7 @@ void Render(const Mesh& mesh);
 void Render(const BVHNode& bvh);
 void Render(const Model& model);
 
-// Generic Primitives
+// Generic Primitives (All pointing up on Y axis, must be rotated)
 void FixedFunctionSphere(int numDivisions, float radius);
 void FixedFunctionCube(float extentsX, float extentsY, float extentsZ);
 void FixedFunctionTorus(int majorSegments, int minorSegments, float majorRadius, float minorRadius);

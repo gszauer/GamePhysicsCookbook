@@ -287,6 +287,10 @@ bool Scene::Accelerate(const vec3& position, float size) {
 std::vector<Model*> Scene::Cull(const Frustum& f) {
 	std::vector<Model*> result;
 
+	for (int i = 0, size = objects.size(); i < size; ++i) {
+		objects[i]->flag = false;
+	}
+
 	if (octree == 0) {
 		for (int i = 0, size = objects.size(); i < size; ++i) {
 			OBB bounds = GetOBB(*(objects[i]));
@@ -314,10 +318,12 @@ std::vector<Model*> Scene::Cull(const Frustum& f) {
 			}
 			else { // Is leaf node
 				for (int i = 0, size = active->models.size(); i < size; ++i) {
-					OBB bounds = GetOBB(*(active->models[i]));
-					if (Intersects(f, bounds)) {
-						// TODO: Should only push back unique models
-						result.push_back(active->models[i]);
+					if (!active->models[i]->flag) {
+						OBB bounds = GetOBB(*(active->models[i]));
+						if (Intersects(f, bounds)) {
+							active->models[i]->flag = true;
+							result.push_back(active->models[i]);
+						}
 					}
 				}
 			}

@@ -124,10 +124,10 @@ protected:
 public:
 	vec3 position;
 	vec3 rotation;
-	
+	bool flag;
 	Model* parent;
 
-	inline Model() : parent(0), content(0) { }
+	inline Model() : parent(0), content(0), flag(false) { }
 	inline Mesh* GetMesh() const {
 		return content;
 	}

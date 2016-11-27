@@ -1,5 +1,6 @@
 #include "DemoWindow.h"
 #include "imgui/imgui.h"
+#include "CH14Demo.h"
 
 // This is the global instance of the IWindow singleton!
 static DemoWindow g_WindowInstance("Physics Sandbox", 800, 600);
@@ -15,14 +16,33 @@ void DemoWindow::OnInitialize() {
 
 void DemoWindow::OnResize(int width, int height) {
 	GLWindow::OnResize(width, height);
+	if (m_pDemo != 0) {
+		m_pDemo->Resize(width, height);
+	}
+	ApplyDemoCamera();
 }
 
 void DemoWindow::OnRender() {
 	GLWindow::OnRender();
 
 	if (m_pDemo != 0) {
+		mat4 view = m_pDemo->camera.GetViewMatrix();
+		SetGLModelView(view.asArray);
+
 		m_pDemo->Render();
 	}
+}
+
+void DemoWindow::ApplyDemoCamera() {
+	if (m_pDemo == 0) {
+		return;
+	}
+
+	mat4 projection = m_pDemo->camera.GetProjectionMatrix();
+	mat4 view = m_pDemo->camera.GetViewMatrix();
+
+	SetGLProjection(projection.asArray);
+	SetGLModelView(view.asArray);
 }
 
 void DemoWindow::OnUpdate(float deltaTime) {
@@ -76,28 +96,42 @@ void DemoWindow::OnUpdate(float deltaTime) {
 	}
 
 	ImGui::End();
+	
+	bool leftDown = MouseButonDown(MOUSE_LEFT);
+	bool middleDown = MouseButonDown(MOUSE_MIDDLE);
+	bool rightDown = MouseButonDown(MOUSE_RIGHT);
+
+	vec2 mousePos = GetMousePosition();
+	vec2 mouseDelta = mousePos - m_prevMousePos;
+	mouseDelta.x /= (float)GetWidth();
+	mouseDelta.y /= (float)GetHeight();
 
 	if (m_pDemo != 0) {
 		m_pDemo->ImGUI();
+		m_pDemo->SetMouseState(leftDown, middleDown, rightDown, mouseDelta);
 		m_pDemo->Update(deltaTime);
 	}
+
+	m_prevMousePos = mousePos;
 }
 
 void DemoWindow::OnShutdown() {
 	GLWindow::OnShutdown();
 	StopDemo();
 }
-
 void DemoWindow::StopDemo() {
 	if (m_pDemo != 0) {
 		m_pDemo->Shutdown();
+		delete m_pDemo;
 	}
 	m_pDemo = 0;
 }
 
 void DemoWindow::Start14() {
 	StopDemo();
-	// TODO
+	m_pDemo = new CH14Demo();
+	m_pDemo->Initialize(GetWidth(), GetHeight());
+	ApplyDemoCamera();
 }
 
 void DemoWindow::Start15() {

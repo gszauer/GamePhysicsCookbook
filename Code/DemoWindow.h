@@ -7,10 +7,12 @@
 
 class DemoWindow : public GLWindow {
 protected:
-	vec2 m_prevMousePos; // TODO: Delta mouse!
+	vec2 m_prevMousePos;
 	int m_selectedDemo; // -1: None, 0: CH14, 1: CH15, 2: CH16
 	DemoBase* m_pDemo;
 	bool imgui_init;
+protected:
+	void ApplyDemoCamera();
 public:
 
 	DemoWindow(const char* title, int width, int height)

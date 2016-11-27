@@ -2,11 +2,9 @@
 #define WIN32_EXTRA_LEAN
 #include <windows.h>
 #include <windowsx.h>
-
 #include "glad/glad.h"
-
 #include <cmath>
-
+#include "Compare.h"
 #include "FixedFunctionPrimitives.h"
 
 #ifndef  M_PI
@@ -135,6 +133,43 @@ void Render(const Frustum& frustum) {
 	glVertex3fv(FBR.asArray);
 
 
+	glEnd();
+}
+
+void Render(const Plane& plane, float scale) {
+	glPushMatrix();
+	glScalef(scale, scale, scale);
+	Render(plane);
+	glPopMatrix();
+}
+
+void Render(const Plane& plane) {
+	vec3 forward = plane.normal;
+	vec3 up = vec3(0, 1, 0);
+	if (CMP(MagnitudeSq(Cross(up, plane.normal)), 0)) {
+		up = vec3(1, 0, 0);
+		if (CMP(MagnitudeSq(Cross(up, plane.normal)), 0)) {
+			up = vec3(0, 0, 1);
+		}
+	}
+	vec3 right = Cross(up, forward);
+	up = Cross(forward, right);
+
+	vec3 n = Normalized(plane.normal);
+	float d = plane.distance;
+	vec3 tx = Normalized(right);
+	vec3 ty = Normalized(up);
+
+	glBegin(GL_QUADS);
+		glVertex3f((tx.x + ty.x) + n.x * d, (tx.y + ty.y) + n.y * d, (tx.z + ty.z) + n.z * d);
+		glVertex3f((tx.x - ty.x) + n.x * d, (tx.y - ty.y) + n.y * d, (tx.z - ty.z) + n.z * d);
+		glVertex3f((-tx.x - ty.x) + n.x * d, (-tx.y - ty.y) + n.y * d, (-tx.z - ty.z) + n.z * d);
+		glVertex3f((-tx.x + ty.x) + n.x * d, (-tx.y + ty.y) + n.y * d, (-tx.z + ty.z) + n.z * d);
+
+		glVertex3f((tx.x + ty.x) + n.x * d, (tx.y + ty.y) + n.y * d, (tx.z + ty.z) + n.z * d);
+		glVertex3f((-tx.x + ty.x) + n.x * d, (-tx.y + ty.y) + n.y * d, (-tx.z + ty.z) + n.z * d);
+		glVertex3f((-tx.x - ty.x) + n.x * d, (-tx.y - ty.y) + n.y * d, (-tx.z - ty.z) + n.z * d);
+		glVertex3f((tx.x - ty.x) + n.x * d, (tx.y - ty.y) + n.y * d, (tx.z - ty.z) + n.z * d);
 	glEnd();
 }
 
