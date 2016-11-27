@@ -1,6 +1,8 @@
 #ifndef _H_SAMPLE_APPLICATION_
 #define _H_SAMPLE_APPLICATION_
 
+// TODO: DELETE THIS FILE!
+
 #include "GLWindow.h"
 #include "vectors.h"
 #include "Camera.h"

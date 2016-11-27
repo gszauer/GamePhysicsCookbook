@@ -136,7 +136,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -146,6 +146,8 @@
   <ItemGroup>
     <ClInclude Include="..\Code\Camera.h" />
     <ClInclude Include="..\Code\Compare.h" />
+    <ClInclude Include="..\Code\DemoBase.h" />
+    <ClInclude Include="..\Code\DemoWindow.h" />
     <ClInclude Include="..\Code\FixedFunctionPrimitives.h" />
     <ClInclude Include="..\Code\Geometry2D.h" />
     <ClInclude Include="..\Code\Geometry3D.h" />
@@ -170,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\Camera.cpp" />
+    <ClCompile Include="..\Code\DemoWindow.cpp" />
     <ClCompile Include="..\Code\FixedFunctionPrimitives.cpp" />
     <ClCompile Include="..\Code\Geometry2D.cpp" />
     <ClCompile Include="..\Code\Geometry3D.cpp" />

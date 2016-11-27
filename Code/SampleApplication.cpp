@@ -9,7 +9,9 @@
 #include "imgui/imgui.h"
 #include <iostream>
 
-static SampleApplication debugInstance("Sample Application", 800, 600);
+
+// TODO: DELETE THIS FILE!
+//static SampleApplication debugInstance("Sample Application", 800, 600);
 
 
 float SampleApplication::random(float min, float max) {

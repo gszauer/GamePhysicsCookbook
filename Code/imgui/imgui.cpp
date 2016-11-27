@@ -680,8 +680,10 @@ static void             AddWindowToSortedBuffer(ImVector<ImGuiWindow*>& out_sort
 
 static ImGuiIniData*    FindWindowSettings(const char* name);
 static ImGuiIniData*    AddWindowSettings(const char* name);
+#ifndef IMGUI_DISABLE_SAVE_SETTINGS
 static void             LoadSettings();
 static void             SaveSettings();
+#endif
 static void             MarkSettingsDirty();
 
 static void             PushColumnClipRect(int column_index = -1);
@@ -2115,7 +2117,9 @@ void ImGui::NewFrame()
         IM_PLACEMENT_NEW(g.LogClipboard) ImGuiTextBuffer();
 
         IM_ASSERT(g.Settings.empty());
-        LoadSettings();
+#ifndef IMGUI_DISABLE_SAVE_SETTINGS
+		LoadSettings();
+#endif
         g.Initialized = true;
     }
 
@@ -2222,8 +2226,11 @@ void ImGui::NewFrame()
     if (g.SettingsDirtyTimer > 0.0f)
     {
         g.SettingsDirtyTimer -= g.IO.DeltaTime;
-        if (g.SettingsDirtyTimer <= 0.0f)
-            SaveSettings();
+		if (g.SettingsDirtyTimer <= 0.0f) {
+#ifndef IMGUI_DISABLE_SAVE_SETTINGS
+			SaveSettings();
+#endif
+		}
     }
 
     // Find the window we are hovering. Child windows can extend beyond the limit of their parent so we need to derive HoveredRootWindow from HoveredWindow
@@ -2347,10 +2354,13 @@ void ImGui::Shutdown()
         g.IO.Fonts->Clear();
 
     // Cleanup of other data are conditional on actually having used ImGui.
-    if (!g.Initialized)
-        return;
+	if (!g.Initialized) {
+		return;
+	}
 
+#ifndef IMGUI_DISABLE_SAVE_SETTINGS
     SaveSettings();
+#endif
 
     for (int i = 0; i < g.Windows.Size; i++)
     {

@@ -32,8 +32,11 @@
 
 // I set all of these settings in the "Project Settings" of visual studio
 // #pragma comment(lib, "opengl32.lib") 
-// #pragma comment(linker,"/SUBSYSTEM:CONSOLE")
-// #pragma comment(linker,"/SUBSYSTEM:WINDOWS")
+#if _DEBUG
+#pragma comment(linker,"/SUBSYSTEM:CONSOLE")
+#else 
+#pragma comment(linker,"/SUBSYSTEM:WINDOWS")
+#endif
 
 RECT windowRect;
 RECT clientRect;
@@ -255,7 +258,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
-	bool skipDefault = ImGui_Implementation_WndProcHandler(hwnd, iMsg, wParam, lParam);
+	ImGui_Implementation_WndProcHandler(hwnd, iMsg, wParam, lParam);
 
 	IWindow* pWindowInstance = IWindow::GetInstance();
 	int width, height;
@@ -284,31 +287,45 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
 		break;
 	// Handle Mouse Events
 	case WM_MOUSEMOVE:
-		pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		if (!ImGui_Implementation_HasMouse()) {
+			pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		}
 		break;
 	case WM_LBUTTONDOWN:
-		pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-		pWindowInstance->OnMouseDown(MOUSE_LEFT);
+		if (!ImGui_Implementation_HasMouse()) {
+			pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			pWindowInstance->OnMouseDown(MOUSE_LEFT);
+		}
 		break;
 	case WM_LBUTTONUP:
-		pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-		pWindowInstance->OnMouseUp(MOUSE_LEFT);
+		if (!ImGui_Implementation_HasMouse()) {
+			pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			pWindowInstance->OnMouseUp(MOUSE_LEFT);
+		}
 		break;
 	case WM_RBUTTONDOWN:
-		pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-		pWindowInstance->OnMouseDown(MOUSE_RIGHT);
+		if (!ImGui_Implementation_HasMouse()) {
+			pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			pWindowInstance->OnMouseDown(MOUSE_RIGHT);
+		}
 		break;
 	case WM_RBUTTONUP:
-		pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-		pWindowInstance->OnMouseUp(MOUSE_RIGHT);
+		if (!ImGui_Implementation_HasMouse()) {
+			pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			pWindowInstance->OnMouseUp(MOUSE_RIGHT);
+		}
 		break;
 	case WM_MBUTTONDOWN:
-		pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-		pWindowInstance->OnMouseDown(MOUSE_MIDDLE);
+		if (!ImGui_Implementation_HasMouse()) {
+			pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			pWindowInstance->OnMouseDown(MOUSE_MIDDLE);
+		}
 		break;
 	case WM_MBUTTONUP:
-		pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-		pWindowInstance->OnMouseUp(MOUSE_MIDDLE);
+		if (!ImGui_Implementation_HasMouse()) {
+			pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			pWindowInstance->OnMouseUp(MOUSE_MIDDLE);
+		}
 		break;
 	// Handle keyboard events
 	case WM_SYSKEYUP:
@@ -322,19 +339,20 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
 		if (wParam == VK_CAPITAL)
 			capsOn = !capsOn;
 
-		pWindowInstance->OnKeyDown(WParamToKeydef(wParam, shiftDown ^ capsOn));
+		if (!ImGui_Implementation_HasKeyboard()) {
+			pWindowInstance->OnKeyDown(WParamToKeydef(wParam, shiftDown ^ capsOn));
+		}
 		break;
 	case WM_KEYUP:
 		if (wParam == VK_SHIFT || wParam == VK_LSHIFT || wParam == VK_RSHIFT)
 			shiftDown = false;
 
-		pWindowInstance->OnKeyUp(WParamToKeydef(wParam, shiftDown ^ capsOn));
+		if (!ImGui_Implementation_HasKeyboard()) {
+			pWindowInstance->OnKeyUp(WParamToKeydef(wParam, shiftDown ^ capsOn));
+		}
 		break;
 	}
-	if (skipDefault) {
-		return true;
-	}
-
+	
 	return DefWindowProc(hwnd, iMsg, wParam, lParam);
 }
 
