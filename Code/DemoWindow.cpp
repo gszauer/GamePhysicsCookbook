@@ -108,7 +108,7 @@ void DemoWindow::OnUpdate(float deltaTime) {
 
 	if (m_pDemo != 0) {
 		m_pDemo->ImGUI();
-		m_pDemo->SetMouseState(leftDown, middleDown, rightDown, mouseDelta);
+		m_pDemo->SetMouseState(leftDown, middleDown, rightDown, mouseDelta, mousePos);
 		m_pDemo->Update(deltaTime);
 	}
 

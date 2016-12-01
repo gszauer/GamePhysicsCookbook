@@ -172,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\Camera.cpp" />
+    <ClCompile Include="..\Code\CH14Demo.cpp" />
     <ClCompile Include="..\Code\DemoBase.cpp" />
     <ClCompile Include="..\Code\DemoWindow.cpp" />
     <ClCompile Include="..\Code\FixedFunctionPrimitives.cpp" />

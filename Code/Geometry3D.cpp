@@ -581,7 +581,14 @@ float Raycast(const Sphere& sphere, const Ray& ray) {
 	return a - f;
 }
 
-float Raycast(const OBB& obb, const Ray& ray) {
+bool Raycast(const OBB& obb, const Ray& ray, RaycastResult* outResult) {
+	if (outResult != 0) {
+		outResult->t = -1;
+		outResult->hit = false;
+		outResult->normal = vec3(0, 0, 1);
+		outResult->point = vec3(0, 0, 0);
+	}
+
 	const float* o = obb.orientation.asArray;
 	const float* size = obb.size.asArray;
 
@@ -655,20 +662,42 @@ float Raycast(const OBB& obb, const Ray& ray) {
 	// if tmax < 0, ray is intersecting AABB
 	// but entire AABB is behing it's origin
 	if (tmax < 0) {
-		return -1.0f;
+		return false;
 	}
 
 	// if tmin > tmax, ray doesn't intersect AABB
 	if (tmin > tmax) {
-		return -1.0f;
+		return false;
 	}
 
 	// If tmin is < 0, tmax is closer
+	float t_result = tmin;
+
 	if (tmin < 0.0f) {
-		return tmax;
+		t_result = tmax;
 	}
 
-	return tmin;
+	if (outResult != 0) {
+		outResult->hit = true;
+		outResult->t = t_result;
+		outResult->point = ray.origin + ray.direction * t_result;
+
+		vec3 normals[] = {
+			X,			// +x
+			X * -1.0f,	// -x
+			Y,			// +y
+			Y * -1.0f,	// -y
+			Z,			// +z
+			Z * -1.0f	// -z
+		};
+
+		for (int i = 0; i < 6; ++i) {
+			if (CMP(t_result, t[i])) {
+				outResult->normal = Normalized(normals[i]);
+			}
+		}
+	}
+	return true;
 }
 
 float Raycast(const AABB& aabb, const Ray& ray) {
