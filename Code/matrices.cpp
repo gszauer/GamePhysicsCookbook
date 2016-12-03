@@ -383,9 +383,11 @@ mat4 Inverse(const mat4& m) {
 	result._44 = (m._11 * m._22 * m._33 + m._12 * m._23 * m._31 + m._13 * m._21 * m._32 - m._11 * m._23 * m._32 - m._12 * m._21 * m._33 - m._13 * m._22 * m._31) * i_det;
 
 #ifdef  DO_SANITY_TESTS
+#ifndef NO_EXTRAS
 	if (result * m != mat4()) {
 		std::cout << "ERROR! Expecting matrix x inverse to equal identity!\n";
 	}
+#endif 
 #endif
 
 	return result;
@@ -451,6 +453,7 @@ mat4 Translate(const vec3& pos) {
 		pos.x, pos.y, pos.z, 1.0f
 	);
 }
+#endif
 
 mat4 FromMat3(const mat3& mat) {
 	mat4 result;
@@ -469,7 +472,6 @@ mat4 FromMat3(const mat3& mat) {
 
 	return result;
 }
-#endif
 
 vec3 GetTranslation(const mat4& mat) {
 	return vec3(mat._41, mat._42, mat._43);
@@ -742,11 +744,13 @@ mat4 LookAt(const vec3& position, const vec3& target, const vec3& up) {
 		-Dot(right, position), -Dot(newUp, position), -Dot(forward, position), 1.0f
 	);
 #ifdef DO_SANITY_TESTS
+#ifndef NO_EXTRAS
 	if (result != view) {
 		std::cout << "Error, result and view do not match in an expected manner!\n";
 		std::cout << "view: \n" << view << "\n\n";
 		std::cout << "result: \n" << result << "\n\n";
 	}
+#endif 
 	return result;
 #endif
 }

@@ -100,7 +100,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;DO_SANITY_TESTS;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;DO_SANITY_TESTS;NO_EXTRAS;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -165,6 +165,9 @@
     <ClInclude Include="..\Code\IWindow.h" />
     <ClInclude Include="..\Code\matrices.h" />
     <ClInclude Include="..\Code\ObjLoader.h" />
+    <ClInclude Include="..\Code\Particle.h" />
+    <ClInclude Include="..\Code\PhysicsSystem.h" />
+    <ClInclude Include="..\Code\Rigidbody.h" />
     <ClInclude Include="..\Code\QuadTree.h" />
     <ClInclude Include="..\Code\Scene.h" />
     <ClInclude Include="..\Code\tiny_obj_loader.h" />
@@ -187,6 +190,8 @@
     <ClCompile Include="..\Code\main-win32.cpp" />
     <ClCompile Include="..\Code\matrices.cpp" />
     <ClCompile Include="..\Code\ObjLoader.cpp" />
+    <ClCompile Include="..\Code\Particle.cpp" />
+    <ClCompile Include="..\Code\PhysicsSystem.cpp" />
     <ClCompile Include="..\Code\QuadTree.cpp" />
     <ClCompile Include="..\Code\Scene.cpp" />
     <ClCompile Include="..\Code\vectors.cpp" />

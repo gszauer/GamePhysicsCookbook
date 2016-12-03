@@ -96,6 +96,14 @@ void DemoWindow::OnUpdate(float deltaTime) {
 	}
 
 	ImGui::End();
+
+	if (m_pDemo != 0) {
+		m_pDemo->ImGUI();
+	}
+}
+
+void DemoWindow::OnFixedUpdate(float deltaTime) {
+	GLWindow::OnFixedUpdate(deltaTime);
 	
 	bool leftDown = MouseButonDown(MOUSE_LEFT);
 	bool middleDown = MouseButonDown(MOUSE_MIDDLE);
@@ -107,7 +115,6 @@ void DemoWindow::OnUpdate(float deltaTime) {
 	mouseDelta.y /= (float)GetHeight();
 
 	if (m_pDemo != 0) {
-		m_pDemo->ImGUI();
 		m_pDemo->SetMouseState(leftDown, middleDown, rightDown, mouseDelta, mousePos);
 		m_pDemo->Update(deltaTime);
 	}

@@ -292,7 +292,7 @@ bool Linetest(const Triangle& triangle, const Line& line);
 #ifndef NO_EXTRAS
 float Raycast(const Ray& ray, const Sphere& sphere);
 float Raycast(const Ray& ray, const AABB& aabb);
-float Raycast(const Ray& ray, const OBB& obb);
+bool Raycast(const Ray& ray, const OBB& obb, RaycastResult* outResult);
 float Raycast(const Ray& ray, const Plane& plane);
 bool Linetest(const Line& line, const Sphere& sphere);
 bool Linetest(const Line& line, const AABB& aabb);

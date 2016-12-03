@@ -790,7 +790,11 @@ bool Linetest(const OBB& obb, const Line& line) {
 	Ray ray;
 	ray.origin = line.start;
 	ray.direction = Normalized(line.end - line.start);
-	float t = Raycast(obb, ray);
+	RaycastResult result;
+	if (!Raycast(obb, ray, &result)) {
+		return false;
+	}
+	float t = result.t;
 
 	return t >= 0 && t * t <= LengthSq(line);
 }
@@ -804,8 +808,8 @@ float Raycast(const Ray& ray, const AABB& aabb) {
 	return Raycast(aabb, ray);
 }
 
-float Raycast(const Ray& ray, const OBB& obb) {
-	return Raycast(obb, ray);
+bool Raycast(const Ray& ray, const OBB& obb, RaycastResult* outResult) {
+	return Raycast(obb, ray, outResult);
 }
 
 float Raycast(const Ray& ray, const Plane& plane) {
@@ -905,6 +909,7 @@ vec3 Barycentric(const Point& p, const Triangle& t) {
 	float c = 1.0f - (Dot(v, cp) / Dot(v, ca));
 
 #ifdef DO_SANITY_TESTS
+#ifndef NO_EXTRAS
 	vec3 barycentric = BarycentricOptimized(p, t);
 	if (fabsf(a - barycentric.x) > 0.1f) {
 		std::cout << "Expected a: " << a << " to be: " << barycentric.x << "\n";
@@ -915,6 +920,7 @@ vec3 Barycentric(const Point& p, const Triangle& t) {
 	if (fabsf(c - barycentric.z) > 0.1f) {
 		std::cout << "Expected c: " << c << " to be: " << barycentric.z << "\n";
 	}
+#endif
 #endif
 
 	return vec3(a, b, c);

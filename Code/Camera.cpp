@@ -116,9 +116,11 @@ mat4 Camera::GetViewMatrix() {
 	inverse._43 = -Dot(forward, position);
 
 #ifdef DO_SANITY_TESTS
+#ifndef NO_EXTRAS
 	if (inverse != Inverse(m_matWorld)) {
 		std::cout << "View matrix is not what was expected!\n";
 	}
+#endif
 #endif
 
 	return inverse;
@@ -246,7 +248,11 @@ void OrbitCamera::Update(float dt) {
 	mat3 orient = Rotation3x3(rotation.x, rotation.y, rotation.z);
 	vec3 dir = MultiplyVector( vec3(0.0, 0.0, -zoomDistance), orient);
 	vec3 position = /*rotation * vec3(0.0, 0.0, -distance)*/dir + target;
+#ifndef NO_EXTRAS
 	m_matWorld = FastInverse(LookAt(position, target, vec3(0, 1, 0)));
+#else
+	m_matWorld = Inverse(LookAt(position, target, vec3(0, 1, 0)));
+#endif
 }
 
 float OrbitCamera::ClampAngle(float angle, float min, float max) {
