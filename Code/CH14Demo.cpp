@@ -20,6 +20,7 @@ void CH14Demo::Initialize(int width, int height) {
 	glLightfv(GL_LIGHT0, GL_SPECULAR, val);
 
 	numParticles = 50;
+	size_imgui_window = true;
 
 	lastFrameTime = GetMilliseconds();
 
@@ -62,31 +63,17 @@ void CH14Demo::ResetDemo() {
 	vec3 spawnMin = spawnPos - spawnSize;
 	vec3 spawnMax = spawnPos + spawnSize;
 
-	/*for (int i = 0; i < numParticles; ++i) {
+	for (int i = 0; i < numParticles; ++i) {
 		particles.push_back(Particle());
 		particles[i].SetPosition(Random(spawnMin, spawnMax));
-		//std::cout << "Spawn at: " << particles[i].GetPosition().x << ", " << particles[i].GetPosition().y << ", " << particles[i].GetPosition().z << "\n";
-		//particles[i].SetBounce(Random(0.5f, 1.5f));
 		physicsSystem.AddRigidbody(&particles[i]);
-	}*/
+	}
 
-	vec3 spawnTest[] = {
-		vec3(-2.42043, 6.62717, -2.24747),
-		vec3(0.688805, 6.67002, -1.09121),
-		vec3(-1.07645, 7.29192, 0.292606),
-		vec3(0.449552, 5.84822, 0.438277),
-		vec3(0.310536, 6.52707, -1.80085),
-		vec3(-2.36755, 5.68281, -1.55691),
-		vec3(-1.85802, 5.8318, 0.961117),
-		vec3(-0.709112, 5.73817, -3.00858),
-		vec3(-2.39094, 6.25576, -0.882245),
-		vec3(-0.225904, 6.70353, -0.577604),
-	};
-	int testIndex = 2;
-
+	/* Debug
 	particles.push_back(Particle());
-	particles[0].SetPosition(spawnTest[testIndex]);
+	particles[0].SetPosition(vec3(-1.07645, 7.29192, 0.292606));
 	physicsSystem.AddRigidbody(&particles[0]);
+	*/
 }
 
 void CH14Demo::Render() {
@@ -107,12 +94,27 @@ void CH14Demo::ImGUI() {
 		avgTime /= deltaTimes.size();
 	}
 
+	if (size_imgui_window) {
+		size_imgui_window = false;
+		ImGui::SetNextWindowPos(ImVec2(400, 90));
+		ImGui::SetNextWindowSize(ImVec2(370, 100));
+	}
 	ImGui::Begin("Chapter 14 Demo", 0, ImGuiWindowFlags_NoResize);
 	ImGui::Text("Simulation delta: %.3f ms/frame", avgTime);
+
+	ImGui::Text("Particle count");
+	ImGui::SameLine();
+	ImGui::PushItemWidth(100);
+	ImGui::SliderInt("", &numParticles, 1, 300);
+	ImGui::SameLine();
 	if (ImGui::Button("Reset")) {
 		ResetDemo();
 	}
-
+	ImGui::SameLine();
+	if (ImGui::Button("Show Help")) {
+		show_help = true;
+	}
+	
 	if (ImGui::Button("Log Camera")) {
 
 	}

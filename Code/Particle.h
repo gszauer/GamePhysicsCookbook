@@ -4,10 +4,11 @@
 #include "Rigidbody.h";
 
 class Particle : public Rigidbody {
-	vec3 position;
 	vec3 oldPosition;
-	vec3 allForces;
-	float bounciness;
+	vec3 position;
+	vec3 velocity;
+	vec3 forces;
+	float bounce;
 	float friction;
 	vec3 gravity;
 	float mass;

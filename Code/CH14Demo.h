@@ -16,6 +16,7 @@ protected:
 	std::list<float> deltaTimes;
 
 	float lastFrameTime;
+	bool size_imgui_window;
 protected:
 	void ResetDemo();
 public:
