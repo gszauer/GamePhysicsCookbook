@@ -268,7 +268,6 @@ void Render(const OBB& obb) {
 
 	glMultMatrixf(transform.asArray);
 	FixedFunctionCube();
-
 	glPopMatrix();
 }
 

@@ -20,13 +20,22 @@ void PhysicsSystem::Update(float deltaTime) {
 }
 
 void PhysicsSystem::Render() {
-	float bodyColor[] = { 1.0f, 0.0f, 0.0f, 0.0f };
-	float specialColor[] = { 0.0f, 1.0f, 0.0f, 0.0f };
-	float constracintColor[] = { 0.0f, 0.0f, 1.0f, 0.0f };
+	static const float rigidbodyDiffuse[]{ 200.0f / 255.0f, 0.0f, 0.0f, 0.0f };
+	static const float rigidbodyAmbient[]{ 200.0f / 255.0f, 50.0f / 255.0f, 50.0f / 255.0f, 0.0f };
 
-	glColor3f(bodyColor[0], bodyColor[1], bodyColor[2]);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, bodyColor);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, bodyColor);
+	static const float groundDiffuse[]{ 0.0f, 0.0f, 200.0f / 255.0f, 0.0f };
+	static const float groundAmbient[]{ 50.0f / 255.0f, 50.0f / 255.0f, 200.0f / 255.0f, 0.0f };
+
+	static const float constraintDiffuse[]{ 0.0f, 200.0f / 255.0f, 0.0f, 0.0f };
+	static const float constraintAmbient[]{ 50.0f / 255.0f, 200.0f / 255.0f, 50.0f / 255.0f, 0.0f };
+	
+	static const float zero[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+
+	glColor3f(rigidbodyDiffuse[0], rigidbodyDiffuse[1], rigidbodyDiffuse[2]);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, rigidbodyAmbient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, rigidbodyDiffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 	for (int i = 0, size = bodies.size(); i < size; ++i) {
 		bodies[i]->Render();
 	}
@@ -35,15 +44,17 @@ void PhysicsSystem::Render() {
 	// Rendering it diferent color is just a hack to make visualization easyer
 	// Normally, you wouldn't even render physics geo!
 	if (constraints.size() > 0) {
-		glColor3f(specialColor[0], specialColor[1], specialColor[2]);
-		glLightfv(GL_LIGHT0, GL_AMBIENT, specialColor);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, specialColor);
+		glColor3f(groundDiffuse[0], groundDiffuse[1], groundDiffuse[2]);
+		glLightfv(GL_LIGHT0, GL_AMBIENT, groundAmbient);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, groundDiffuse);
+		glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 		::Render(constraints[0]);
 	}
 
-	glColor3f(constracintColor[0], constracintColor[1], constracintColor[2]);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, constracintColor);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, constracintColor);
+	glColor3f(constraintDiffuse[0], constraintDiffuse[1], constraintDiffuse[2]);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, constraintAmbient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, constraintDiffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 	for (int i = 1, size = constraints.size(); i < size; ++i) {
 		::Render(constraints[i]);
 	}

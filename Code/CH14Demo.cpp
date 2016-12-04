@@ -2,10 +2,10 @@
 #include "FixedFunctionPrimitives.h"
 #include "glad/glad.h"
 #include "imgui/imgui.h"
-#include <iostream>>
+#include <iostream>
 
 extern double GetMilliseconds();
-
+ 
 void CH14Demo::Initialize(int width, int height) {
 	DemoBase::Initialize(width, height);
 	glEnable(GL_LIGHTING);
@@ -13,16 +13,14 @@ void CH14Demo::Initialize(int width, int height) {
 
 	float val[] = { 0.5f, 1.0f, -1.5f, 0.0f };
 	glLightfv(GL_LIGHT0, GL_POSITION, val);
-	val[0] = 0.0f; val[1] = 1.0f; val[2] = 0.0f; val[3] = 1.0f;
-	glLightfv(GL_LIGHT0, GL_AMBIENT, val);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, val);
-	val[0] = 1.0f; val[2] = 1.0f;
-	glLightfv(GL_LIGHT0, GL_SPECULAR, val);
 
 	numParticles = 50;
 	size_imgui_window = true;
-
 	lastFrameTime = GetMilliseconds();
+
+	camera.SetTarget(vec3(3.75622f, 2.98255f, 0.0f));
+	camera.SetZoom(9.0f);
+	camera.SetRotation(vec2(-67.9312f, 19.8f));
 
 	ResetDemo();
 }
@@ -66,6 +64,7 @@ void CH14Demo::ResetDemo() {
 	for (int i = 0; i < numParticles; ++i) {
 		particles.push_back(Particle());
 		particles[i].SetPosition(Random(spawnMin, spawnMax));
+		particles[i].SetBounce(Random(0, 1));
 		physicsSystem.AddRigidbody(&particles[i]);
 	}
 
@@ -78,6 +77,9 @@ void CH14Demo::ResetDemo() {
 
 void CH14Demo::Render() {
 	DemoBase::Render();
+
+	float val[] = { 0.0f, 1.0f, 0.0f, 0.0f };
+	glLightfv(GL_LIGHT0, GL_POSITION, val);
 
 	physicsSystem.Render();
 }
@@ -96,9 +98,10 @@ void CH14Demo::ImGUI() {
 
 	if (size_imgui_window) {
 		size_imgui_window = false;
-		ImGui::SetNextWindowPos(ImVec2(400, 90));
-		ImGui::SetNextWindowSize(ImVec2(370, 100));
+		ImGui::SetNextWindowPos(ImVec2(400, 10));
+		ImGui::SetNextWindowSize(ImVec2(370, 75));
 	}
+
 	ImGui::Begin("Chapter 14 Demo", 0, ImGuiWindowFlags_NoResize);
 	ImGui::Text("Simulation delta: %.3f ms/frame", avgTime);
 
@@ -113,10 +116,6 @@ void CH14Demo::ImGUI() {
 	ImGui::SameLine();
 	if (ImGui::Button("Show Help")) {
 		show_help = true;
-	}
-	
-	if (ImGui::Button("Log Camera")) {
-
 	}
 	ImGui::End();
 }
@@ -133,6 +132,9 @@ void CH14Demo::Update(float dt) {
 
 	physicsSystem.Update(dt);
 
+	// This next part isn't really needed. It's just in place 
+	// in case the simulation becomes unstable and something 
+	// falls below the floor of the world!
 	for (int i = 0; i < particles.size(); ++i) {
 		vec3 position = particles[i].GetPosition();
 		if (position.y < -5.0f) {

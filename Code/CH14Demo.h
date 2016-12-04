@@ -20,6 +20,8 @@ protected:
 protected:
 	void ResetDemo();
 public:
+	inline CH14Demo() : DemoBase(), size_imgui_window(true) { }
+
 	void Initialize(int width, int height);
 	void Render();
 	void Update(float dt);
