@@ -559,7 +559,9 @@ bool PlanePlane(const Plane& plane1, const Plane& plane2) {
 	// We could have used the dot product here, instead of the cross product
 }
 
-float Raycast(const Sphere& sphere, const Ray& ray) {
+bool Raycast(const Sphere& sphere, const Ray& ray, RaycastResult* outResult) {
+	ResetRaycastResult(outResult);
+
 	vec3 e = sphere.position - ray.origin;
 	float rSq = sphere.radius * sphere.radius;
 
@@ -568,26 +570,29 @@ float Raycast(const Sphere& sphere, const Ray& ray) {
 	float bSq = /*sqrtf(*/eSq - (a * a)/*)*/;
 	float f = sqrt((rSq)- /*(b * b)*/bSq);
 
+	// Assume normal intersection!
+	float t = a - f;
+
 	// No collision has happened
 	if (rSq - (eSq - a * a) < 0.0f) {
-		return -1.0f; // -1 is invalid.
+		return false;
 	}
 	// Ray starts inside the sphere
 	else if (eSq < rSq) {
-		return a + f; // Just reverse direction
+		// Just reverse direction
+		t = a + f;
 	}
-
-	// else Normal intersection
-	return a - f;
+	if (outResult != 0) {
+		outResult->t = t;
+		outResult->hit = true;
+		outResult->point = ray.origin + ray.direction * t;
+		outResult->normal = Normalized(outResult->point - sphere.position);
+	}
+	return true;
 }
 
 bool Raycast(const OBB& obb, const Ray& ray, RaycastResult* outResult) {
-	if (outResult != 0) {
-		outResult->t = -1;
-		outResult->hit = false;
-		outResult->normal = vec3(0, 0, 1);
-		outResult->point = vec3(0, 0, 0);
-	}
+	ResetRaycastResult(outResult);
 
 	const float* o = obb.orientation.asArray;
 	const float* size = obb.size.asArray;
@@ -700,7 +705,18 @@ bool Raycast(const OBB& obb, const Ray& ray, RaycastResult* outResult) {
 	return true;
 }
 
-float Raycast(const AABB& aabb, const Ray& ray) {
+void ResetRaycastResult(RaycastResult* outResult) {
+	if (outResult != 0) {
+		outResult->t = -1;
+		outResult->hit = false;
+		outResult->normal = vec3(0, 0, 1);
+		outResult->point = vec3(0, 0, 0);
+	}
+}
+
+bool Raycast(const AABB& aabb, const Ray& ray, RaycastResult* outResult) {
+	ResetRaycastResult(outResult);
+
 	vec3 min = GetMin(aabb);
 	vec3 max = GetMax(aabb);
 
@@ -720,23 +736,49 @@ float Raycast(const AABB& aabb, const Ray& ray) {
 	// if tmax < 0, ray is intersecting AABB
 	// but entire AABB is behing it's origin
 	if (tmax < 0) {
-		return -1.0f;
+		return false;
 	}
 
 	// if tmin > tmax, ray doesn't intersect AABB
 	if (tmin > tmax) {
-		return -1.0f;
+		return false;
 	}
+
+	float t_result = tmin;
 
 	// If tmin is < 0, tmax is closer
 	if (tmin < 0.0f) {
-		return tmax;
+		t_result = tmax;
 	}
 
-	return tmin;
+	if (outResult != 0) {
+		outResult->t = t_result;
+		outResult->hit = true;
+		outResult->point = ray.origin + ray.direction * t_result;
+
+		vec3 normals[] = {
+			vec3(-1, 0, 0),
+			vec3(1, 0, 0),
+			vec3(0, -1, 0),
+			vec3(0, 1, 0),
+			vec3(0, 0, -1),
+			vec3(0, 0, 1)
+		};
+		float t[] = { t1, t2, t3, t4, t5, t6 };
+
+		for (int i = 0; i < 6; ++i) {
+			if (CMP(t_result, t[i])) {
+				outResult->normal = normals[i];
+			}
+		}
+	}
+
+	return true;
 }
 
-float Raycast(const Plane& plane, const Ray& ray) {
+bool Raycast(const Plane& plane, const Ray& ray, RaycastResult* outResult) {
+	ResetRaycastResult(outResult);
+
 	float nd = Dot(ray.direction, plane.normal);
 	float pn = Dot(ray.origin, plane.normal);
 
@@ -744,17 +786,23 @@ float Raycast(const Plane& plane, const Ray& ray) {
 	// if nd is positive, the ray and plane normals
 	// point in the same direction. No intersection.
 	if (nd >= 0.0f) {
-		return -1;
+		return false;
 	}
 
 	float t = (plane.distance - pn) / nd;
 
 	// t must be positive
 	if (t >= 0.0f) {
-		return t;
+		if (outResult != 0) {
+			outResult->t = t;
+			outResult->hit = true;
+			outResult->point = ray.origin + ray.direction * t;
+			outResult->normal = Normalized(plane.normal);
+		}
+		return true;
 	}
 
-	return -1;
+	return false;
 }
 
 bool Linetest(const Sphere& sphere, const Line& line) {
@@ -781,7 +829,11 @@ bool Linetest(const AABB& aabb, const Line& line) {
 	Ray ray;
 	ray.origin = line.start;
 	ray.direction = Normalized(line.end - line.start);
-	float t = Raycast(aabb, ray);
+	RaycastResult raycast;
+	if (!Raycast(aabb, ray, &raycast)) {
+		return false;
+	}
+	float t = raycast.t;
 
 	return t >= 0 && t * t <= LengthSq(line);
 }
@@ -800,20 +852,20 @@ bool Linetest(const OBB& obb, const Line& line) {
 }
 
 #ifndef NO_EXTRAS
-float Raycast(const Ray& ray, const Sphere& sphere) {
-	return Raycast(sphere, ray);
+bool Raycast(const Ray& ray, const Sphere& sphere, RaycastResult* outResult) {
+	return Raycast(sphere, ray, outResult);
 }
 
-float Raycast(const Ray& ray, const AABB& aabb) {
-	return Raycast(aabb, ray);
+bool Raycast(const Ray& ray, const AABB& aabb, RaycastResult* outResult) {
+	return Raycast(aabb, ray, outResult);
 }
 
 bool Raycast(const Ray& ray, const OBB& obb, RaycastResult* outResult) {
 	return Raycast(obb, ray, outResult);
 }
 
-float Raycast(const Ray& ray, const Plane& plane) {
-	return Raycast(plane, ray);
+bool Raycast(const Ray& ray, const Plane& plane, RaycastResult* outResult) {
+	return Raycast(plane, ray, outResult);
 }
 
 bool Linetest(const Line& line, const Sphere& sphere) {
@@ -1161,12 +1213,16 @@ vec3 SatCrossEdge(const vec3& a, const vec3& b, const vec3& c, const vec3& d) {
 
 Point debugRaycastResult;
 
-float Raycast(const Triangle& triangle, const Ray& ray) {
+bool Raycast(const Triangle& triangle, const Ray& ray, RaycastResult* outResult) {
+	ResetRaycastResult(outResult);
 	Plane plane = FromTriangle(triangle);
-	float t = Raycast(plane, ray);
-	if (t < 0.0f) {
-		return t;
+
+	RaycastResult planeResult;
+	if (!Raycast(plane, ray, &planeResult)) {
+		return false;
 	}
+	float t = planeResult.t;
+
 	Point result = ray.origin + ray.direction * t;
 	
 	vec3 barycentric = Barycentric(result, triangle);
@@ -1179,8 +1235,14 @@ float Raycast(const Triangle& triangle, const Ray& ray) {
 			std::cout << "Point in triangle and barycentric coordinates don't match!\n";
 		}
 #endif
+		if (outResult != 0) {
+			outResult->t = t;
+			outResult->hit = true;
+			outResult->point = ray.origin + ray.direction * t;
+			outResult->normal = plane.normal;
+		}
 
-		return t;
+		return true;
 	}
 #ifdef DO_SANITY_TESTS
 	else if (PointInTriangle(result, triangle)) {
@@ -1188,14 +1250,18 @@ float Raycast(const Triangle& triangle, const Ray& ray) {
 	}
 #endif
 
-	return -1;
+	return false;
 }
 
 bool Linetest(const Triangle& triangle, const Line& line) {
 	Ray ray;
 	ray.origin = line.start;
 	ray.direction = Normalized(line.end - line.start);
-	float t = Raycast(triangle, ray);
+	RaycastResult raycast;
+	if (!Raycast(triangle, ray, &raycast)) {
+		return false;
+	}
+	float t = raycast.t;
 
 	return t >= 0 && t * t <= LengthSq(line);
 }
@@ -1558,7 +1624,9 @@ float Raycast(const Model& mesh, const Ray& ray) {
 float MeshRay(const Mesh& mesh, const Ray& ray) {
 	if (mesh.accelerator == 0) {
 		for (int i = 0; i < mesh.numTriangles; ++i) {
-			float result = Raycast(mesh.triangles[i], ray);
+			RaycastResult raycast;
+			Raycast(mesh.triangles[i], ray, &raycast);
+			float result = raycast.t;
 			if (result >= 0) {
 				return result;
 			}
@@ -1577,7 +1645,9 @@ float MeshRay(const Mesh& mesh, const Ray& ray) {
 				// Iterate trough all triangles of the node
 				for (int i = 0; i < iterator->numTriangles; ++i) {
 					// Triangle indices in BVHNode index the mesh
-					float r = Raycast(mesh.triangles[iterator->triangles[i]], ray);
+					RaycastResult raycast;
+					Raycast(mesh.triangles[iterator->triangles[i]], ray, &raycast);
+					float r = raycast.t;
 					if (r >= 0) {
 						return r;
 					}
@@ -1587,7 +1657,9 @@ float MeshRay(const Mesh& mesh, const Ray& ray) {
 			if (iterator->children != 0) {
 				for (int i = 8 - 1; i >= 0; --i) {
 					// Only push children whos bounds intersect the test geometry
-					if (Raycast(iterator->children[i].bounds, ray) >= 0) {
+					RaycastResult raycast;
+					Raycast(iterator->children[i].bounds, ray, &raycast);
+					if (raycast.t >= 0) {
 						toProcess.push_front(&iterator->children[i]);
 					}
 				}

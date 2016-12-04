@@ -167,6 +167,7 @@
     <ClInclude Include="..\Code\ObjLoader.h" />
     <ClInclude Include="..\Code\Particle.h" />
     <ClInclude Include="..\Code\PhysicsSystem.h" />
+    <ClInclude Include="..\Code\RaycastDemo.h" />
     <ClInclude Include="..\Code\Rigidbody.h" />
     <ClInclude Include="..\Code\QuadTree.h" />
     <ClInclude Include="..\Code\Scene.h" />
@@ -193,6 +194,7 @@
     <ClCompile Include="..\Code\Particle.cpp" />
     <ClCompile Include="..\Code\PhysicsSystem.cpp" />
     <ClCompile Include="..\Code\QuadTree.cpp" />
+    <ClCompile Include="..\Code\RaycastDemo.cpp" />
     <ClCompile Include="..\Code\Scene.cpp" />
     <ClCompile Include="..\Code\vectors.cpp" />
   </ItemGroup>

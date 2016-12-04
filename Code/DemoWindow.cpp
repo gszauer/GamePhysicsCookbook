@@ -1,6 +1,7 @@
 #include "DemoWindow.h"
 #include "imgui/imgui.h"
 #include "CH14Demo.h"
+#include "RaycastDemo.h"
 
 // This is the global instance of the IWindow singleton!
 static DemoWindow g_WindowInstance("Physics Sandbox", 800, 600);
