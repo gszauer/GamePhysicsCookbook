@@ -25,9 +25,10 @@ void Particle::Update(float deltaTime) {
 	position = position + velocity * deltaTime;
 #endif
 #else
-	vec3 positionCache = position;
-	position = position + ((position - oldPosition) * friction + forces * deltaTime * deltaTime);
-	oldPosition = positionCache;
+	vec3 velocity = position - oldPosition;
+	oldPosition = position;
+	float deltaSquare = deltaTime * deltaTime;
+	position = position + (velocity * friction + forces * deltaSquare);
 #endif
 }
 
@@ -55,7 +56,7 @@ void Particle::SolveConstraints(const std::vector<OBB>& constraints) {
 			
 			if (Raycast(constraints[i], ray, &result)) {
 				// Place object just a little above collision result
-				position = result.point + result.normal * 0.005f;
+				position = result.point + result.normal * 0.003f;
 
 				vec3 vn = result.normal * Dot(result.normal, velocity);
 				vec3 vt = velocity - vn;
