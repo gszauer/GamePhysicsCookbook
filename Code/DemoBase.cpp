@@ -8,6 +8,8 @@ DemoBase::DemoBase() {
 	mouseRightDown = false;
 	mouseMiddleDown = false;
 	mouseDelta = vec2(0.0f, 0.0f);
+	mousePos = vec2(0.0f, 0.0f);
+	size = vec2(0.0f, 0.0f);
 	configHelpWindow = true;
 }
 
@@ -17,6 +19,7 @@ void DemoBase::Initialize(int width, int height) {
 
 void DemoBase::Resize(int width, int height) {
 	camera.Perspective(60.0f, (float)width / (float)height, 0.01f, 1000.0f);
+	size = vec2(width, height);
 }
 
 void DemoBase::Update(float dt) {
@@ -55,9 +58,10 @@ void DemoBase::Render() {
 	FixedFunctionOrigin();
 }
 
-void DemoBase::SetMouseState(bool left, bool middle, bool right, const vec2& delta) {
+void DemoBase::SetMouseState(bool left, bool middle, bool right, const vec2& delta, const vec2& mouse) {
 	mouseLeftDown = left;
 	mouseMiddleDown = middle;
 	mouseRightDown = right;
 	mouseDelta = delta;
+	mousePos = mouse;
 }

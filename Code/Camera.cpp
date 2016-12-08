@@ -1,11 +1,8 @@
 #include "Camera.h"
-#include "../../GLSandbox/Code/GLWindow.h"
-#undef CMP
-#include "../../GLSandbox/Code/Compare.h"
+#include "GLWindow.h"
+#include "Compare.h"
 
-#ifdef DO_SANITY_TESTS
 #include <iostream>
-#endif
 
 Camera::Camera() {
 	m_nFov = 60.0f;
@@ -116,9 +113,11 @@ mat4 Camera::GetViewMatrix() {
 	inverse._43 = -Dot(forward, position);
 
 #ifdef DO_SANITY_TESTS
+#ifndef NO_EXTRAS
 	if (inverse != Inverse(m_matWorld)) {
 		std::cout << "View matrix is not what was expected!\n";
 	}
+#endif
 #endif
 
 	return inverse;
@@ -239,6 +238,16 @@ void OrbitCamera::Pan(const vec2& delataPan, float deltaTime) {
 	target = target - (right * (delataPan.x * panSpeed.x * deltaTime));
 	// Pan Y Axis in global space
 	target = target + (vec3(0, 1, 0) * (delataPan.y * panSpeed.y * deltaTime));
+
+	// Reset zoom to allow infinate zooming after a motion
+	// This part of the code is not in the book!
+	float midZoom = zoomDistanceLimit.x + (zoomDistanceLimit.y - zoomDistanceLimit.x) * 0.5f;
+	zoomDistance = midZoom - zoomDistance;
+	vec3 rotation = vec3(currentRotation.y, currentRotation.x, 0);
+	mat3 orient = Rotation3x3(rotation.x, rotation.y, rotation.z);
+	vec3 dir = MultiplyVector( vec3(0.0, 0.0, -zoomDistance), orient);
+	target = target - dir;
+	zoomDistance = midZoom;
 }
 
 void OrbitCamera::Update(float dt) {
@@ -246,7 +255,11 @@ void OrbitCamera::Update(float dt) {
 	mat3 orient = Rotation3x3(rotation.x, rotation.y, rotation.z);
 	vec3 dir = MultiplyVector( vec3(0.0, 0.0, -zoomDistance), orient);
 	vec3 position = /*rotation * vec3(0.0, 0.0, -distance)*/dir + target;
+#ifndef NO_EXTRAS
 	m_matWorld = FastInverse(LookAt(position, target, vec3(0, 1, 0)));
+#else
+	m_matWorld = Inverse(LookAt(position, target, vec3(0, 1, 0)));
+#endif
 }
 
 float OrbitCamera::ClampAngle(float angle, float min, float max) {
@@ -299,4 +312,22 @@ Frustum Camera::GetFrustum() {
 	}
 
 	return result;		   
+}
+
+void OrbitCamera::PrintDebug() {
+	std::cout << "Target: (" << target.x << ", " << target.y << ", " << target.z << ")\n";
+	std::cout << "Zoom distance: " << zoomDistance << "\n";
+	std::cout << "Rotation: (" << currentRotation.x << ", " << currentRotation.y << ")\n";
+}
+
+void OrbitCamera::SetTarget(const vec3& newTarget) {
+	target = newTarget;
+}
+
+void OrbitCamera::SetZoom(float zoom) {
+	zoomDistance = zoom;
+}
+
+void OrbitCamera::SetRotation(const vec2& rotation) {
+	currentRotation = rotation;
 }

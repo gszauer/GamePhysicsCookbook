@@ -211,8 +211,8 @@ vec3 GetTranslation(const mat4& mat);
 #ifndef NO_EXTRAS
 mat4 Translate(float x, float y, float z);
 mat4 Translate(const vec3& pos);
-mat4 FromMat3(const mat3& mat);
 #endif
+mat4 FromMat3(const mat3& mat);
 
 mat4 Scale(float x, float y, float z);
 mat4 Scale(const vec3& vec);

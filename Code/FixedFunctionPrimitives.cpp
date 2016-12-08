@@ -79,7 +79,11 @@ void RenderNormals(const Frustum& frustum) {
 		vec3 p1 = centers[i] + frustum.planes[i].normal * 0.5f;
 		vec3 p2 = p1 + frustum.planes[i].normal * 0.25f;
 
+#ifndef NO_EXTRAS
 		mat4 orient = FastInverse(LookAt(p1, p2, vec3(0, 1, 0)));
+#else
+		mat4 orient = Inverse(LookAt(p1, p2, vec3(0, 1, 0)));
+#endif
 		mat4 rotate = Rotation(90.0f, 0.0f, 0.0f);
 
 		glPushMatrix();
@@ -264,7 +268,6 @@ void Render(const OBB& obb) {
 
 	glMultMatrixf(transform.asArray);
 	FixedFunctionCube();
-
 	glPopMatrix();
 }
 

@@ -69,6 +69,11 @@ public:
 
 	void Update(float dt);
 	float ClampAngle(float angle, float min, float max);
+
+	void SetTarget(const vec3& newTarget);
+	void SetZoom(float zoom);
+	void SetRotation(const vec2& rotation);
+	void PrintDebug();
 };
 
 #endif 

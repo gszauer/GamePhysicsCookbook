@@ -162,6 +162,15 @@ typedef struct Frustum {
 	inline Frustum() { }
 } Frustum;
 
+typedef struct RaycastResult {
+	vec3 point;
+	vec3 normal;
+	float t;
+	bool hit;
+} RaycastResult;
+
+void ResetRaycastResult(RaycastResult* outResult);
+
 Point Intersection(Plane p1, Plane p2, Plane p3);
 void GetCorners(const Frustum& f, vec3* outCorners);
 
@@ -270,12 +279,11 @@ bool PlanePlane(const Plane& plane1, const Plane& plane2);
 #define PlaneOBB(plane, obb) \
 	OBBPlane(obb, plane)
 
-
-float Raycast(const Sphere& sphere, const Ray& ray);
-float Raycast(const AABB& aabb, const Ray& ray);
-float Raycast(const OBB& obb, const Ray& ray);
-float Raycast(const Plane& plane, const Ray& ray);
-float Raycast(const Triangle& triangle, const Ray& ray);
+bool Raycast(const Sphere& sphere, const Ray& ray, RaycastResult* outResult);
+bool Raycast(const AABB& aabb, const Ray& ray, RaycastResult* outResult);
+bool Raycast(const OBB& obb, const Ray& ray, RaycastResult* outResult);
+bool Raycast(const Plane& plane, const Ray& ray, RaycastResult* outResult);
+bool Raycast(const Triangle& triangle, const Ray& ray, RaycastResult* outResult);
 
 bool Linetest(const Sphere& sphere, const Line& line);
 bool Linetest(const AABB& aabb, const Line& line);
@@ -284,10 +292,10 @@ bool Linetest(const Plane& plane, const Line& line);
 bool Linetest(const Triangle& triangle, const Line& line);
 
 #ifndef NO_EXTRAS
-float Raycast(const Ray& ray, const Sphere& sphere);
-float Raycast(const Ray& ray, const AABB& aabb);
-float Raycast(const Ray& ray, const OBB& obb);
-float Raycast(const Ray& ray, const Plane& plane);
+bool Raycast(const Ray& ray, const Sphere& sphere, RaycastResult* outResult);
+bool Raycast(const Ray& ray, const AABB& aabb, RaycastResult* outResult);
+bool Raycast(const Ray& ray, const OBB& obb, RaycastResult* outResult);
+bool Raycast(const Ray& ray, const Plane& plane, RaycastResult* outResult);
 bool Linetest(const Line& line, const Sphere& sphere);
 bool Linetest(const Line& line, const AABB& aabb);
 bool Linetest(const Line& line, const OBB& obb);

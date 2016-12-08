@@ -192,7 +192,9 @@ Model* FindClosest(const std::vector<Model*>& set, const Ray& ray) {
 }
 
 Model* Raycast(OctreeNode* node, const Ray& ray) {
-	float t = Raycast(node->bounds, ray);
+	RaycastResult raycast;
+	Raycast(node->bounds, ray, &raycast);
+	float t = raycast.t;
 
 	if (t >= 0) {
 		if (node->children == 0) {

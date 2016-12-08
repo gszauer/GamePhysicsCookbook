@@ -1,6 +1,7 @@
 #include "DemoWindow.h"
 #include "imgui/imgui.h"
 #include "CH14Demo.h"
+#include "RaycastDemo.h"
 
 // This is the global instance of the IWindow singleton!
 static DemoWindow g_WindowInstance("Physics Sandbox", 800, 600);
@@ -96,6 +97,14 @@ void DemoWindow::OnUpdate(float deltaTime) {
 	}
 
 	ImGui::End();
+
+	if (m_pDemo != 0) {
+		m_pDemo->ImGUI();
+	}
+}
+
+void DemoWindow::OnFixedUpdate(float deltaTime) {
+	GLWindow::OnFixedUpdate(deltaTime);
 	
 	bool leftDown = MouseButonDown(MOUSE_LEFT);
 	bool middleDown = MouseButonDown(MOUSE_MIDDLE);
@@ -107,8 +116,7 @@ void DemoWindow::OnUpdate(float deltaTime) {
 	mouseDelta.y /= (float)GetHeight();
 
 	if (m_pDemo != 0) {
-		m_pDemo->ImGUI();
-		m_pDemo->SetMouseState(leftDown, middleDown, rightDown, mouseDelta);
+		m_pDemo->SetMouseState(leftDown, middleDown, rightDown, mouseDelta, mousePos);
 		m_pDemo->Update(deltaTime);
 	}
 
