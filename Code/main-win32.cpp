@@ -181,6 +181,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 	double fixed_millis = pWindowInstance->GetFixedFPS() / 1000.0; 
 	double fixed_ellapsed = 0.0;
 
+	pWindowInstance->MarkAsShown();
+
 	while (!pWindowInstance->GetQuitFlag()) {
 		// If or while? Not sure if all messages should process at once or not
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -283,6 +285,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
 		GetClientRect(hwnd, &clientRect);
 		GetWindowRect(hwnd, &borderRect);
 		pWindowInstance->Resize(width, height);
+		if (pWindowInstance->WasWindowShown()) {
+			pWindowInstance->OnResize(width, height);
+		}
 
 		break;
 	// Handle Mouse Events

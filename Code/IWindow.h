@@ -15,6 +15,7 @@ protected:
 	bool m_bFullscreenFlag;
 	int m_nWidth;
 	int m_nHeight;
+	bool b_isVisible;
 
 	char* m_szTitle;
 	bool m_bTitleDirty;
@@ -71,6 +72,9 @@ public:
 	void SetTargetFPS(int target);
 	int GetTargetFPS();
 	int GetFixedFPS();
+
+	void MarkAsShown();
+	bool WasWindowShown();
 
 #if ENABLE_USER_DATA
 	void SetInt(const char* name, int value);

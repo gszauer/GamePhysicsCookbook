@@ -11,11 +11,11 @@ IWindow* IWindow::g_pSingleton = 0;
 		m_bQuitFlag(false), m_bFullscreenFlag(false), m_nWidth(w), m_nHeight(h), \
 		m_szTitle(0), m_bTitleDirty(false), m_vGenericIntegerValues(0), \
 		m_vGenericIntegerNames(0),m_nGenericIntegerCount(0), m_nGenericIntegerLength(0), \
-		m_nTargetFPS(30), m_nFixedFPS(30)
+		m_nTargetFPS(30), m_nFixedFPS(30), b_isVisible(false)
 #else 
 	#define I_WINDOW_CPP_DEFAULTS(w, h) \
 		m_bQuitFlag(false), m_bFullscreenFlag(false), m_nWidth(w), m_nHeight(h), \
-		m_szTitle(0), m_bTitleDirty(false), m_nTargetFPS(30), m_nFixedFPS(30)
+		m_szTitle(0), m_bTitleDirty(false), m_nTargetFPS(30), m_nFixedFPS(30), b_isVisible(false)
 #endif
 
 IWindow::IWindow() : I_WINDOW_CPP_DEFAULTS(800, 600) {
@@ -241,6 +241,14 @@ void IWindow::SetTargetFPS(int target) {
 
 int IWindow::GetFixedFPS() {
 	return m_nFixedFPS;
+}
+
+void IWindow::MarkAsShown() {
+	b_isVisible = true;
+}
+
+bool IWindow::WasWindowShown() {
+	return b_isVisible;
 }
 
 int IWindow::GetTargetFPS() {
