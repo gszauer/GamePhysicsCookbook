@@ -69,7 +69,7 @@ void DemoWindow::OnUpdate(float deltaTime) {
 			Start14();
 		}
 	}
-	ImGui::SameLine();
+	/*ImGui::SameLine();
 	if (m_selectedDemo == 1) {
 		if (ImGui::Button("Stop Chapter 15")) {
 			m_selectedDemo = -1;
@@ -94,7 +94,7 @@ void DemoWindow::OnUpdate(float deltaTime) {
 			m_selectedDemo = 2;
 			Start16();
 		}
-	}
+	}*/
 
 	ImGui::End();
 

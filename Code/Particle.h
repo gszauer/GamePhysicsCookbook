@@ -11,7 +11,7 @@
 // accurate integration model is used. This should help 
 // keep the simulation stable over long periods of time
 
-#define EULER_INTEGRATION
+//#define EULER_INTEGRATION
 #define ACCURATE_EULER_INTEGRATION
 
 class Particle : public Rigidbody {
