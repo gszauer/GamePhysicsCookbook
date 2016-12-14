@@ -1,6 +1,9 @@
 #ifndef _H_GEOMETRY_3D_
 #define _H_GEOMETRY_3D_
 
+#include <vector>
+#include <utility>
+
 #include "vectors.h"
 #include "matrices.h"
 
@@ -370,5 +373,77 @@ bool Intersects(const Frustum& f, const OBB& obb);
 vec3 Unproject(const vec3& viewportPoint, const vec2& viewportOrigin, const vec2& viewportSize, const mat4& view, const mat4& projection);
 Ray GetPickRay(const vec2& viewportPoint, const vec2& viewportOrigin, const vec2& viewportSize, const mat4& view, const mat4& projection);
 
+// Chapter 15
+
+typedef struct CollisionResult {
+	bool colliding;
+	vec3 normal;
+	float depth;
+	std::vector<vec3> contacts;
+};
+
+// Already defined!
+/*Interval GetInterval(const AABB& aabb, const vec3& axis);
+Interval GetInterval(const OBB& obb, const vec3& axis);
+Interval GetInterval(const Triangle& triangle, const vec3& axis);*/
+
+std::vector<vec3> GetFaceNormals(const AABB& aabb);
+std::vector<vec3> GetFaceNormals(const OBB& obb);
+std::vector<vec3> GetFaceNormals(const Triangle& t);
+
+typedef std::pair<vec3, vec3> vec3Pair;
+
+std::vector<vec3Pair> GetEdges(const AABB& aabb);
+std::vector<vec3Pair> GetEdges(const OBB& obb);
+std::vector<vec3Pair> GetEdges(const Triangle& t);
+
+template <typename T, typename U>
+inline bool OverlapOnAxis(const T& o1, const U& o2) {
+	Interval i1 = GetInterval(o1, axis);
+	Interval i2 = GetInterval(o2, axis);
+	return ((i2.min <= i1.max) && (i1.min <= i2.max));
+}
+
+template <typename T, typename U>
+static inline CollisionResult SATIntersectionTest(const T& o1, const U& o2) {
+	CollisionResult result; // Will return result of intersection!
+
+	// First, test the face normals of object 1 as the seperating axis
+	std::vector<vec3> normals = GetFaceNormals(o1);
+	for (int i = 0; i < normals.size(); ++i) {
+		if (!OverlapOnAxis(shape1, shape2, normals[i])) {
+			return true; // Seperating axis found, early out
+		}
+	}
+
+	// Then, test the face normals of object 2 as the seperating axis
+	normals = GetFaceNormals(o2);
+	for (int i = 0; i < normals.size(); ++i) {
+		if (!OverlapOnAxis(shape1, shape2, normals[i])) {
+			return true; // Seperating axis found, early out
+		}
+	}
+
+	// Finally, check the normals obtained by getting the cross product of each shapes edges.
+	std::vector<vec3Pair> edges1 = GetEdges(o1);
+	std::vector<vec3Pair> edges2 = GetEdges(o2);
+	for (int i = 0; i < edges1.size(); ++i) {
+		for (int j = 0; j < edges2.size(); ++j) {
+			Vector3 testAxis = SatCrossEdge(
+				edges1[i].first, edges1[i].second,
+				edges2[j].first, edges2[j].second
+			); // Cross(edges1[i], edges2[j]);
+			if (!OverlapOnAxis(shape1, shape2, testAxis)) {
+				return true; // Seperating axis found, early out
+			}
+		}
+	}
+
+	// No seperating axis found, the objects do not intersect
+	result.colliding = false;
+	result.normal = vec3(0, 0, 1);
+	result.depth = 0.0f;
+	return result;
+}
 
 #endif

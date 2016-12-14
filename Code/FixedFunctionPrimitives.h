@@ -32,6 +32,8 @@ void Render(const Mesh& mesh);
 void Render(const BVHNode& bvh);
 void Render(const Model& model);
 
+void Render(const std::vector<vec3Pair>& edges);
+
 // Generic Primitives (All pointing up on Y axis, must be rotated)
 void FixedFunctionSphere(int numDivisions, float radius);
 void FixedFunctionCube(float extentsX, float extentsY, float extentsZ);

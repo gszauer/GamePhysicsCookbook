@@ -150,6 +150,7 @@
     <ClInclude Include="..\Code\DemoBase.h" />
     <ClInclude Include="..\Code\DemoWindow.h" />
     <ClInclude Include="..\Code\FixedFunctionPrimitives.h" />
+    <ClInclude Include="..\Code\GenericSAT.h" />
     <ClInclude Include="..\Code\Geometry2D.h" />
     <ClInclude Include="..\Code\Geometry3D.h" />
     <ClInclude Include="..\Code\glad\glad.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="..\Code\DemoBase.cpp" />
     <ClCompile Include="..\Code\DemoWindow.cpp" />
     <ClCompile Include="..\Code\FixedFunctionPrimitives.cpp" />
+    <ClCompile Include="..\Code\GenericSAT.cpp" />
     <ClCompile Include="..\Code\Geometry2D.cpp" />
     <ClCompile Include="..\Code\Geometry3D.cpp" />
     <ClCompile Include="..\Code\glad\glad.c" />

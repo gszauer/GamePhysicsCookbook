@@ -215,6 +215,17 @@ void Render(const Line& line) {
 	glEnd();
 }
 
+void Render(const std::vector<vec3Pair>& edges) {
+	glBegin(GL_LINES);
+	for (int i = 0; i < edges.size(); ++i) {
+		vec3 p1 = edges[i].first;
+		vec3 p2 = edges[i].second;
+		glVertex3f(p1.x, p1.y, p1.z);
+		glVertex3f(p2.x, p2.y, p2.z);
+	}
+	glEnd();
+}
+
 void Render(const Point2D& point) {
 	glBegin(GL_POINTS);
 	glVertex3f(point.x, point.y, 0.0f);

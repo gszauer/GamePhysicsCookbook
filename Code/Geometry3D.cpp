@@ -2035,3 +2035,102 @@ Ray GetPickRay(const vec2& viewportPoint, const vec2& viewportOrigin, const vec2
 
 	return Ray(origin, normal);
 }
+
+// Chapter 15
+std::vector<vec3> GetFaceNormals(const AABB& aabb) {
+	std::vector<vec3> result;
+	result.reserve(6);
+	result.push_back(vec3( 1, 0, 0));
+	result.push_back(vec3(-1, 0, 0));
+	result.push_back(vec3(0,  1, 0));
+	result.push_back(vec3(0, -1, 0));
+	result.push_back(vec3(0, 0,  1));
+	result.push_back(vec3(0, 0, -1));
+	return result;
+}
+
+std::vector<vec3> GetFaceNormals(const OBB& obb) {
+	const float* o = obb.orientation.asArray;
+	std::vector<vec3> result;
+	result.reserve(6);
+
+	vec3 X(o[0], o[1], o[2]);
+	vec3 Y(o[3], o[4], o[5]);
+	vec3 Z(o[6], o[7], o[8]);
+	Normalize(X);
+	Normalize(Y);
+	Normalize(Z);
+
+	result.push_back( X);
+	result.push_back(X * -1.0f);
+	result.push_back(Y);
+	result.push_back(Y * -1.0f);
+	result.push_back(Z);
+	result.push_back(Z * -1.0f);
+
+	return result;
+}
+
+std::vector<vec3> GetFaceNormals(const Triangle& t) {
+	std::vector<vec3> result;
+	vec3 n = Normalized(Cross(t.b - t.a, t.c - t.a));
+	result.push_back(n);
+	return result;
+}
+
+std::vector<vec3Pair> GetEdges(const AABB& aabb) {
+	std::vector<vec3Pair> result;
+	result.reserve(12);
+
+	vec3 v[8]; // Vertices of AABB
+	v[0].x = v[1].x = v[2].x = v[3].x = GetMin(aabb).x;
+	v[4].x = v[5].x = v[6].x = v[7].x = GetMax(aabb).x;
+	v[2].y = v[3].y = v[6].y = v[7].y = GetMin(aabb).y;
+	v[0].y = v[1].y = v[4].y = v[5].y = GetMax(aabb).y;
+	v[1].z = v[3].z = v[5].z = v[7].z = GetMin(aabb).z;
+	v[0].z = v[2].z = v[4].z = v[6].z = GetMax(aabb).z;
+
+	int i[][2] = { // Indices of edges
+		{0, 1}, {0, 3}, {1, 2}, {2, 3}, {5, 4}, {5, 6},
+		{4, 7}, {6, 7}, {1, 4}, {0, 5}, {2, 7}, {3, 6}
+	};
+
+	for (int j = 0; j < 12; ++j) {
+		result.push_back(vec3Pair(
+			v[i[j][0]], v[i[j][1]]
+		));
+	}
+
+	return result;
+}
+
+std::vector<vec3Pair> GetEdges(const OBB& obb) {
+	vec3 vertex[8];
+
+	vec3 C = obb.position;	// OBB Center
+	vec3 E = obb.size;		// OBB Extents
+	const float* o = obb.orientation.asArray;
+	vec3 A[] = {			// OBB Axis
+		vec3(o[0], o[1], o[2]),
+		vec3(o[3], o[4], o[5]),
+		vec3(o[6], o[7], o[8]),
+	};
+
+	vertex[0] = C + A[0] * E[0] + A[1] * E[1] + A[2] * E[2];
+	vertex[1] = C - A[0] * E[0] + A[1] * E[1] + A[2] * E[2];
+	vertex[2] = C + A[0] * E[0] - A[1] * E[1] + A[2] * E[2];
+	vertex[3] = C + A[0] * E[0] + A[1] * E[1] - A[2] * E[2];
+	vertex[4] = C - A[0] * E[0] - A[1] * E[1] - A[2] * E[2];
+	vertex[5] = C + A[0] * E[0] - A[1] * E[1] - A[2] * E[2];
+	vertex[6] = C - A[0] * E[0] + A[1] * E[1] - A[2] * E[2];
+	vertex[7] = C - A[0] * E[0] - A[1] * E[1] + A[2] * E[2];
+}
+
+std::vector<vec3Pair> GetEdges(const Triangle& t) {
+	std::vector<vec3Pair> result;
+	result.reserve(3);
+	result.push_back(vec3Pair(t.a, t.b));
+	result.push_back(vec3Pair(t.b, t.c));
+	result.push_back(vec3Pair(t.c, t.a));
+	return result;
+}
