@@ -175,6 +175,19 @@ void Render(const Plane& plane) {
 		glVertex3f((-tx.x - ty.x) + n.x * d, (-tx.y - ty.y) + n.y * d, (-tx.z - ty.z) + n.z * d);
 		glVertex3f((tx.x - ty.x) + n.x * d, (tx.y - ty.y) + n.y * d, (tx.z - ty.z) + n.z * d);
 	glEnd();
+
+	float currentColor[4];
+	glGetFloatv(GL_CURRENT_COLOR, currentColor);
+
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glBegin(GL_LINES);
+	vec3 start = n * d;
+	vec3 end = start + n;
+	glVertex3f(start.x, start.y, start.z);
+	glVertex3f(end.x, end.y, end.z);
+	glEnd();
+
+	glColor4fv(currentColor);
 }
 
 void Render(const Triangle& triangle) {
@@ -215,11 +228,11 @@ void Render(const Line& line) {
 	glEnd();
 }
 
-void Render(const std::vector<vec3Pair>& edges) {
+void Render(const std::vector<Line>& edges) {
 	glBegin(GL_LINES);
 	for (int i = 0; i < edges.size(); ++i) {
-		vec3 p1 = edges[i].first;
-		vec3 p2 = edges[i].second;
+		vec3 p1 = edges[i].start;
+		vec3 p2 = edges[i].end;
 		glVertex3f(p1.x, p1.y, p1.z);
 		glVertex3f(p2.x, p2.y, p2.z);
 	}

@@ -16,7 +16,7 @@ void GenericSAT::Initialize(int width, int height) {
 	aabb.position = vec3(4, 2, 0);
 	
 	obb.position = vec3(-4, -2, 0);
-	obb.orientation = Rotation3x3(30.0f, 20.0f, 0.0f);
+	//obb.orientation = Rotation3x3(30.0f, 20.0f, 0.0f);
 	
 	triangle.a = vec3(-1, 1, 0);
 	triangle.b = vec3(0, 3, 0);
@@ -143,9 +143,9 @@ void GenericSAT::Render() {
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 
-	CollisionResult r1 = SATIntersectionTest<AABB, OBB>(aabb, obb);
-	CollisionResult r2 = SATIntersectionTest<AABB, Triangle>(aabb, triangle);
-	CollisionResult r3 = SATIntersectionTest<OBB, Triangle>(obb, triangle);
+	CollisionResult r1 = SATIntersectionTest<AABB, OBB>(aabb.position, aabb, obb);
+	CollisionResult r2 = SATIntersectionTest<AABB, Triangle>(aabb.position, aabb, triangle);
+	CollisionResult r3 = SATIntersectionTest<OBB, Triangle>(obb.position, obb, triangle);
 
 	//::Render(sphere);
 	if (!r1.colliding && !r2.colliding) {
@@ -169,6 +169,14 @@ void GenericSAT::Render() {
 	if (r1.colliding || r3.colliding) {
 		::Render(GetEdges(obb));
 	}
+
+	glColor3f(1.0f, 0.0f, 0.0f);
+	if (r1.colliding) {
+		for (int i = 0; i < r1.contacts.size(); ++i) {
+			::Render(r1.contacts[i]);
+		}
+	}
+
 	glEnable(GL_LIGHTING);
 }
 
