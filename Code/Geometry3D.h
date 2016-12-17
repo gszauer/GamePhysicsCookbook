@@ -556,6 +556,11 @@ std::vector<Plane> GetPlanes(const OBB& obb);
 bool ClipToPlane(const Plane& plane, const Line& line, Point* outPoint);
 std::vector<Point> ClipToPlanesInOBB(const std::vector<Plane>& planes, const std::vector<Line>& edges, const OBB& obb);
 float PenetrationDepth(const OBB& o1, const OBB& o2, const vec3& axis, bool* outShouldFlip);
+
 CollisionResult CollisionFeatures(const OBB& obb1, const OBB& obb2);
+
+Interval GetInterval(const Sphere& sphere, const vec3& axis);
+float PenetrationDepth(const OBB& obb, const Sphere& sphere, const vec3& axis, bool* outShouldFlip);
+CollisionResult CollisionFeatures(const OBB& obb, const Sphere& sphere);
 
 #endif

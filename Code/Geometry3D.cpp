@@ -2377,6 +2377,36 @@ std::vector<Point> ClipToPlanesInOBB(const std::vector<Plane>& planes, const std
 	return result;
 }
 
+Interval GetInterval(const Sphere& sphere, const vec3& axis) {
+	Interval result;
+	float v1 = Dot(axis, sphere.position - axis * sphere.radius);
+	float v2 = Dot(axis, sphere.position + axis * sphere.radius);
+	result.min = fminf(v1, v2);
+	result.max = fmaxf(v1, v2);
+	return result;
+}
+
+float PenetrationDepth(const OBB& obb, const Sphere& sphere, const vec3& axis, bool* outShouldFlip) {
+	Interval i1 = GetInterval(obb, Normalized(axis));
+	Interval i2 = GetInterval(sphere, Normalized(axis));
+
+	if (!((i2.min <= i1.max) && (i1.min <= i2.max))) {
+		return 0.0f; // No penerattion
+	}
+
+	float len1 = i1.max - i1.min;
+	float len2 = i2.max - i2.min;
+	float min = fminf(i1.min, i2.min);
+	float max = fmaxf(i1.max, i2.max);
+	float length = max - min;
+
+	if (outShouldFlip != 0) {
+		*outShouldFlip = (i2.min < i1.min);
+	}
+
+	return (len1 + len2) - length;
+}
+
 float PenetrationDepth(const OBB& o1, const OBB& o2, const vec3& axis, bool* outShouldFlip) {
 	Interval i1 = GetInterval(o1, Normalized(axis));
 	Interval i2 = GetInterval(o2, Normalized(axis));
@@ -2471,6 +2501,27 @@ CollisionResult CollisionFeatures(const OBB& obb1, const OBB& obb2) {
 
 	result.colliding = true;
 	result.normal = axis * -1.0f;
+
+	return result;
+}
+
+CollisionResult CollisionFeatures(const OBB& obb, const Sphere& sphere) {
+	CollisionResult result; // Will return result of intersection!
+	ResetCollisionResult(&result);
+
+	Point closestPoint = ClosestPoint(obb, sphere.position);
+
+	if (MagnitudeSq(closestPoint - sphere.position) > sphere.radius * sphere.radius) {
+		return result;
+	}
+	vec3 normal = Normalized(closestPoint - sphere.position);
+	Point outsidePoint = sphere.position + normal * sphere.radius;
+	float distance = Magnitude(closestPoint - outsidePoint);
+
+	result.colliding = true;
+	result.contacts.push_back(closestPoint);
+	result.normal = normal;
+	result.depth = distance * 0.5f;
 
 	return result;
 }

@@ -14,7 +14,10 @@ void CollisionFeature::Initialize(int width, int height) {
 
 	obb[0].position = vec3(4, 2, 0);
 	obb[1].position = vec3(-4, -2, 0);
-	//obb[1].orientation = Rotation3x3(30.0f, 20.0f, 0.0f);
+	obb[1].orientation = Rotation3x3(30.0f, 20.0f, 0.0f);
+
+	sphere.position = vec3(-4, 2, 0);
+
 	
 	glPointSize(5.0f);
 	glEnable(GL_LIGHTING);
@@ -59,7 +62,7 @@ void CollisionFeature::ImGUI() {
 		}
 		if (manipulator == manRotation.asArray) {
 			currentGizmoOperation = ImGuizmo::ROTATE;
-			ImGuizmo::Enable(manipulating == 1);
+			ImGuizmo::Enable(manipulating == 0 || manipulating == 1);
 		}
 		if (manipulator == manScale.asArray) {
 			currentGizmoOperation = ImGuizmo::SCALE;
@@ -106,27 +109,47 @@ void CollisionFeature::Render() {
 	glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 
 	CollisionResult r1 = CollisionFeatures(obb[0], obb[1]);
+	CollisionResult r2 = CollisionFeatures(obb[0], sphere);
+	CollisionResult r3 = CollisionFeatures(obb[1], sphere);
 
-	if (!r1.colliding) {
+	if (!r1.colliding && !r2.colliding) {
 		::Render(obb[0]);
 	}
-	if (!r1.colliding) {
+	if (!r1.colliding && !r3.colliding) {
 		::Render(obb[1]);
+	}
+	if (!r2.colliding && !r3.colliding) {
+		::Render(sphere);
 	}
 
 	glDisable(GL_LIGHTING);
 	glColor3f(0.0f, 0.0f, 1.0f);
-	if (r1.colliding) {
+	if (r1.colliding || r2.colliding) {
 		::Render(GetEdges(obb[0]));
 	}
-	if (r1.colliding) {
+	if (r1.colliding || r3.colliding) {
 		::Render(GetEdges(obb[1]));
+	}
+	if (r2.colliding || r3.colliding) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		::Render(sphere);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
 	glColor3f(1.0f, 0.0f, 0.0f);
 	if (r1.colliding) {
 		for (int i = 0; i < r1.contacts.size(); ++i) {
 			::Render(r1.contacts[i]);
+		}
+	}
+	if (r2.colliding) {
+		for (int i = 0; i < r2.contacts.size(); ++i) {
+			::Render(r3.contacts[i]);
+		}
+	}
+	if (r3.colliding) {
+		for (int i = 0; i < r3.contacts.size(); ++i) {
+			::Render(r3.contacts[i]);
 		}
 	}
 	glEnable(GL_LIGHTING);

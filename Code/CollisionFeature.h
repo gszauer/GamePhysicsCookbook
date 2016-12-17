@@ -6,7 +6,7 @@
 
 class CollisionFeature : public DemoBase {
 protected:
-	// TODO: Add spheres!
+	Sphere sphere;
 	OBB obb[2];
 
 	float* manipulator;
