@@ -542,4 +542,20 @@ static inline CollisionResult SATIntersectionTest(vec3 center1, const T& o1, con
 }
 #endif
 
+typedef struct CollisionResult {
+	bool colliding;
+	vec3 normal;
+	float depth;
+	std::vector<vec3> contacts;
+};
+void ResetCollisionResult(CollisionResult* result);
+
+std::vector<Point> GetVertices(const OBB& obb);
+std::vector<Line> GetEdges(const OBB& obb);
+std::vector<Plane> GetPlanes(const OBB& obb);
+bool ClipToPlane(const Plane& plane, const Line& line, Point* outPoint);
+std::vector<Point> ClipToPlanesInOBB(const std::vector<Plane>& planes, const std::vector<Line>& edges, const OBB& obb);
+float PenetrationDepth(const OBB& o1, const OBB& o2, const vec3& axis, bool* outShouldFlip);
+CollisionResult CollisionFeatures(const OBB& obb1, const OBB& obb2);
+
 #endif

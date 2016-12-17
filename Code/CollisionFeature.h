@@ -4,12 +4,10 @@
 #include "DemoBase.h"
 #include "Geometry3D.h"
 
-class GenericSAT : public DemoBase {
+class CollisionFeature : public DemoBase {
 protected:
-	//Sphere sphere;
-	AABB aabb;
-	OBB obb;
-	Triangle triangle;
+	// TODO: Add spheres!
+	OBB obb[2];
 
 	float* manipulator;
 	mat4 manTranslation;
@@ -17,7 +15,6 @@ protected:
 	mat4 manScale;
 	int manipulating;
 	bool transformWorld;
-	Triangle centroidOffset;
 public:
 	void Initialize(int width, int height);
 	void Render();

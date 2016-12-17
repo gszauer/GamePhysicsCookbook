@@ -2261,3 +2261,216 @@ std::vector<Line> GetEdges(const Triangle& t) {
 	return result;
 }
 #endif
+
+void ResetCollisionResult(CollisionResult* result) {
+	if (result != 0) {
+		result->colliding = false;
+		result->normal = vec3(0, 0, 1);
+		result->depth = FLT_MAX;
+	}
+}
+
+std::vector<Point> GetVertices(const OBB& obb) {
+	std::vector<vec3> v;
+	v.resize(8);
+
+	vec3 C = obb.position;	// OBB Center
+	vec3 E = obb.size;		// OBB Extents
+	const float* o = obb.orientation.asArray;
+	vec3 A[] = {			// OBB Axis
+		vec3(o[0], o[1], o[2]),
+		vec3(o[3], o[4], o[5]),
+		vec3(o[6], o[7], o[8]),
+	};
+
+	v[0] = C + A[0] * E[0] + A[1] * E[1] + A[2] * E[2];
+	v[1] = C - A[0] * E[0] + A[1] * E[1] + A[2] * E[2];
+	v[2] = C + A[0] * E[0] - A[1] * E[1] + A[2] * E[2];
+	v[3] = C + A[0] * E[0] + A[1] * E[1] - A[2] * E[2];
+	v[4] = C - A[0] * E[0] - A[1] * E[1] - A[2] * E[2];
+	v[5] = C + A[0] * E[0] - A[1] * E[1] - A[2] * E[2];
+	v[6] = C - A[0] * E[0] + A[1] * E[1] - A[2] * E[2];
+	v[7] = C - A[0] * E[0] - A[1] * E[1] + A[2] * E[2];
+
+	return v;
+}
+
+std::vector<Line> GetEdges(const OBB& obb) {
+	std::vector<Line> result;
+	result.reserve(12);
+	std::vector<Point> v = GetVertices(obb);
+
+	int index[][2] = { // Indices of edges
+		{ 6, 1 },{ 6, 3 },{ 6, 4 },{ 2, 7 },{ 2, 5 },{ 2, 0 },
+		{ 0, 1 },{ 0, 3 },{ 7, 1 },{ 7, 4 },{ 4, 5 },{ 5, 3 }
+	};
+
+	for (int j = 0; j < 12; ++j) {
+		result.push_back(Line(
+			v[index[j][0]], v[index[j][1]]
+		));
+	}
+
+	return result;
+}
+
+std::vector<Plane> GetPlanes(const OBB& obb) {
+	vec3 c = obb.position;	// OBB Center
+	vec3 e = obb.size;		// OBB Extents
+	const float* o = obb.orientation.asArray;
+	vec3 a[] = {			// OBB Axis
+		vec3(o[0], o[1], o[2]),
+		vec3(o[3], o[4], o[5]),
+		vec3(o[6], o[7], o[8]),
+	};
+
+	std::vector<Plane> result;
+	result.resize(6);
+
+	result[0] = Plane(a[0]        ,  Dot(a[0], (c + a[0] * e.x)));
+	result[1] = Plane(a[0] * -1.0f, -Dot(a[0], (c - a[0] * e.x)));
+	result[2] = Plane(a[1]        ,  Dot(a[1], (c + a[1] * e.y)));
+	result[3] = Plane(a[1] * -1.0f, -Dot(a[1], (c - a[1] * e.y)));
+	result[4] = Plane(a[2]        ,  Dot(a[2], (c + a[2] * e.z)));
+	result[5] = Plane(a[2] * -1.0f, -Dot(a[2], (c - a[2] * e.z)));
+
+	return result;
+}
+
+
+bool ClipToPlane(const Plane& plane, const Line& line, Point* outPoint) {
+	vec3 ab = line.end - line.start;
+
+	float nA = Dot(plane.normal, line.start);
+	float nAB = Dot(plane.normal, ab);
+
+	if (CMP(nAB, 0)) {
+		return false;
+	}
+
+	float t = (plane.distance - nA) / nAB;
+	if (t >= 0.0f && t <= 1.0f) {
+		if (outPoint != 0) {
+			*outPoint = line.start + ab * t;
+		}
+		return true;
+	}
+
+	return false;
+}
+
+std::vector<Point> ClipToPlanesInOBB(const std::vector<Plane>& planes, const std::vector<Line>& edges, const OBB& obb) {
+	std::vector<Point> result;
+	result.reserve(edges.size());
+	Point intersection;
+
+	for (int i = 0; i < planes.size(); ++i) {
+		for (int j = 0; j < edges.size(); ++j) {
+			if (ClipToPlane(planes[i], edges[j], &intersection)) {
+				if (PointInOBB(intersection, obb)) {
+					result.push_back(intersection);
+				}
+			}
+		}
+	}
+
+	return result;
+}
+
+float PenetrationDepth(const OBB& o1, const OBB& o2, const vec3& axis, bool* outShouldFlip) {
+	Interval i1 = GetInterval(o1, Normalized(axis));
+	Interval i2 = GetInterval(o2, Normalized(axis));
+
+	if (!((i2.min <= i1.max) && (i1.min <= i2.max))) {
+		return 0.0f; // No penerattion
+	}
+
+	float len1 = i1.max - i1.min;
+	float len2 = i2.max - i2.min;
+	float min = fminf(i1.min, i2.min);
+	float max = fmaxf(i1.max, i2.max);
+	float length = max - min;
+
+	if (outShouldFlip != 0) {
+		*outShouldFlip = (i2.min < i1.min);
+	}
+
+	return (len1 + len2) - length;
+}
+
+CollisionResult CollisionFeatures(const OBB& obb1, const OBB& obb2) {
+	CollisionResult result; // Will return result of intersection!
+	ResetCollisionResult(&result);
+
+	const float* o1 = obb1.orientation.asArray;
+	const float* o2 = obb2.orientation.asArray;
+
+	vec3 test[15] = {
+		vec3(o1[0], o1[1], o1[2]),
+		vec3(o1[3], o1[4], o1[5]),
+		vec3(o1[6], o1[7], o1[8]),
+		vec3(o2[0], o2[1], o2[2]),
+		vec3(o2[3], o2[4], o2[5]),
+		vec3(o2[6], o2[7], o2[8])
+	};
+
+	for (int i = 0; i < 3; ++i) { // Fill out rest of axis
+		test[6 + i * 3 + 0] = Cross(test[i], test[0]);
+		test[6 + i * 3 + 1] = Cross(test[i], test[1]);
+		test[6 + i * 3 + 2] = Cross(test[i], test[2]);
+	}
+
+	vec3* hitNormal = 0;
+	bool shouldFlip;
+
+	for (int i = 0; i < 15; ++i) {
+		if (CMP(MagnitudeSq(test[i]), 0)) {
+			continue;
+		}
+
+		float depth = PenetrationDepth(obb1, obb2, test[i], &shouldFlip);
+		if (depth <= 0.0f) {
+			return result;
+		}
+		else if (depth < result.depth) {
+			if (shouldFlip) {
+				test[i] = test[i] * -1.0f;
+			}
+			result.depth = depth;
+			hitNormal = &test[i];
+		}
+	}
+
+	if (hitNormal == 0) {
+		return result;
+	}
+	vec3 axis = Normalized(*hitNormal);
+
+	std::vector<Point> c1 = ClipToPlanesInOBB(GetPlanes(obb1), GetEdges(obb2), obb1);
+	std::vector<Point> c2 = ClipToPlanesInOBB(GetPlanes(obb2), GetEdges(obb1), obb2);
+	result.contacts.reserve(c1.size() + c2.size());
+	result.contacts.insert(result.contacts.end(), c1.begin(), c1.end());
+	result.contacts.insert(result.contacts.end(), c2.begin(), c2.end());
+
+	Interval i = GetInterval(obb1, axis);
+	float distance = (i.max - i.min)* 0.5f - result.depth * 0.5f;
+	vec3 pointOnPlane = obb1.position + axis * distance;
+	
+	for (int i = result.contacts.size() - 1; i >= 0; --i) {
+		vec3 contact = result.contacts[i];
+		result.contacts[i] = contact + (axis * Dot(axis, pointOnPlane - contact));
+		
+		// This bit is in the "There is more" section of the book
+		for (int j = result.contacts.size() - 1; j > i; --j) {
+			if (MagnitudeSq(result.contacts[j] - result.contacts[i]) < 0.0001f) {
+				result.contacts.erase(result.contacts.begin() + j);
+				break;
+			}
+		}
+	}
+
+	result.colliding = true;
+	result.normal = axis * -1.0f;
+
+	return result;
+}

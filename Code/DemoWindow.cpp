@@ -1,7 +1,7 @@
 #include "DemoWindow.h"
 #include "imgui/imgui.h"
 #include "CH14Demo.h"
-#include "GenericSAT.h"
+#include "CollisionFeature.h"
 
 // This is the global instance of the IWindow singleton!
 static DemoWindow g_WindowInstance("Physics Sandbox", 800, 600);
@@ -144,7 +144,7 @@ void DemoWindow::Start14() {
 
 void DemoWindow::Start15() {
 	StopDemo();
-	m_pDemo = new GenericSAT();
+	m_pDemo = new CollisionFeature();
 	m_pDemo->Initialize(GetWidth(), GetHeight());
 	ApplyDemoCamera();
 }

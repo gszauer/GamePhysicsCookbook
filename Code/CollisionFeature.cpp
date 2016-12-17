@@ -1,32 +1,21 @@
-#include "GenericSAT.h"
+#include "CollisionFeature.h"
 #include "FixedFunctionPrimitives.h"
 #include "glad/glad.h"
 #include "imgui/imgui.h"
 #include "imgui/ImGuizmo.h"
 #include <iostream>
 
-void GenericSAT::Initialize(int width, int height) {
+void CollisionFeature::Initialize(int width, int height) {
 	DemoBase::Initialize(width, height);
 
 	manipulator = manTranslation.asArray;
 	manipulating = -1;
 	transformWorld = false;
 
-	//sphere.position = vec3(-4, 2, 0);
-	aabb.position = vec3(4, 2, 0);
+	obb[0].position = vec3(4, 2, 0);
+	obb[1].position = vec3(-4, -2, 0);
+	//obb[1].orientation = Rotation3x3(30.0f, 20.0f, 0.0f);
 	
-	obb.position = vec3(-4, -2, 0);
-	//obb.orientation = Rotation3x3(30.0f, 20.0f, 0.0f);
-	
-	triangle.a = vec3(-1, 1, 0);
-	triangle.b = vec3(0, 3, 0);
-	triangle.c = vec3(1, 1, 0);
-
-	vec3 centroid = Centroid(triangle);
-	centroidOffset.a = centroid - triangle.a;
-	centroidOffset.b = centroid - triangle.b;
-	centroidOffset.c = centroid - triangle.c;
-
 	glPointSize(5.0f);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
@@ -35,7 +24,7 @@ void GenericSAT::Initialize(int width, int height) {
 	glLightfv(GL_LIGHT0, GL_POSITION, val);
 }
 
-void GenericSAT::ImGUI() {
+void CollisionFeature::ImGUI() {
 	DemoBase::ImGUI();
 
 	ImGui::Begin("SAT Test Demo", 0, ImGuiWindowFlags_NoResize);
@@ -85,52 +74,25 @@ void GenericSAT::ImGUI() {
 		float matrixTranslation[3], matrixRotation[3], matrixScale[3];
 		ImGuizmo::DecomposeMatrixToComponents(manipulator, matrixTranslation, matrixRotation, matrixScale);
 
-		if (manipulating == 0) {
+		if (manipulating == 0 || manipulating == 1) {
 			if (manipulator == manTranslation.asArray) {
-				aabb.position.x = matrixTranslation[0];
-				aabb.position.y = matrixTranslation[1];
-				aabb.position.z = matrixTranslation[2];
+				obb[manipulating].position.x = matrixTranslation[0];
+				obb[manipulating].position.y = matrixTranslation[1];
+				obb[manipulating].position.z = matrixTranslation[2];
 			}
 			else if (manipulator == manScale.asArray) {
-				aabb.size.x = matrixScale[0];
-				aabb.size.y = matrixScale[1];
-				aabb.size.z = matrixScale[2];
-			}
-		}
-		else if (manipulating == 1) {
-			if (manipulator == manTranslation.asArray) {
-				obb.position.x = matrixTranslation[0];
-				obb.position.y = matrixTranslation[1];
-				obb.position.z = matrixTranslation[2];
-			}
-			else if (manipulator == manScale.asArray) {
-				obb.size.x = matrixScale[0];
-				obb.size.y = matrixScale[1];
-				obb.size.z = matrixScale[2];
+				obb[manipulating].size.x = matrixScale[0];
+				obb[manipulating].size.y = matrixScale[1];
+				obb[manipulating].size.z = matrixScale[2];
 			}
 			else if (manipulator == manRotation.asArray) {
-				obb.orientation = Cut(manRotation, 3, 3);
-			}
-		}
-		else if (manipulating == 2) {
-			if (manipulator == manTranslation.asArray) {
-				vec3 centroid = Centroid(triangle);
-				
-				centroid.x = matrixTranslation[0];
-				centroid.y = matrixTranslation[1];
-				centroid.z = matrixTranslation[2];
-				
-				triangle.a = centroid - centroidOffset.a;
-				triangle.b = centroid - centroidOffset.b;
-				triangle.c = centroid - centroidOffset.c;
+				obb[manipulating].orientation = Cut(manRotation, 3, 3);
 			}
 		}
 	}
-
-
 }
 
-void GenericSAT::Render() {
+void CollisionFeature::Render() {
 	DemoBase::Render();
 
 	static const float position[] = { 0.5f, 1.0f, -1.5f, 0.0f };
@@ -143,31 +105,22 @@ void GenericSAT::Render() {
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 
-	/*CollisionResult r1 = SATIntersectionTest<AABB, OBB>(aabb.position, aabb, obb);
-	CollisionResult r2 = SATIntersectionTest<AABB, Triangle>(aabb.position, aabb, triangle);
-	CollisionResult r3 = SATIntersectionTest<OBB, Triangle>(obb.position, obb, triangle);
+	CollisionResult r1 = CollisionFeatures(obb[0], obb[1]);
 
-	//::Render(sphere);
-	if (!r1.colliding && !r2.colliding) {
-		::Render(aabb);
+	if (!r1.colliding) {
+		::Render(obb[0]);
 	}
-	if (!r1.colliding & !r3.colliding) {
-		::Render(obb);
+	if (!r1.colliding) {
+		::Render(obb[1]);
 	}
-	if (!r2.colliding & !r3.colliding) {
-		::Render(triangle);
-	}*/
 
 	glDisable(GL_LIGHTING);
 	glColor3f(0.0f, 0.0f, 1.0f);
-	/*if (r1.colliding || r2.colliding) {
-		::Render(GetEdges(aabb));
+	if (r1.colliding) {
+		::Render(GetEdges(obb[0]));
 	}
-	if (r2.colliding || r3.colliding) {
-		::Render(GetEdges(triangle));
-	}
-	if (r1.colliding || r3.colliding) {
-		::Render(GetEdges(obb));
+	if (r1.colliding) {
+		::Render(GetEdges(obb[1]));
 	}
 
 	glColor3f(1.0f, 0.0f, 0.0f);
@@ -175,29 +128,27 @@ void GenericSAT::Render() {
 		for (int i = 0; i < r1.contacts.size(); ++i) {
 			::Render(r1.contacts[i]);
 		}
-	}*/
+	}
 	glEnable(GL_LIGHTING);
 }
 
-void GenericSAT::Update(float dt) {
+void CollisionFeature::Update(float dt) {
 	DemoBase::Update(dt);
 
 	if (mouseLeftDown) {
 		Ray screenRay = GetPickRay(mousePos, vec2(), size, camera.GetViewMatrix(), camera.GetProjectionMatrix());
 		screenRay.NormalizeDirection();
 
-		RaycastResult allCasts[3];
-		//Raycast(sphere, screenRay, &allCasts[0]);
-		Raycast(aabb, screenRay, &allCasts[0]);
-		Raycast(obb, screenRay, &allCasts[1]);
-		Raycast(triangle, screenRay, &allCasts[2]);
+		std::vector<RaycastResult> allCasts;
+		allCasts.resize(2);
+		Raycast(obb[0], screenRay, &allCasts[0]);
+		Raycast(obb[1], screenRay, &allCasts[1]);
 
 		RaycastResult raycastResult;
 		ResetRaycastResult(&raycastResult);
-
 		int wasManipulating = manipulating;
 
-		for (int i = 0; i < 3; ++i) {
+		for (int i = 0; i < allCasts.size(); ++i) {
 			if (allCasts[i].hit) {
 				if (!raycastResult.hit || allCasts[i].t < raycastResult.t) {
 					raycastResult = allCasts[i];
@@ -213,22 +164,13 @@ void GenericSAT::Update(float dt) {
 		if (!raycastResult.hit) {
 			manipulating = -1;
 		}
-		else if (manipulating == 0 && wasManipulating != 0) {
-			manTranslation = Translation(aabb.position.x, aabb.position.y, aabb.position.z);
-			manRotation = mat4() * manTranslation;
-			manScale = Scale(aabb.size.x, aabb.size.y, aabb.size.z) * manTranslation;
-		}
-		else if (manipulating == 1 && wasManipulating != 1) {
-			manTranslation = Translation(obb.position.x, obb.position.y, obb.position.z);
-			manRotation = FromMat3(obb.orientation) * manTranslation;
+		else if (manipulating < 2 && wasManipulating != manipulating) {
+			manTranslation = Translation(obb[manipulating].position.x, obb[manipulating].position.y, obb[manipulating].position.z);
+			manRotation = FromMat3(obb[manipulating].orientation) * manTranslation;
 			manTranslation = manRotation;
-			manScale = Scale(obb.size.x, obb.size.y, obb.size.z) * manTranslation;
+			manScale = Scale(obb[manipulating].size.x, obb[manipulating].size.y, obb[manipulating].size.z) * manTranslation;
 		}
-		else if (manipulating == 2 && wasManipulating != 2) {
-			manTranslation = Translation(Centroid(triangle));
-			manRotation = manTranslation;
-			manScale = manTranslation;
-		}
+		
 
 		if (trans) {
 			manipulator = manTranslation.asArray;
