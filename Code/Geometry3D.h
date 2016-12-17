@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <utility>
-#include <cfloat>
+//#include <cfloat>
 
 #include "vectors.h"
 #include "matrices.h"
@@ -308,9 +308,8 @@ bool Linetest(const Line& line, const Plane& plane);
 
 #ifndef NO_EXTRAS
 vec3 BarycentricOptimized(const Point& p, const Triangle& t);
-#endif
-
 vec3 Centroid(const Triangle& t);
+#endif
 
 bool PointInTriangle(const Point& p, const Triangle& t);
 Plane FromTriangle(const Triangle& t);

@@ -883,8 +883,6 @@ bool Linetest(const Line& line, const OBB& obb) {
 bool Linetest(const Line& line, const Plane& plane) {
 	return Linetest(plane, line);
 }
-#endif
-
 
 vec3 Centroid(const Triangle& t) {
 	vec3 result;
@@ -893,7 +891,8 @@ vec3 Centroid(const Triangle& t) {
 	result.z = t.a.z + t.b.z + t.c.z;
 	result = result * (1.0f / 3.0f);
 	return result;
-} 
+}
+#endif
 
 bool PointInTriangle(const Point& p, const Triangle& t) {
 	// Move the triangle so that the point is  
