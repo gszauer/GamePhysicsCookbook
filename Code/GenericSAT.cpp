@@ -143,7 +143,7 @@ void GenericSAT::Render() {
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 
-	CollisionResult r1 = SATIntersectionTest<AABB, OBB>(aabb.position, aabb, obb);
+	/*CollisionResult r1 = SATIntersectionTest<AABB, OBB>(aabb.position, aabb, obb);
 	CollisionResult r2 = SATIntersectionTest<AABB, Triangle>(aabb.position, aabb, triangle);
 	CollisionResult r3 = SATIntersectionTest<OBB, Triangle>(obb.position, obb, triangle);
 
@@ -156,11 +156,11 @@ void GenericSAT::Render() {
 	}
 	if (!r2.colliding & !r3.colliding) {
 		::Render(triangle);
-	}
+	}*/
 
 	glDisable(GL_LIGHTING);
 	glColor3f(0.0f, 0.0f, 1.0f);
-	if (r1.colliding || r2.colliding) {
+	/*if (r1.colliding || r2.colliding) {
 		::Render(GetEdges(aabb));
 	}
 	if (r2.colliding || r3.colliding) {
@@ -175,8 +175,7 @@ void GenericSAT::Render() {
 		for (int i = 0; i < r1.contacts.size(); ++i) {
 			::Render(r1.contacts[i]);
 		}
-	}
-
+	}*/
 	glEnable(GL_LIGHTING);
 }
 

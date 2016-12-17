@@ -397,14 +397,6 @@ bool OverlapOnAxis(const OBB& obb1, const OBB& obb2, const vec3& axis) {
 	return ((b.min <= a.max) && (a.min <= b.max));
 }
 
-void ResetCollisionResult(CollisionResult* result) {
-	if (result != 0) {
-		result->colliding = false;
-		result->normal = vec3(0, 0, 1);
-		result->depth = 0.0f;
-	}
-}
-
 bool OverlapOnAxis(const AABB& aabb, const Triangle& triangle, const vec3& axis) {
 	Interval a = GetInterval(aabb, axis);
 	Interval b = GetInterval(triangle, axis);
@@ -2055,6 +2047,15 @@ Ray GetPickRay(const vec2& viewportPoint, const vec2& viewportOrigin, const vec2
 }
 
 // Chapter 15
+#if 0
+void ResetCollisionResult(CollisionResult* result) {
+	if (result != 0) {
+		result->colliding = false;
+		result->normal = vec3(0, 0, 1);
+		result->depth = 0.0f;
+	}
+}
+
 std::vector<vec3> GetFaceNormals(const AABB& aabb) {
 	std::vector<vec3> result;
 	result.reserve(6);
@@ -2260,3 +2261,4 @@ std::vector<Line> GetEdges(const Triangle& t) {
 	result.push_back(Line(t.c, t.a));
 	return result;
 }
+#endif

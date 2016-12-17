@@ -377,7 +377,7 @@ vec3 Unproject(const vec3& viewportPoint, const vec2& viewportOrigin, const vec2
 Ray GetPickRay(const vec2& viewportPoint, const vec2& viewportOrigin, const vec2& viewportSize, const mat4& view, const mat4& projection);
 
 // Chapter 15
-
+#if 0
 typedef struct CollisionResult {
 	bool colliding;
 	vec3 normal;
@@ -541,5 +541,6 @@ static inline CollisionResult SATIntersectionTest(vec3 center1, const T& o1, con
 
 	return result;
 }
+#endif
 
 #endif
