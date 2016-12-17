@@ -158,6 +158,7 @@
     <ClInclude Include="..\Code\GLWindow.h" />
     <ClInclude Include="..\Code\imgui\imconfig.h" />
     <ClInclude Include="..\Code\imgui\imgui.h" />
+    <ClInclude Include="..\Code\imgui\ImGuizmo.h" />
     <ClInclude Include="..\Code\imgui\imgui_implementation.h" />
     <ClInclude Include="..\Code\imgui\imgui_internal.h" />
     <ClInclude Include="..\Code\imgui\stb_rect_pack.h" />
@@ -187,6 +188,7 @@
     <ClCompile Include="..\Code\glad\glad.c" />
     <ClCompile Include="..\Code\GLWindow.cpp" />
     <ClCompile Include="..\Code\imgui\imgui.cpp" />
+    <ClCompile Include="..\Code\imgui\ImGuizmo.cpp" />
     <ClCompile Include="..\Code\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\Code\imgui\imgui_implementation.cpp" />
     <ClCompile Include="..\Code\IWindow.cpp" />

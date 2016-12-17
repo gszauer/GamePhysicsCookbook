@@ -397,6 +397,14 @@ bool OverlapOnAxis(const OBB& obb1, const OBB& obb2, const vec3& axis) {
 	return ((b.min <= a.max) && (a.min <= b.max));
 }
 
+void ResetCollisionResult(CollisionResult* result) {
+	if (result != 0) {
+		result->colliding = false;
+		result->normal = vec3(0, 0, 1);
+		result->depth = 0.0f;
+	}
+}
+
 bool OverlapOnAxis(const AABB& aabb, const Triangle& triangle, const vec3& axis) {
 	Interval a = GetInterval(aabb, axis);
 	Interval b = GetInterval(triangle, axis);
@@ -884,6 +892,16 @@ bool Linetest(const Line& line, const Plane& plane) {
 	return Linetest(plane, line);
 }
 #endif
+
+
+vec3 Centroid(const Triangle& t) {
+	vec3 result;
+	result.x = t.a.x + t.b.x + t.c.x;
+	result.y = t.a.y + t.b.y + t.c.y;
+	result.z = t.a.z + t.b.z + t.c.z;
+	result = result * (1.0f / 3.0f);
+	return result;
+} 
 
 bool PointInTriangle(const Point& p, const Triangle& t) {
 	// Move the triangle so that the point is  
@@ -2091,8 +2109,8 @@ std::vector<vec3Pair> GetEdges(const AABB& aabb) {
 	v[0].z = v[2].z = v[4].z = v[6].z = GetMax(aabb).z;
 
 	int i[][2] = { // Indices of edges
-		{0, 1}, {0, 3}, {1, 2}, {2, 3}, {5, 4}, {5, 6},
-		{4, 7}, {6, 7}, {1, 4}, {0, 5}, {2, 7}, {3, 6}
+		{0, 1}, {0, 2}, {1, 3}, {3, 2}, {5, 4}, {5, 7},
+		{4, 6}, {6, 7}, {1, 5}, {0, 4}, {3, 7}, {2, 6}
 	};
 
 	for (int j = 0; j < 12; ++j) {
@@ -2105,6 +2123,9 @@ std::vector<vec3Pair> GetEdges(const AABB& aabb) {
 }
 
 std::vector<vec3Pair> GetEdges(const OBB& obb) {
+	std::vector<vec3Pair> result;
+	result.reserve(12);
+
 	vec3 vertex[8];
 
 	vec3 C = obb.position;	// OBB Center
@@ -2124,6 +2145,19 @@ std::vector<vec3Pair> GetEdges(const OBB& obb) {
 	vertex[5] = C + A[0] * E[0] - A[1] * E[1] - A[2] * E[2];
 	vertex[6] = C - A[0] * E[0] + A[1] * E[1] - A[2] * E[2];
 	vertex[7] = C - A[0] * E[0] - A[1] * E[1] + A[2] * E[2];
+
+	int index[][2] = { // Indices of edges
+		{ 6, 1 },{ 6, 3 },{ 6, 4 },{ 2, 7 },{ 2, 5 },{ 2, 0 },
+		{ 0, 1 },{ 0, 3 },{ 7, 1 },{ 7, 4 },{ 4, 5 },{ 5, 3 }
+	};
+
+	for (int j = 0; j < 12; ++j) {
+		result.push_back(vec3Pair(
+			vertex[index[j][0]], vertex[index[j][1]]
+		));
+	}
+
+	return result;
 }
 
 std::vector<vec3Pair> GetEdges(const Triangle& t) {

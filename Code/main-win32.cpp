@@ -29,6 +29,7 @@
 #include "matrices.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_implementation.h"
+#include "imgui/ImGuizmo.h"
 
 // I set all of these settings in the "Project Settings" of visual studio
 // #pragma comment(lib, "opengl32.lib") 
@@ -193,6 +194,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 			DispatchMessage(&msg);
 		}
 		ImGui_Implementation_NewFrame();
+		ImGuizmo::BeginFrame();
 
 		// Potentially change title
 		if (pWindowInstance->GetAndResetTitleDirtyFlag()) {
@@ -298,38 +300,52 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
 		break;
 	case WM_LBUTTONDOWN:
 		if (!ImGui_Implementation_HasMouse()) {
-			pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-			pWindowInstance->OnMouseDown(MOUSE_LEFT);
+			//pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			if (!ImGuizmo::IsUsing() && !ImGuizmo::IsOver()) {
+				pWindowInstance->OnMouseDown(MOUSE_LEFT);
+			}
 		}
 		break;
 	case WM_LBUTTONUP:
 		if (!ImGui_Implementation_HasMouse()) {
-			pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-			pWindowInstance->OnMouseUp(MOUSE_LEFT);
+			//pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			if (!ImGuizmo::IsUsing()) {
+				pWindowInstance->OnMouseUp(MOUSE_LEFT);
+			}
 		}
 		break;
 	case WM_RBUTTONDOWN:
 		if (!ImGui_Implementation_HasMouse()) {
-			pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-			pWindowInstance->OnMouseDown(MOUSE_RIGHT);
+			//pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			if (!ImGuizmo::IsUsing() && !ImGuizmo::IsOver()) {
+				pWindowInstance->OnMouseDown(MOUSE_RIGHT);
+			}
 		}
 		break;
 	case WM_RBUTTONUP:
 		if (!ImGui_Implementation_HasMouse()) {
-			pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-			pWindowInstance->OnMouseUp(MOUSE_RIGHT);
+			//pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			if (!ImGuizmo::IsUsing()) {
+				pWindowInstance->OnMouseUp(MOUSE_RIGHT);
+			}
 		}
 		break;
 	case WM_MBUTTONDOWN:
 		if (!ImGui_Implementation_HasMouse()) {
-			pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-			pWindowInstance->OnMouseDown(MOUSE_MIDDLE);
+			//pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			if (!ImGuizmo::IsUsing() && !ImGuizmo::IsOver()) {
+				pWindowInstance->OnMouseDown(MOUSE_MIDDLE);
+			}
 		}
 		break;
 	case WM_MBUTTONUP:
 		if (!ImGui_Implementation_HasMouse()) {
-			pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-			pWindowInstance->OnMouseUp(MOUSE_MIDDLE);
+			if (!ImGuizmo::IsOver()) {
+				pWindowInstance->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			}
+			if (!ImGuizmo::IsUsing()) {
+				pWindowInstance->OnMouseUp(MOUSE_MIDDLE);
+			}
 		}
 		break;
 	// Handle keyboard events

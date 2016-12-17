@@ -10,6 +10,31 @@
 		(fabsf(x - y) <= FLT_EPSILON * fmaxf(1.0f, fmaxf(fabsf(x), fabsf(y))))
 #endif
 
+float CorrectDegrees(float degrees) {
+	while (degrees > 360.0f) {
+		degrees -= 360.0f;
+	}
+	while (degrees < -360.0f) {
+		degrees += 360.0f;
+	}
+	return degrees;
+}
+
+#ifndef RAD2DEG
+float RAD2DEG(float radians) {
+	float degrees = radians * 57.295754f;
+	degrees = CorrectDegrees(degrees);
+	return degrees;
+}
+#endif
+#ifndef DEG2RAD
+float DEG2RAD(float degrees) {
+	degrees = CorrectDegrees(degrees);
+	float radians = degrees * 0.0174533f;
+	return radians;
+}
+#endif
+
 bool operator==(const vec2& l, const vec2& r) { 
 	return CMP(l.x, r.x) && CMP(l.y, r.y);
 }

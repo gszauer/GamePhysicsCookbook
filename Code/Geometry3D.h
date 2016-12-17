@@ -309,6 +309,8 @@ bool Linetest(const Line& line, const Plane& plane);
 vec3 BarycentricOptimized(const Point& p, const Triangle& t);
 #endif
 
+vec3 Centroid(const Triangle& t);
+
 bool PointInTriangle(const Point& p, const Triangle& t);
 Plane FromTriangle(const Triangle& t);
 Point ClosestPoint(const Triangle& t, const Point& p);
@@ -382,6 +384,8 @@ typedef struct CollisionResult {
 	std::vector<vec3> contacts;
 };
 
+void ResetCollisionResult(CollisionResult* result);
+
 // Already defined!
 /*Interval GetInterval(const AABB& aabb, const vec3& axis);
 Interval GetInterval(const OBB& obb, const vec3& axis);
@@ -407,42 +411,45 @@ inline bool OverlapOnAxis(const T& o1, const U& o2) {
 template <typename T, typename U>
 static inline CollisionResult SATIntersectionTest(const T& o1, const U& o2) {
 	CollisionResult result; // Will return result of intersection!
+	ResetCollisionResult(&result);
 
 	// First, test the face normals of object 1 as the seperating axis
 	std::vector<vec3> normals = GetFaceNormals(o1);
 	for (int i = 0; i < normals.size(); ++i) {
-		if (!OverlapOnAxis(shape1, shape2, normals[i])) {
-			return true; // Seperating axis found, early out
+		if (!OverlapOnAxis(o1, o2, normals[i])) {
+			ResetCollisionResult(&result);
+			return result;
 		}
 	}
 
 	// Then, test the face normals of object 2 as the seperating axis
 	normals = GetFaceNormals(o2);
 	for (int i = 0; i < normals.size(); ++i) {
-		if (!OverlapOnAxis(shape1, shape2, normals[i])) {
-			return true; // Seperating axis found, early out
+		if (!OverlapOnAxis(o1, o2, normals[i])) {
+			ResetCollisionResult(&result);
+			return result;
 		}
 	}
+
 
 	// Finally, check the normals obtained by getting the cross product of each shapes edges.
 	std::vector<vec3Pair> edges1 = GetEdges(o1);
 	std::vector<vec3Pair> edges2 = GetEdges(o2);
 	for (int i = 0; i < edges1.size(); ++i) {
 		for (int j = 0; j < edges2.size(); ++j) {
-			Vector3 testAxis = SatCrossEdge(
+			vec3 testAxis = SatCrossEdge(
 				edges1[i].first, edges1[i].second,
 				edges2[j].first, edges2[j].second
 			); // Cross(edges1[i], edges2[j]);
-			if (!OverlapOnAxis(shape1, shape2, testAxis)) {
-				return true; // Seperating axis found, early out
+			if (!OverlapOnAxis(o1, o2, testAxis)) {
+				ResetCollisionResult(&result);
+				return result;
 			}
 		}
 	}
-
+	
+	result.colliding = true;
 	// No seperating axis found, the objects do not intersect
-	result.colliding = false;
-	result.normal = vec3(0, 0, 1);
-	result.depth = 0.0f;
 	return result;
 }
 
