@@ -5,7 +5,6 @@
 Particle::Particle() {
 	friction = 0.95f;
 	bounce = 0.7f;
-	gravity = vec3(0.0f, -9.82f, 0.0f);
 
 #ifdef EULER_INTEGRATION
 	mass = 1.0f;
@@ -15,7 +14,8 @@ Particle::Particle() {
 void Particle::Update(float deltaTime) {
 #ifdef EULER_INTEGRATION
 	oldPosition = position;
-	vec3 acceleration = forces * (1.0f / mass);
+	float invMass = (mass == 0.0f)? 0.0f : (1.0f / mass);
+	vec3 acceleration = forces * invMass;
 #ifdef ACCURATE_EULER_INTEGRATION
 	vec3 oldVelocity = velocity;
 	velocity = velocity * friction + acceleration * deltaTime;
@@ -25,7 +25,7 @@ void Particle::Update(float deltaTime) {
 	position = position + velocity * deltaTime;
 #endif
 #else
-	vec3 velocity = position - oldPosition;
+	velocity = position - oldPosition;
 	oldPosition = position;
 	float deltaSquare = deltaTime * deltaTime;
 	position = position + (velocity * friction + forces * deltaSquare);
@@ -38,7 +38,7 @@ void Particle::Render() {
 }
 
 void Particle::ApplyForces() {
-	forces = gravity;
+	forces = GRAVITY_CONST;
 }
 
 void Particle::SolveConstraints(const std::vector<OBB>& constraints) {
@@ -48,7 +48,7 @@ void Particle::SolveConstraints(const std::vector<OBB>& constraints) {
 		if (Linetest(constraints[i], traveled)) {
 		//if (PointInOBB(position, constraints[i])) {
 #ifndef EULER_INTEGRATION
-			vec3 velocity = position - oldPosition;
+			velocity = position - oldPosition;
 #endif
 			vec3 direction = Normalized(velocity);
 			Ray ray(oldPosition, direction);

@@ -293,16 +293,16 @@ Frustum Camera::GetFrustum() {
 	result.right.normal = col4 - col1;
 	result.bottom.normal= col4 + col2;
 	result.top.normal	= col4 - col2;
-	result.near.normal	= /*col4 +*/ col3;
-	result.far.normal	= col4 - col3;
+	result._near.normal	= /*col4 +*/ col3;
+	result._far.normal	= col4 - col3;
 
 	// Find plane distances
 	result.left.distance	= vp._44 + vp._41;
 	result.right.distance	= vp._44 - vp._41;
 	result.bottom.distance	= vp._44 + vp._42;
 	result.top.distance		= vp._44 - vp._42;
-	result.near.distance	= /*vp._44 +*/ vp._43;
-	result.far.distance		= vp._44 - vp._43;
+	result._near.distance	= /*vp._44 +*/ vp._43;
+	result._far.distance		= vp._44 - vp._43;
 
 	// Normalize all 6 planes
 	for (int i = 0; i < 6; ++i) {

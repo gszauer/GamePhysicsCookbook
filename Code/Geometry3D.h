@@ -147,9 +147,6 @@ typedef struct Interval {
 	float max;
 } Interval;
 
-#undef near
-#undef far
-
 typedef struct Frustum {
 	union {
 		struct {
@@ -157,8 +154,8 @@ typedef struct Frustum {
 			Plane bottom;
 			Plane left;
 			Plane right;
-			Plane near;
-			Plane far;
+			Plane _near;
+			Plane _far;
 		};
 		Plane planes[6];
 	};
@@ -542,13 +539,13 @@ static inline CollisionResult SATIntersectionTest(vec3 center1, const T& o1, con
 }
 #endif
 
-typedef struct CollisionResult {
+typedef struct CollisionManifest {
 	bool colliding;
 	vec3 normal;
 	float depth;
 	std::vector<vec3> contacts;
 };
-void ResetCollisionResult(CollisionResult* result);
+void ResetCollisionManifest(CollisionManifest* result);
 
 std::vector<Point> GetVertices(const OBB& obb);
 std::vector<Line> GetEdges(const OBB& obb);
@@ -557,10 +554,11 @@ bool ClipToPlane(const Plane& plane, const Line& line, Point* outPoint);
 std::vector<Point> ClipToPlanesInOBB(const std::vector<Plane>& planes, const std::vector<Line>& edges, const OBB& obb);
 float PenetrationDepth(const OBB& o1, const OBB& o2, const vec3& axis, bool* outShouldFlip);
 
-CollisionResult CollisionFeatures(const OBB& obb1, const OBB& obb2);
+CollisionManifest FindCollisionFeatures(const Sphere& s1, const Sphere& s2);
+CollisionManifest FindCollisionFeatures(const OBB& obb, const Sphere& sphere); // TODO: Make sure normal is correct!
+CollisionManifest FindCollisionFeatures(const OBB& obb1, const OBB& obb2);
 
 Interval GetInterval(const Sphere& sphere, const vec3& axis);
 float PenetrationDepth(const OBB& obb, const Sphere& sphere, const vec3& axis, bool* outShouldFlip);
-CollisionResult CollisionFeatures(const OBB& obb, const Sphere& sphere);
 
 #endif

@@ -6,7 +6,7 @@
 
 class CollisionFeature : public DemoBase {
 protected:
-	Sphere sphere;
+	Sphere sphere[2];
 	OBB obb[2];
 
 	float* manipulator;
@@ -15,6 +15,7 @@ protected:
 	mat4 manScale;
 	int manipulating;
 	bool transformWorld;
+	bool size_imgui_window;
 public:
 	void Initialize(int width, int height);
 	void Render();

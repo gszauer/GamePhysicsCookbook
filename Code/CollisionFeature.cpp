@@ -7,6 +7,7 @@
 
 void CollisionFeature::Initialize(int width, int height) {
 	DemoBase::Initialize(width, height);
+	size_imgui_window = true;
 
 	manipulator = manTranslation.asArray;
 	manipulating = -1;
@@ -16,7 +17,9 @@ void CollisionFeature::Initialize(int width, int height) {
 	obb[1].position = vec3(-4, -2, 0);
 	obb[1].orientation = Rotation3x3(30.0f, 20.0f, 0.0f);
 
-	sphere.position = vec3(-4, 2, 0);
+	sphere[0].position = vec3(-4, 2, 0);
+	sphere[1].position = vec3(4, -2, 0);
+	sphere[1].radius = 0.5f;
 
 	
 	glPointSize(5.0f);
@@ -29,6 +32,12 @@ void CollisionFeature::Initialize(int width, int height) {
 
 void CollisionFeature::ImGUI() {
 	DemoBase::ImGUI();
+
+	if (size_imgui_window) {
+		size_imgui_window = false;
+		ImGui::SetNextWindowPos(ImVec2(400, 10));
+		ImGui::SetNextWindowSize(ImVec2(370, 75));
+	}
 
 	ImGui::Begin("SAT Test Demo", 0, ImGuiWindowFlags_NoResize);
 	if (ImGui::RadioButton("Translate", manipulator == manTranslation.asArray)) {
@@ -62,11 +71,11 @@ void CollisionFeature::ImGUI() {
 		}
 		if (manipulator == manRotation.asArray) {
 			currentGizmoOperation = ImGuizmo::ROTATE;
-			ImGuizmo::Enable(manipulating == 0 || manipulating == 1);
+			ImGuizmo::Enable(true);// manipulating == 0 || manipulating == 1);
 		}
 		if (manipulator == manScale.asArray) {
 			currentGizmoOperation = ImGuizmo::SCALE;
-			ImGuizmo::Enable(manipulating == 0 || manipulating == 1);
+			ImGuizmo::Enable(true);
 		}
 
 		ImGuizmo::Manipulate(
@@ -92,6 +101,29 @@ void CollisionFeature::ImGUI() {
 				obb[manipulating].orientation = Cut(manRotation, 3, 3);
 			}
 		}
+		else if (manipulating == 2 || manipulating == 3) {
+			if (manipulator == manTranslation.asArray) {
+				sphere[manipulating - 2].position.x = matrixTranslation[0];
+				sphere[manipulating - 2].position.y = matrixTranslation[1];
+				sphere[manipulating - 2].position.z = matrixTranslation[2];
+			}
+			else if (manipulator == manScale.asArray) {
+				float diff0 = fabsf(sphere[manipulating - 2].radius - matrixScale[0]);
+				float diff1 = fabsf(sphere[manipulating - 2].radius - matrixScale[1]);
+				float diff2 = fabsf(sphere[manipulating - 2].radius - matrixScale[2]);
+				
+				if (diff0 > diff1 && diff0 > diff2) {
+					sphere[manipulating - 2].radius = matrixScale[0];
+				}
+				else if (diff1 > diff0 && diff1 > diff2) {
+					sphere[manipulating - 2].radius = matrixScale[1];
+				}
+				else if (diff2 > diff0 && diff2 > diff1) {
+					sphere[manipulating - 2].radius = matrixScale[2];
+				}
+			}
+		}
+
 	}
 }
 
@@ -108,33 +140,49 @@ void CollisionFeature::Render() {
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 
-	CollisionResult r1 = CollisionFeatures(obb[0], obb[1]);
-	CollisionResult r2 = CollisionFeatures(obb[0], sphere);
-	CollisionResult r3 = CollisionFeatures(obb[1], sphere);
+	CollisionManifest r1 = FindCollisionFeatures(obb[0], obb[1]);
+	CollisionManifest r2 = FindCollisionFeatures(obb[0], sphere[0]);
+	CollisionManifest r3 = FindCollisionFeatures(obb[1], sphere[0]);
+	CollisionManifest r4 = FindCollisionFeatures(sphere[0], sphere[1]);
+	CollisionManifest r5 = FindCollisionFeatures(obb[0], sphere[1]);
+	CollisionManifest r6 = FindCollisionFeatures(obb[1], sphere[1]);
 
-	if (!r1.colliding && !r2.colliding) {
+	if (!r1.colliding && !r2.colliding && !r5.colliding) {
 		::Render(obb[0]);
 	}
-	if (!r1.colliding && !r3.colliding) {
+	if (!r1.colliding && !r3.colliding && !r6.colliding) {
 		::Render(obb[1]);
 	}
-	if (!r2.colliding && !r3.colliding) {
-		::Render(sphere);
+	if (!r2.colliding && !r3.colliding && !r4.colliding) {
+		::Render(sphere[0]);
+	}
+	if (!r4.colliding && !r5.colliding && !r6.colliding) {
+		::Render(sphere[1]);
 	}
 
 	glDisable(GL_LIGHTING);
 	glColor3f(0.0f, 0.0f, 1.0f);
-	if (r1.colliding || r2.colliding) {
+	if (r1.colliding || r2.colliding || r5.colliding) {
 		::Render(GetEdges(obb[0]));
 	}
-	if (r1.colliding || r3.colliding) {
+	if (r1.colliding || r3.colliding || r6.colliding) {
 		::Render(GetEdges(obb[1]));
 	}
-	if (r2.colliding || r3.colliding) {
+	if (r2.colliding || r3.colliding || r4.colliding) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		::Render(sphere);
+		::Render(sphere[0]);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
+	if (r4.colliding || r5.colliding || r6.colliding) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		::Render(sphere[1]);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+
+	/*glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	Sphere s1(obb[0].position, Magnitude(obb[0].size));
+	::Render(s1);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);*/
 
 	glColor3f(1.0f, 0.0f, 0.0f);
 	if (r1.colliding) {
@@ -144,12 +192,17 @@ void CollisionFeature::Render() {
 	}
 	if (r2.colliding) {
 		for (int i = 0; i < r2.contacts.size(); ++i) {
-			::Render(r3.contacts[i]);
+			::Render(r2.contacts[i]);
 		}
 	}
 	if (r3.colliding) {
 		for (int i = 0; i < r3.contacts.size(); ++i) {
 			::Render(r3.contacts[i]);
+		}
+	}
+	if (r4.colliding) {
+		for (int i = 0; i < r4.contacts.size(); ++i) {
+			::Render(r4.contacts[i]);
 		}
 	}
 	glEnable(GL_LIGHTING);
@@ -163,9 +216,11 @@ void CollisionFeature::Update(float dt) {
 		screenRay.NormalizeDirection();
 
 		std::vector<RaycastResult> allCasts;
-		allCasts.resize(2);
+		allCasts.resize(4);
 		Raycast(obb[0], screenRay, &allCasts[0]);
 		Raycast(obb[1], screenRay, &allCasts[1]);
+		Raycast(sphere[0], screenRay, &allCasts[2]);
+		Raycast(sphere[1], screenRay, &allCasts[3]);
 
 		RaycastResult raycastResult;
 		ResetRaycastResult(&raycastResult);
@@ -193,7 +248,11 @@ void CollisionFeature::Update(float dt) {
 			manTranslation = manRotation;
 			manScale = Scale(obb[manipulating].size.x, obb[manipulating].size.y, obb[manipulating].size.z) * manTranslation;
 		}
-		
+		else if (manipulating >= 2 && manipulating < 4 && wasManipulating != manipulating) {
+			manTranslation = Translation(sphere[manipulating - 2].position.x, sphere[manipulating - 2].position.y, sphere[manipulating - 2].position.z);
+			manRotation = manTranslation;
+			manScale = Scale(sphere[manipulating - 2].radius, sphere[manipulating - 2].radius, sphere[manipulating - 2].radius) * manTranslation;
+		}
 
 		if (trans) {
 			manipulator = manTranslation.asArray;

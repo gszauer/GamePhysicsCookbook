@@ -11,16 +11,18 @@ protected:
 	int m_selectedDemo; // -1: None, 0: CH14, 1: CH15, 2: CH16
 	DemoBase* m_pDemo;
 	bool imgui_init;
+
+	bool select_all;
 protected:
 	void ApplyDemoCamera();
 public:
 
 	DemoWindow(const char* title, int width, int height)
-		: GLWindow(title, width, height) {
+		: GLWindow(title, width, height), select_all(true) {
 		m_nFixedFPS = 30.0f;
 		m_nTargetFPS = 60.0f;
 	}
-	virtual ~DemoWindow() { }
+	~DemoWindow();
 
 	virtual void OnRender();
 	virtual void OnResize(int width, int height);

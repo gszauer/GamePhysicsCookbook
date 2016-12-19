@@ -39,15 +39,15 @@ void Render(const Model& model) {
 }
 
 void RenderNormals(const Frustum& frustum) {
-	vec3 NTL = Intersection(frustum.near, frustum.top, frustum.left);
-	vec3 NTR = Intersection(frustum.near, frustum.top, frustum.right);
-	vec3 NBL = Intersection(frustum.near, frustum.bottom, frustum.left);
-	vec3 NBR = Intersection(frustum.near, frustum.bottom, frustum.right);
+	vec3 NTL = Intersection(frustum._near, frustum.top, frustum.left);
+	vec3 NTR = Intersection(frustum._near, frustum.top, frustum.right);
+	vec3 NBL = Intersection(frustum._near, frustum.bottom, frustum.left);
+	vec3 NBR = Intersection(frustum._near, frustum.bottom, frustum.right);
 
-	vec3 FTL = Intersection(frustum.far, frustum.top, frustum.left);
-	vec3 FTR = Intersection(frustum.far, frustum.top, frustum.right);
-	vec3 FBL = Intersection(frustum.far, frustum.bottom, frustum.left);
-	vec3 FBR = Intersection(frustum.far, frustum.bottom, frustum.right);
+	vec3 FTL = Intersection(frustum._far, frustum.top, frustum.left);
+	vec3 FTR = Intersection(frustum._far, frustum.top, frustum.right);
+	vec3 FBL = Intersection(frustum._far, frustum.bottom, frustum.left);
+	vec3 FBR = Intersection(frustum._far, frustum.bottom, frustum.right);
 
 	vec3 centers[] = {
 		(NTR + NTL + FTR + FTL) * 0.25f, // Top
@@ -94,15 +94,15 @@ void RenderNormals(const Frustum& frustum) {
 }
 
 void Render(const Frustum& frustum) {
-	vec3 NTL = Intersection(frustum.near, frustum.top, frustum.left);
-	vec3 NTR = Intersection(frustum.near, frustum.top, frustum.right);
-	vec3 NBL = Intersection(frustum.near, frustum.bottom, frustum.left);
-	vec3 NBR = Intersection(frustum.near, frustum.bottom, frustum.right);
+	vec3 NTL = Intersection(frustum._near, frustum.top, frustum.left);
+	vec3 NTR = Intersection(frustum._near, frustum.top, frustum.right);
+	vec3 NBL = Intersection(frustum._near, frustum.bottom, frustum.left);
+	vec3 NBR = Intersection(frustum._near, frustum.bottom, frustum.right);
 
-	vec3 FTL = Intersection(frustum.far, frustum.top, frustum.left);
-	vec3 FTR = Intersection(frustum.far, frustum.top, frustum.right);
-	vec3 FBL = Intersection(frustum.far, frustum.bottom, frustum.left);
-	vec3 FBR = Intersection(frustum.far, frustum.bottom, frustum.right);
+	vec3 FTL = Intersection(frustum._far, frustum.top, frustum.left);
+	vec3 FTR = Intersection(frustum._far, frustum.top, frustum.right);
+	vec3 FBL = Intersection(frustum._far, frustum.bottom, frustum.left);
+	vec3 FBR = Intersection(frustum._far, frustum.bottom, frustum.right);
 	
 	glBegin(GL_LINES);
 

@@ -1,11 +1,90 @@
 #include "PhysicsSystem.h"
 #include "FixedFunctionPrimitives.h"
 #include "glad/glad.h"
+#include <iostream>
+
+PhysicsSystem::PhysicsSystem() : RenderRandomColors(false) {
+	LinearProjectionPercent = 0.45f;
+	PenetrationSlack = 0.01f;
+	ImpulseIteration = 5;
+}
 
 void PhysicsSystem::Update(float deltaTime) {
-	// Add forces
+	colliders1.clear();
+	colliders2.clear();
+	results.clear();
+
+	{ // Find objects whom are colliding
+	  // First, build a list of colliding objects
+		for (int i = 0, size = bodies.size(); i < size; ++i) {
+			for (int j = 0; j < size; ++j) {
+				if (i == j) {
+					continue;
+				}
+				CollisionManifest result = bodies[i]->IsColliding(*bodies[j]);
+				if (result.colliding) {
+					bool isDuplicate = false;
+
+					// Duplicate detection code was left out of the book
+					// Mostly a matter of space and performance!
+#if 0
+					for (int k = 0, kSize = colliders1.size(); k < kSize; ++k) {
+						if (colliders1[k] == bodies[i] || colliders1[k] == bodies[j]) {
+							if (colliders2[k] == bodies[i] || colliders2[k] == bodies[j]) {
+								isDuplicate = true;
+								break;
+							}
+						}
+					}
+
+					if (!isDuplicate) {
+						for (int k = 0, kSize = colliders2.size(); k < kSize; ++k) {
+							if (colliders2[k] == bodies[i] || colliders2[k] == bodies[j]) {
+								if (colliders1[k] == bodies[i] || colliders1[k] == bodies[j]) {
+									isDuplicate = true;
+									break;
+								}
+							}
+						}
+					}
+#endif
+
+					if (!isDuplicate) {
+						colliders1.push_back(bodies[i]);
+						colliders2.push_back(bodies[j]);
+						results.push_back(result);
+					}
+				}
+			}
+		}
+	}
+
+	// Calculate foces acting on the object
 	for (int i = 0, size = bodies.size(); i < size; ++i) {
 		bodies[i]->ApplyForces();
+	}
+
+	// Apply impulses to resolve collisions
+	for (int k = 0; k < ImpulseIteration; ++k) { // Apply impulses
+		for (int i = 0, size = results.size(); i < size; ++i) {
+			for (int j = 0, jSize = results[i].contacts.size(); j < jSize; ++j) {
+				colliders1[i]->LinearImpulse(*colliders2[i], results[i]);
+			}
+		}
+	}
+
+	// Correct position to avoid sinking!
+	for (int i = 0, size = results.size(); i < size; ++i) {
+		float invMass1 = (colliders1[i]->mass == 0.0f) ? 0.0f : 1.0f / colliders1[i]->mass;
+		float invMass2 = (colliders2[i]->mass == 0.0f) ? 0.0f : 1.0f / colliders2[i]->mass;
+		float totalMass = (invMass1 + invMass2);
+
+		float depth = fmaxf(results[i].depth - PenetrationSlack, 0.0f);
+		float scalar = (totalMass == 0.0f) ? 0.0f : depth / totalMass;
+		vec3 correction = results[i].normal * (scalar * LinearProjectionPercent);
+
+		colliders1[i]->position = colliders1[i]->position + correction * invMass1;
+		colliders2[i]->position = colliders2[i]->position - correction * invMass2;
 	}
 
 	// Update object positions
@@ -15,7 +94,7 @@ void PhysicsSystem::Update(float deltaTime) {
 
 	// Solve constraints
 	for (int i = 0, size = bodies.size(); i < size; ++i) {
-		bodies[i]->SolveConstraints(constraints);
+		bodies[i]->SolveConstraints(constraints); // TODO: ENABLE!
 	}
 }
 
@@ -31,12 +110,30 @@ void PhysicsSystem::Render() {
 	
 	static const float zero[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
+	std::vector<const float*> ambient;
+	std::vector<const float*> diffuse;
+	if (RenderRandomColors) {
+		ambient.push_back(rigidbodyAmbient);
+		ambient.push_back(groundAmbient);
+		ambient.push_back(constraintAmbient);
+		diffuse.push_back(rigidbodyDiffuse);
+		diffuse.push_back(groundDiffuse);
+		diffuse.push_back(constraintDiffuse);
+	}
 
 	glColor3f(rigidbodyDiffuse[0], rigidbodyDiffuse[1], rigidbodyDiffuse[2]);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, rigidbodyAmbient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, rigidbodyDiffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 	for (int i = 0, size = bodies.size(); i < size; ++i) {
+		if (RenderRandomColors) {
+			int a_i = i % ambient.size();
+			int d_i = i % diffuse.size();
+			glColor3f(diffuse[d_i][0], diffuse[d_i][1], diffuse[d_i][2]);
+			glLightfv(GL_LIGHT0, GL_AMBIENT, ambient[a_i]);
+			glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse[d_i]);
+			glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
+		}
 		bodies[i]->Render();
 	}
 

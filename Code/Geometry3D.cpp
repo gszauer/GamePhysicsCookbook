@@ -1885,14 +1885,14 @@ Point Intersection(Plane p1, Plane p2, Plane p3) {
 }
 
 void GetCorners(const Frustum& f, vec3* outCorners) {
-	outCorners[0] = Intersection(f.near, f.top,    f.left);
-	outCorners[1] = Intersection(f.near, f.top,    f.right);
-	outCorners[2] = Intersection(f.near, f.bottom, f.left);
-	outCorners[3] = Intersection(f.near, f.bottom, f.right);
-	outCorners[4] = Intersection(f.far,  f.top,    f.left);
-	outCorners[5] = Intersection(f.far,  f.top,    f.right);
-	outCorners[6] = Intersection(f.far,  f.bottom, f.left);
-	outCorners[7] = Intersection(f.far,  f.bottom, f.right);
+	outCorners[0] = Intersection(f._near, f.top,    f.left);
+	outCorners[1] = Intersection(f._near, f.top,    f.right);
+	outCorners[2] = Intersection(f._near, f.bottom, f.left);
+	outCorners[3] = Intersection(f._near, f.bottom, f.right);
+	outCorners[4] = Intersection(f._far,  f.top,    f.left);
+	outCorners[5] = Intersection(f._far,  f.top,    f.right);
+	outCorners[6] = Intersection(f._far,  f.bottom, f.left);
+	outCorners[7] = Intersection(f._far,  f.bottom, f.right);
 }
 
 bool Intersects(const Frustum& f, const Point& p) {
@@ -2262,7 +2262,7 @@ std::vector<Line> GetEdges(const Triangle& t) {
 }
 #endif
 
-void ResetCollisionResult(CollisionResult* result) {
+void ResetCollisionManifest(CollisionManifest* result) {
 	if (result != 0) {
 		result->colliding = false;
 		result->normal = vec3(0, 0, 1);
@@ -2428,9 +2428,16 @@ float PenetrationDepth(const OBB& o1, const OBB& o2, const vec3& axis, bool* out
 	return (len1 + len2) - length;
 }
 
-CollisionResult CollisionFeatures(const OBB& obb1, const OBB& obb2) {
-	CollisionResult result; // Will return result of intersection!
-	ResetCollisionResult(&result);
+CollisionManifest FindCollisionFeatures(const OBB& obb1, const OBB& obb2) {
+	CollisionManifest result; // Will return result of intersection!
+	ResetCollisionManifest(&result);
+
+	Sphere s1(obb1.position, Magnitude(obb1.size));
+	Sphere s2(obb2.position, Magnitude(obb2.size));
+
+	if (!SphereSphere(s1, s2)) {
+		return result;
+	}
 
 	const float* o1 = obb1.orientation.asArray;
 	const float* o2 = obb2.orientation.asArray;
@@ -2505,21 +2512,49 @@ CollisionResult CollisionFeatures(const OBB& obb1, const OBB& obb2) {
 	return result;
 }
 
-CollisionResult CollisionFeatures(const OBB& obb, const Sphere& sphere) {
-	CollisionResult result; // Will return result of intersection!
-	ResetCollisionResult(&result);
+CollisionManifest FindCollisionFeatures(const Sphere& s1, const Sphere& s2) {
+	CollisionManifest result; // Will return result of intersection!
+	ResetCollisionManifest(&result);
+
+	float r = s1.radius + s2.radius;
+	vec3 d = s1.position - s2.position;
+	float s = Magnitude(d) - r;
+
+	if (s > 0) {
+		return result;
+	}
+	Normalize(d);
+
+	result.colliding = true;
+	result.normal = d;
+	result.depth = fabsf(s) * 0.5f;
+	
+	// dtp - Distance to intersection point
+	float dtp = s2.radius - result.depth;
+	Point contact = s2.position + d * dtp;
+	
+	result.contacts.push_back(contact);
+
+	return result;
+}
+
+CollisionManifest FindCollisionFeatures(const OBB& obb, const Sphere& sphere) {
+	CollisionManifest result; // Will return result of intersection!
+	ResetCollisionManifest(&result);
 
 	Point closestPoint = ClosestPoint(obb, sphere.position);
 
-	if (MagnitudeSq(closestPoint - sphere.position) > sphere.radius * sphere.radius) {
+	float distanceSq = MagnitudeSq(closestPoint - sphere.position);
+	if (distanceSq > sphere.radius * sphere.radius) {
 		return result;
 	}
-	vec3 normal = Normalized(closestPoint - sphere.position);
-	Point outsidePoint = sphere.position + normal * sphere.radius;
+
+	vec3 normal = Normalized(sphere.position - closestPoint);
+	Point outsidePoint = sphere.position - normal * sphere.radius;
 	float distance = Magnitude(closestPoint - outsidePoint);
 
 	result.colliding = true;
-	result.contacts.push_back(closestPoint);
+	result.contacts.push_back(closestPoint + (outsidePoint - closestPoint) * 0.5f);
 	result.normal = normal;
 	result.depth = distance * 0.5f;
 

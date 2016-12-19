@@ -1,7 +1,12 @@
 #include "DemoWindow.h"
 #include "imgui/imgui.h"
+
 #include "CH14Demo.h"
+#include "RaycastDemo.h"
 #include "CollisionFeature.h"
+#include "LinearImpulse.h"
+
+#include <cstdlib>
 
 // This is the global instance of the IWindow singleton!
 static DemoWindow g_WindowInstance("Physics Sandbox", 800, 600);
@@ -13,6 +18,10 @@ void DemoWindow::OnInitialize() {
 	m_selectedDemo = -1;
 	m_pDemo = 0;
 	imgui_init = true;
+}
+
+DemoWindow::~DemoWindow() {
+	StopDemo();
 }
 
 void DemoWindow::OnResize(int width, int height) {
@@ -53,48 +62,73 @@ void DemoWindow::OnUpdate(float deltaTime) {
 		ImGui::SetNextWindowPos(ImVec2(10, 10));
 		imgui_init = false;
 	}
-	ImGui::SetNextWindowSize(ImVec2(370, 75));
+	ImGui::SetNextWindowSize(ImVec2(370, (select_all)? 145 : 75));
 	ImGui::Begin("Physics Demo", 0, ImGuiWindowFlags_NoResize);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
-	if (m_selectedDemo == 0) {
-		if (ImGui::Button("Stop Chapter 14")) {
-			m_selectedDemo = -1;
+	if (select_all) {
+		const char* listbox_items[] = { "Raycast Demo", "Chapter 14", "Collision Features", "Linear Impulse" };
+		int lastSelected = m_selectedDemo;
+		ImGui::ListBox("", &m_selectedDemo, listbox_items, 4, 4);
+
+		if (m_selectedDemo != lastSelected) {
 			StopDemo();
+
+			switch (m_selectedDemo) {
+				case 0: m_pDemo = new RaycastDemo(); break;
+				case 1: m_pDemo = new CH14Demo(); break;
+				case 2: m_pDemo = new CollisionFeature(); break;
+				case 3: m_pDemo = new LinearImpulse(); break;
+			}
+			
+			m_pDemo->Initialize(GetWidth(), GetHeight());
+			ApplyDemoCamera();
+		}
+
+		if (ImGui::Button("Clear Console")) {
+			system("cls");
 		}
 	}
 	else {
-		if (ImGui::Button(" Run Chapter 14")) {
-			m_selectedDemo = 0;
-			Start14();
+		if (m_selectedDemo == 0) {
+			if (ImGui::Button("Stop Chapter 14")) {
+				m_selectedDemo = -1;
+				StopDemo();
+			}
 		}
+		else {
+			if (ImGui::Button(" Run Chapter 14")) {
+				m_selectedDemo = 0;
+				Start14();
+			}
+		}
+		ImGui::SameLine();
+		if (m_selectedDemo == 1) {
+			if (ImGui::Button("Stop Chapter 15")) {
+				m_selectedDemo = -1;
+				StopDemo();
+			}
+		}
+		else {
+			if (ImGui::Button(" Run Chapter 15")) {
+				m_selectedDemo = 1;
+				Start15();
+			}
+		}
+		/*ImGui::SameLine();
+		if (m_selectedDemo == 2) {
+			if (ImGui::Button("Stop Chapter 16")) {
+				m_selectedDemo = -1;
+				StopDemo();
+			}
+		}
+		else {
+			if (ImGui::Button(" Run Chapter 16")) {
+				m_selectedDemo = 2;
+				Start16();
+			}
+		}*/
 	}
-	ImGui::SameLine();
-	if (m_selectedDemo == 1) {
-		if (ImGui::Button("Stop Chapter 15")) {
-			m_selectedDemo = -1;
-			StopDemo();
-		}
-	}
-	else {
-		if (ImGui::Button(" Run Chapter 15")) {
-			m_selectedDemo = 1;
-			Start15();
-		}
-	}
-	/*ImGui::SameLine();
-	if (m_selectedDemo == 2) {
-		if (ImGui::Button("Stop Chapter 16")) {
-			m_selectedDemo = -1;
-			StopDemo();
-		}
-	}
-	else {
-		if (ImGui::Button(" Run Chapter 16")) {
-			m_selectedDemo = 2;
-			Start16();
-		}
-	}*/
 
 	ImGui::End();
 
@@ -127,6 +161,7 @@ void DemoWindow::OnShutdown() {
 	GLWindow::OnShutdown();
 	StopDemo();
 }
+
 void DemoWindow::StopDemo() {
 	if (m_pDemo != 0) {
 		m_pDemo->Shutdown();
@@ -144,7 +179,7 @@ void DemoWindow::Start14() {
 
 void DemoWindow::Start15() {
 	StopDemo();
-	m_pDemo = new CollisionFeature();
+	m_pDemo = new CollisionFeature(); // TODO: Change to CH15!
 	m_pDemo->Initialize(GetWidth(), GetHeight());
 	ApplyDemoCamera();
 }

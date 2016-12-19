@@ -42,7 +42,7 @@ void DemoBase::ImGUI() {
 		if (configHelpWindow) {
 			configHelpWindow = false;
 
-			ImGui::SetNextWindowPos(ImVec2(10, 90));
+			ImGui::SetNextWindowPos(ImVec2(400, 90));
 			ImGui::SetNextWindowSize(ImVec2(370, 100));
 		}
 		ImGui::Begin("How to use", &show_help, ImGuiWindowFlags_NoResize);

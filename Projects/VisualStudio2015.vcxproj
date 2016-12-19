@@ -165,6 +165,7 @@
     <ClInclude Include="..\Code\imgui\stb_textedit.h" />
     <ClInclude Include="..\Code\imgui\stb_truetype.h" />
     <ClInclude Include="..\Code\IWindow.h" />
+    <ClInclude Include="..\Code\LinearImpulse.h" />
     <ClInclude Include="..\Code\matrices.h" />
     <ClInclude Include="..\Code\ObjLoader.h" />
     <ClInclude Include="..\Code\Particle.h" />
@@ -172,6 +173,8 @@
     <ClInclude Include="..\Code\RaycastDemo.h" />
     <ClInclude Include="..\Code\Rigidbody.h" />
     <ClInclude Include="..\Code\QuadTree.h" />
+    <ClInclude Include="..\Code\RigidBox.h" />
+    <ClInclude Include="..\Code\RigidSphere.h" />
     <ClInclude Include="..\Code\Scene.h" />
     <ClInclude Include="..\Code\tiny_obj_loader.h" />
     <ClInclude Include="..\Code\vectors.h" />
@@ -192,6 +195,7 @@
     <ClCompile Include="..\Code\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\Code\imgui\imgui_implementation.cpp" />
     <ClCompile Include="..\Code\IWindow.cpp" />
+    <ClCompile Include="..\Code\LinearImpulse.cpp" />
     <ClCompile Include="..\Code\main-win32.cpp" />
     <ClCompile Include="..\Code\matrices.cpp" />
     <ClCompile Include="..\Code\ObjLoader.cpp" />
