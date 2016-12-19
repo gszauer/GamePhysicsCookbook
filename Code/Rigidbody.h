@@ -4,8 +4,7 @@
 #include <vector>
 #include "Geometry3D.h"
 #include <iostream>
-
-#define RIGIDBODY_USE_FRICTION
+#include "Compare.h"
 
 #define RIGIDBODY_TYPE_BASE		0
 #define RIGIDBODY_TYPE_PARTICLE	1
@@ -25,8 +24,14 @@ public:
 	vec3 forces;
 
 	float cor; // Coefficient of restitution
+
+	float staticFriction;
+	float dynamicFriction;
 public:
-	Rigidbody() : type(RIGIDBODY_TYPE_BASE), cor(0.5f) { }
+	Rigidbody() : type(RIGIDBODY_TYPE_BASE), 
+		cor(0.5f),
+		staticFriction(0.5f),
+		dynamicFriction(0.3f) { }
 	virtual ~Rigidbody() { }
 
 	inline virtual void Render() { }
@@ -61,7 +66,8 @@ public:
 		velocity = velocity + impulse;
 	}
 
-	inline virtual float LinearImpulse(Rigidbody& other, const CollisionManifest& features) {
+	inline virtual void ApplyImpulse(Rigidbody& other, const CollisionManifest& features) {
+		// Linear impulse
 		float invMass1 = (mass == 0.0f)? 0.0f : 1.0f / mass;
 		float invMass2 = (other.mass == 0.0f)? 0.0f : 1.0f / other.mass;
 
@@ -72,21 +78,16 @@ public:
 
 		// Moving away from each other? Do nothing!
 		if (Dot(vel, norm) > 0.0f) {
-			return 0.0f;
+			return;
 		}
-
-		//vec3 tan = vel - norm *  Dot(vel, norm);
-		//Normalize(tan);
-		//std::cout << "normal: " << norm.x << ", " << norm.y << ", " << norm.z << "\n";
 
 		float e = fminf(cor, other.cor);
 
-/*#ifdef  RIGIDBODY_USE_FRICTION
-		float numerator = (-(1.0f + e) * Dot(vel, tan));
-#else */
 		float numerator = (-(1.0f + e) * Dot(vel, norm));
-//#endif
 		float denominator = (invMass1 + invMass2);
+		if (denominator == 0.0f) {
+			return; // Both objects have infinate mass!
+		}
 		float j = numerator / denominator;
 
 		vec3 impulse = norm * j;
@@ -94,7 +95,37 @@ public:
 		velocity = velocity + impulse *  invMass1;
 		other.velocity = other.velocity - impulse *  invMass2;
 
-		return j;
+		// Friction
+		float sf = sqrtf(staticFriction + other.staticFriction);
+		float df = sqrtf(dynamicFriction + other.dynamicFriction);
+
+		vel = velocity - other.velocity;
+		vec3 t = vel - norm * Dot(vel, norm);
+		if (CMP(MagnitudeSq(t), 0.0f)) {
+			return;
+		}
+		Normalize(t);
+
+		float jt = -Dot(vel, t);
+		jt /= (invMass1 + invMass2);
+		if (features.contacts.size() > 0.0f) {
+			jt /= (float)features.contacts.size();
+		}
+
+		if (CMP(jt, 0.0f)) {
+			return;
+		}
+
+		vec3 tangentImpuse;
+		if (fabsf(jt) < j * sf) {
+			tangentImpuse = t * jt;
+		}
+		else {
+			tangentImpuse = t * -j * df;
+		}
+
+		velocity = velocity + tangentImpuse *  invMass1;
+		other.velocity = other.velocity - tangentImpuse *  invMass2;
 	}
 };
 
