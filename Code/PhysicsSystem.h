@@ -10,7 +10,7 @@ protected:
 
 	std::vector<Rigidbody*> colliders1;
 	std::vector<Rigidbody*> colliders2;
-	std::vector<CollisionManifest> results;
+	std::vector<CollisionManifold> results;
 public:
 	float LinearProjectionPercent; // [0.2 to 0.8], Smaller = less jitter / more penetration
 	float PenetrationSlack; // [0.01 to 0.1],  Samller = more accurate

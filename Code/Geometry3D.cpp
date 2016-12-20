@@ -2262,7 +2262,7 @@ std::vector<Line> GetEdges(const Triangle& t) {
 }
 #endif
 
-void ResetCollisionManifest(CollisionManifest* result) {
+void ResetCollisionManifold(CollisionManifold* result) {
 	if (result != 0) {
 		result->colliding = false;
 		result->normal = vec3(0, 0, 1);
@@ -2359,10 +2359,12 @@ bool ClipToPlane(const Plane& plane, const Line& line, Point* outPoint) {
 	return false;
 }
 
-std::vector<Point> ClipToPlanesInOBB(const std::vector<Plane>& planes, const std::vector<Line>& edges, const OBB& obb) {
+std::vector<Point> ClipEdgesToOBB(const std::vector<Line>& edges, const OBB& obb) {
 	std::vector<Point> result;
 	result.reserve(edges.size());
 	Point intersection;
+
+	std::vector<Plane>& planes = GetPlanes(obb);
 
 	for (int i = 0; i < planes.size(); ++i) {
 		for (int j = 0; j < edges.size(); ++j) {
@@ -2377,6 +2379,7 @@ std::vector<Point> ClipToPlanesInOBB(const std::vector<Plane>& planes, const std
 	return result;
 }
 
+#if 0
 Interval GetInterval(const Sphere& sphere, const vec3& axis) {
 	Interval result;
 	float v1 = Dot(axis, sphere.position - axis * sphere.radius);
@@ -2406,6 +2409,7 @@ float PenetrationDepth(const OBB& obb, const Sphere& sphere, const vec3& axis, b
 
 	return (len1 + len2) - length;
 }
+#endif
 
 float PenetrationDepth(const OBB& o1, const OBB& o2, const vec3& axis, bool* outShouldFlip) {
 	Interval i1 = GetInterval(o1, Normalized(axis));
@@ -2428,9 +2432,9 @@ float PenetrationDepth(const OBB& o1, const OBB& o2, const vec3& axis, bool* out
 	return (len1 + len2) - length;
 }
 
-CollisionManifest FindCollisionFeatures(const OBB& A, const OBB& B) {
-	CollisionManifest result; // Will return result of intersection!
-	ResetCollisionManifest(&result);
+CollisionManifold FindCollisionFeatures(const OBB& A, const OBB& B) {
+	CollisionManifold result; // Will return result of intersection!
+	ResetCollisionManifold(&result);
 
 	Sphere s1(A.position, Magnitude(A.size));
 	Sphere s2(B.position, Magnitude(B.size));
@@ -2483,8 +2487,8 @@ CollisionManifest FindCollisionFeatures(const OBB& A, const OBB& B) {
 	}
 	vec3 axis = Normalized(*hitNormal);
 
-	std::vector<Point> c1 = ClipToPlanesInOBB(GetPlanes(A), GetEdges(B), A);
-	std::vector<Point> c2 = ClipToPlanesInOBB(GetPlanes(B), GetEdges(A), B);
+	std::vector<Point> c1 = ClipEdgesToOBB(GetEdges(B), A);
+	std::vector<Point> c2 = ClipEdgesToOBB(GetEdges(A), B);
 	result.contacts.reserve(c1.size() + c2.size());
 	result.contacts.insert(result.contacts.end(), c1.begin(), c1.end());
 	result.contacts.insert(result.contacts.end(), c2.begin(), c2.end());
@@ -2512,22 +2516,21 @@ CollisionManifest FindCollisionFeatures(const OBB& A, const OBB& B) {
 	return result;
 }
 
-CollisionManifest FindCollisionFeatures(const Sphere& A, const Sphere& B) {
-	CollisionManifest result; // Will return result of intersection!
-	ResetCollisionManifest(&result);
+CollisionManifold FindCollisionFeatures(const Sphere& A, const Sphere& B) {
+	CollisionManifold result; // Will return result of intersection!
+	ResetCollisionManifold(&result);
 
 	float r = A.radius + B.radius;
 	vec3 d = B.position - A.position;
-	float s = Magnitude(d) - r;
 
-	if (s > 0 || MagnitudeSq(d) == 0.0f) {
+	if (MagnitudeSq(d) - r * r > 0 || MagnitudeSq(d) == 0.0f) {
 		return result;
 	}
 	Normalize(d);
 
 	result.colliding = true;
 	result.normal = d;
-	result.depth = fabsf(s) * 0.5f;
+	result.depth = fabsf(Magnitude(d) - r) * 0.5f;
 	
 	// dtp - Distance to intersection point
 	float dtp = A.radius - result.depth;
@@ -2538,9 +2541,9 @@ CollisionManifest FindCollisionFeatures(const Sphere& A, const Sphere& B) {
 	return result;
 }
 
-CollisionManifest FindCollisionFeatures(const OBB& A, const Sphere& B) {
-	CollisionManifest result; // Will return result of intersection!
-	ResetCollisionManifest(&result);
+CollisionManifold FindCollisionFeatures(const OBB& A, const Sphere& B) {
+	CollisionManifold result; // Will return result of intersection!
+	ResetCollisionManifold(&result);
 
 	Point closestPoint = ClosestPoint(A, B.position);
 
@@ -2549,10 +2552,13 @@ CollisionManifest FindCollisionFeatures(const OBB& A, const Sphere& B) {
 		return result;
 	}
 
-	// Closest point is at the center of the sphere
-	// technically this is a penetration, but we have no normal to resolve!
-	vec3 normal;
+	vec3 normal; 
 	if (CMP(distanceSq, 0.0f)) {
+		if (CMP(MagnitudeSq(closestPoint - A.position), 0.0f)) {
+			return result;
+
+		}
+		// Closest point is at the center of the sphere
 		normal = Normalized(closestPoint - A.position);
 	}
 	else {

@@ -25,7 +25,7 @@ void PhysicsSystem::Update(float deltaTime) {
 				if (i == j) {
 					continue;
 				}
-				CollisionManifest result = FindCollisionFeatures(*bodies[i], *bodies[j]);
+				CollisionManifold result = FindCollisionFeatures(*bodies[i], *bodies[j]);
 				if (result.colliding) {
 					bool isDuplicate = false;
 

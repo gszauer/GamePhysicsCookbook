@@ -5,6 +5,7 @@
 Particle::Particle() {
 	friction = 0.95f;
 	bounce = 0.7f;
+	type = RIGIDBODY_TYPE_PARTICLE;
 
 #ifdef EULER_INTEGRATION
 	mass = 1.0f;

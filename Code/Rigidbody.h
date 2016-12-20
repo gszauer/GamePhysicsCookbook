@@ -52,7 +52,7 @@ public:
 	inline virtual void SolveConstraints(const std::vector<OBB>& constraints) { }
 };
 
-CollisionManifest FindCollisionFeatures(Rigidbody& ra, Rigidbody& rb);
-void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifest& M);
+CollisionManifold FindCollisionFeatures(Rigidbody& ra, Rigidbody& rb);
+void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M);
 
 #endif

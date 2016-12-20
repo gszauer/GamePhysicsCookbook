@@ -2,6 +2,9 @@
 	#define _CRTDBG_MAP_ALLOC
 	#include <stdlib.h>
 	#include <crtdbg.h>
+
+	#include <float.h>
+	unsigned int fp_control_state = _controlfp(_EM_INEXACT, _MCW_EM);
 #endif
 
 // If you don't want a console window define this

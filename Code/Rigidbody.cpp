@@ -42,9 +42,9 @@ void Rigidbody::Render() {
 	}
 }
 
-CollisionManifest FindCollisionFeatures(Rigidbody& ra, Rigidbody& rb) {
-	CollisionManifest result;
-	ResetCollisionManifest(&result);
+CollisionManifold FindCollisionFeatures(Rigidbody& ra, Rigidbody& rb) {
+	CollisionManifold result;
+	ResetCollisionManifold(&result);
 
 	if (ra.type == RIGIDBODY_TYPE_SPHERE) {
 		if (rb.type == RIGIDBODY_TYPE_SPHERE) {
@@ -68,7 +68,7 @@ CollisionManifest FindCollisionFeatures(Rigidbody& ra, Rigidbody& rb) {
 	return result;
 }
 
-void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifest& M) {
+void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M) {
 	// Linear impulse
 	float invMass1 = A.InvMass();
 	float invMass2 = B.InvMass();

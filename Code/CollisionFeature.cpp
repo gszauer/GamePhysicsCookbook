@@ -140,12 +140,12 @@ void CollisionFeature::Render() {
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 
-	CollisionManifest r1 = FindCollisionFeatures(obb[0], obb[1]);
-	CollisionManifest r2 = FindCollisionFeatures(obb[0], sphere[0]);
-	CollisionManifest r3 = FindCollisionFeatures(obb[1], sphere[0]);
-	CollisionManifest r4 = FindCollisionFeatures(sphere[0], sphere[1]);
-	CollisionManifest r5 = FindCollisionFeatures(obb[0], sphere[1]);
-	CollisionManifest r6 = FindCollisionFeatures(obb[1], sphere[1]);
+	CollisionManifold r1 = FindCollisionFeatures(obb[0], obb[1]);
+	CollisionManifold r2 = FindCollisionFeatures(obb[0], sphere[0]);
+	CollisionManifold r3 = FindCollisionFeatures(obb[1], sphere[0]);
+	CollisionManifold r4 = FindCollisionFeatures(sphere[0], sphere[1]);
+	CollisionManifold r5 = FindCollisionFeatures(obb[0], sphere[1]);
+	CollisionManifold r6 = FindCollisionFeatures(obb[1], sphere[1]);
 
 	if (!r1.colliding && !r2.colliding && !r5.colliding) {
 		::Render(obb[0]);

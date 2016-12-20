@@ -539,26 +539,28 @@ static inline CollisionResult SATIntersectionTest(vec3 center1, const T& o1, con
 }
 #endif
 
-typedef struct CollisionManifest {
+typedef struct CollisionManifold {
 	bool colliding;
 	vec3 normal;
 	float depth;
 	std::vector<vec3> contacts;
 };
-void ResetCollisionManifest(CollisionManifest* result);
+void ResetCollisionManifold(CollisionManifold* result);
 
 std::vector<Point> GetVertices(const OBB& obb);
 std::vector<Line> GetEdges(const OBB& obb);
 std::vector<Plane> GetPlanes(const OBB& obb);
 bool ClipToPlane(const Plane& plane, const Line& line, Point* outPoint);
-std::vector<Point> ClipToPlanesInOBB(const std::vector<Plane>& planes, const std::vector<Line>& edges, const OBB& obb);
+std::vector<Point> ClipEdgesToOBB(const std::vector<Line>& edges, const OBB& obb);
 float PenetrationDepth(const OBB& o1, const OBB& o2, const vec3& axis, bool* outShouldFlip);
 
-CollisionManifest FindCollisionFeatures(const Sphere& s1, const Sphere& s2);
-CollisionManifest FindCollisionFeatures(const OBB& obb, const Sphere& sphere); // TODO: Make sure normal is correct!
-CollisionManifest FindCollisionFeatures(const OBB& obb1, const OBB& obb2);
+CollisionManifold FindCollisionFeatures(const Sphere& A, const Sphere& B);
+CollisionManifold FindCollisionFeatures(const OBB& A, const Sphere& B);
+CollisionManifold FindCollisionFeatures(const OBB& A, const OBB& B);
 
+#if 0
 Interval GetInterval(const Sphere& sphere, const vec3& axis);
 float PenetrationDepth(const OBB& obb, const Sphere& sphere, const vec3& axis, bool* outShouldFlip);
+#endif
 
 #endif
