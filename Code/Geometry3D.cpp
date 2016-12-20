@@ -2428,19 +2428,19 @@ float PenetrationDepth(const OBB& o1, const OBB& o2, const vec3& axis, bool* out
 	return (len1 + len2) - length;
 }
 
-CollisionManifest FindCollisionFeatures(const OBB& obb1, const OBB& obb2) {
+CollisionManifest FindCollisionFeatures(const OBB& A, const OBB& B) {
 	CollisionManifest result; // Will return result of intersection!
 	ResetCollisionManifest(&result);
 
-	Sphere s1(obb1.position, Magnitude(obb1.size));
-	Sphere s2(obb2.position, Magnitude(obb2.size));
+	Sphere s1(A.position, Magnitude(A.size));
+	Sphere s2(B.position, Magnitude(B.size));
 
 	if (!SphereSphere(s1, s2)) {
 		return result;
 	}
 
-	const float* o1 = obb1.orientation.asArray;
-	const float* o2 = obb2.orientation.asArray;
+	const float* o1 = A.orientation.asArray;
+	const float* o2 = B.orientation.asArray;
 
 	vec3 test[15] = {
 		vec3(o1[0], o1[1], o1[2]),
@@ -2465,7 +2465,7 @@ CollisionManifest FindCollisionFeatures(const OBB& obb1, const OBB& obb2) {
 			continue;
 		}
 
-		float depth = PenetrationDepth(obb1, obb2, test[i], &shouldFlip);
+		float depth = PenetrationDepth(A, B, test[i], &shouldFlip);
 		if (depth <= 0.0f) {
 			return result;
 		}
@@ -2483,15 +2483,15 @@ CollisionManifest FindCollisionFeatures(const OBB& obb1, const OBB& obb2) {
 	}
 	vec3 axis = Normalized(*hitNormal);
 
-	std::vector<Point> c1 = ClipToPlanesInOBB(GetPlanes(obb1), GetEdges(obb2), obb1);
-	std::vector<Point> c2 = ClipToPlanesInOBB(GetPlanes(obb2), GetEdges(obb1), obb2);
+	std::vector<Point> c1 = ClipToPlanesInOBB(GetPlanes(A), GetEdges(B), A);
+	std::vector<Point> c2 = ClipToPlanesInOBB(GetPlanes(B), GetEdges(A), B);
 	result.contacts.reserve(c1.size() + c2.size());
 	result.contacts.insert(result.contacts.end(), c1.begin(), c1.end());
 	result.contacts.insert(result.contacts.end(), c2.begin(), c2.end());
 
-	Interval i = GetInterval(obb1, axis);
+	Interval i = GetInterval(A, axis);
 	float distance = (i.max - i.min)* 0.5f - result.depth * 0.5f;
-	vec3 pointOnPlane = obb1.position + axis * distance;
+	vec3 pointOnPlane = A.position + axis * distance;
 	
 	for (int i = result.contacts.size() - 1; i >= 0; --i) {
 		vec3 contact = result.contacts[i];
@@ -2507,20 +2507,20 @@ CollisionManifest FindCollisionFeatures(const OBB& obb1, const OBB& obb2) {
 	}
 
 	result.colliding = true;
-	result.normal = axis * -1.0f;
+	result.normal = axis;
 
 	return result;
 }
 
-CollisionManifest FindCollisionFeatures(const Sphere& s1, const Sphere& s2) {
+CollisionManifest FindCollisionFeatures(const Sphere& A, const Sphere& B) {
 	CollisionManifest result; // Will return result of intersection!
 	ResetCollisionManifest(&result);
 
-	float r = s1.radius + s2.radius;
-	vec3 d = s1.position - s2.position;
+	float r = A.radius + B.radius;
+	vec3 d = B.position - A.position;
 	float s = Magnitude(d) - r;
 
-	if (s > 0) {
+	if (s > 0 || MagnitudeSq(d) == 0.0f) {
 		return result;
 	}
 	Normalize(d);
@@ -2530,27 +2530,37 @@ CollisionManifest FindCollisionFeatures(const Sphere& s1, const Sphere& s2) {
 	result.depth = fabsf(s) * 0.5f;
 	
 	// dtp - Distance to intersection point
-	float dtp = s2.radius - result.depth;
-	Point contact = s2.position + d * dtp;
+	float dtp = A.radius - result.depth;
+	Point contact = A.position + d * dtp;
 	
 	result.contacts.push_back(contact);
 
 	return result;
 }
 
-CollisionManifest FindCollisionFeatures(const OBB& obb, const Sphere& sphere) {
+CollisionManifest FindCollisionFeatures(const OBB& A, const Sphere& B) {
 	CollisionManifest result; // Will return result of intersection!
 	ResetCollisionManifest(&result);
 
-	Point closestPoint = ClosestPoint(obb, sphere.position);
+	Point closestPoint = ClosestPoint(A, B.position);
 
-	float distanceSq = MagnitudeSq(closestPoint - sphere.position);
-	if (distanceSq > sphere.radius * sphere.radius) {
+	float distanceSq = MagnitudeSq(closestPoint - B.position);
+	if (distanceSq > B.radius * B.radius) {
 		return result;
 	}
 
-	vec3 normal = Normalized(sphere.position - closestPoint);
-	Point outsidePoint = sphere.position - normal * sphere.radius;
+	// Closest point is at the center of the sphere
+	// technically this is a penetration, but we have no normal to resolve!
+	vec3 normal;
+	if (CMP(distanceSq, 0.0f)) {
+		normal = Normalized(closestPoint - A.position);
+	}
+	else {
+		normal = Normalized(B.position - closestPoint);
+	}
+
+	Point outsidePoint = B.position - normal * B.radius;
+
 	float distance = Magnitude(closestPoint - outsidePoint);
 
 	result.colliding = true;

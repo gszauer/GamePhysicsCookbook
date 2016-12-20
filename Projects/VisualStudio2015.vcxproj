@@ -173,8 +173,6 @@
     <ClInclude Include="..\Code\RaycastDemo.h" />
     <ClInclude Include="..\Code\Rigidbody.h" />
     <ClInclude Include="..\Code\QuadTree.h" />
-    <ClInclude Include="..\Code\RigidBox.h" />
-    <ClInclude Include="..\Code\RigidSphere.h" />
     <ClInclude Include="..\Code\Scene.h" />
     <ClInclude Include="..\Code\tiny_obj_loader.h" />
     <ClInclude Include="..\Code\vectors.h" />
@@ -203,6 +201,7 @@
     <ClCompile Include="..\Code\PhysicsSystem.cpp" />
     <ClCompile Include="..\Code\QuadTree.cpp" />
     <ClCompile Include="..\Code\RaycastDemo.cpp" />
+    <ClCompile Include="..\Code\Rigidbody.cpp" />
     <ClCompile Include="..\Code\Scene.cpp" />
     <ClCompile Include="..\Code\vectors.cpp" />
   </ItemGroup>

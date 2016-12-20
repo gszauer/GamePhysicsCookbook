@@ -32,51 +32,53 @@ void LinearImpulse::Initialize(int width, int height) {
 	ResetDemo();
 }
 
+#define sphere0 bodies[0]
+#define sphere1 bodies[1]
+#define box0 bodies[2]
+#define box1 bodies[3]
+
 void LinearImpulse::ResetDemo() {
 	physicsSystem.ClearRigidbodys();
 	physicsSystem.ClearConstraints();
 
-	spheres.clear();
-	spheres.resize(2);
+	bodies.clear();
+	bodies.resize(4);
 
-	boxes.clear();
-	boxes.resize(2);
+	sphere0.type = sphere1.type = RIGIDBODY_TYPE_SPHERE;
+	box0.type = box1.type = RIGIDBODY_TYPE_BOX;
 
 	if (!drop) {
-		spheres[0].SetPosition(vec3(-10, 1.2f, -5));
-		spheres[1].SetPosition(vec3(5, 1.2f, 2.5f));
-		boxes[0].SetPosition(vec3(-10, 1.2f, -5));
-		boxes[1].SetPosition(vec3(5, 1.2f, 2.5f));
+		sphere0.position = vec3(-10, 1.5f, -5);
+		sphere1.position = vec3(5, 1.5f, 2.5f);
+		box0.position = vec3(-10, 1.5f, -5);
+		box1.position = vec3(5, 1.5f, 2.5f);
 
-		vec3 impulseDirection = vec3(-10, 1, -5) - vec3(5, 1, 2.5f);
-		impulseDirection = impulseDirection;
-		spheres[1].AddLinearImpulse(impulseDirection + vec3(0, 5, 0));
-		boxes[1].AddLinearImpulse(impulseDirection + vec3(0, 5, 0));
-		impulseDirection = vec3(5, 1, 2.5f) - vec3(-10, 1, -5);
-		impulseDirection = impulseDirection;
-		spheres[0].AddLinearImpulse(impulseDirection + vec3(0, 5, 0));
-		boxes[0].AddLinearImpulse(impulseDirection + vec3(0, 5, 0));
+		vec3 impulseDirection = vec3(-10, 1.5f, -5) - vec3(5, 1.5f, 2.5f);
+		sphere1.AddLinearImpulse(impulseDirection + vec3(0, 5, 0));
+		box1.AddLinearImpulse(impulseDirection + vec3(0, 5, 0));
+
+		impulseDirection = vec3(5, 1.5f, 2.5f) - vec3(-10, 1.5f, -5);
+		sphere0.AddLinearImpulse(impulseDirection + vec3(0, 5, 0));
+		box0.AddLinearImpulse(impulseDirection + vec3(0, 5, 0));
 	}
 	else {
-		spheres[0].SetPosition(vec3(0, 1.2, 0));
-		spheres[1].SetPosition(vec3(0, 4, 0));
-		boxes[0].SetPosition(vec3(0, 1.2, 0));
-		boxes[1].SetPosition(vec3(0, 4, 0));
+		sphere0.position = vec3(0, 1.2, 0);
+		sphere1.position = vec3(0, 4, 0);
+		box0.position = vec3(0, 1.2, 0);
+		box1.position = vec3(0, 4, 0);
 	}
 
-	groundBox = RigidBox();
+	groundBox = Rigidbody(RIGIDBODY_TYPE_BOX);
 	groundBox.box.size = vec3(10.0f, 0.15f, 10.0f);
 	groundBox.mass = 0.0f;
 
 	if (use_spheres) {
-		for (int i = 0; i < spheres.size(); ++i) {
-			physicsSystem.AddRigidbody(&spheres[i]);
-		}
+		physicsSystem.AddRigidbody(&sphere0);
+		physicsSystem.AddRigidbody(&sphere1);
 	}
 	else {
-		for (int i = 0; i < boxes.size(); ++i) {
-			physicsSystem.AddRigidbody(&boxes[i]);
-		}
+		physicsSystem.AddRigidbody(&box0);
+		physicsSystem.AddRigidbody(&box1);
 	}
 
 	physicsSystem.AddRigidbody(&groundBox);
@@ -128,9 +130,16 @@ void LinearImpulse::ImGUI() {
 	ImGui::SameLine();
 	ImGui::Checkbox("Pause", &isPaused);
 
+	bool wasUsingSpheres = use_spheres;
+	bool wasDropping = drop;
+
 	ImGui::Checkbox("Spheres", &use_spheres);
 	ImGui::SameLine();
 	ImGui::Checkbox("Drop", &drop);
+
+	if (wasUsingSpheres != use_spheres || wasDropping != drop) {
+		ResetDemo();
+	}
 
 	ImGui::End();
 }

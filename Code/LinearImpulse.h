@@ -3,16 +3,13 @@
 
 #include "DemoBase.h"
 #include "Geometry3D.h"
-#include "RigidBox.h"
-#include "RigidSphere.h"
 #include "PhysicsSystem.h"
 
 class LinearImpulse : public DemoBase {
 protected:
 	PhysicsSystem physicsSystem;
-	std::vector<RigidBox> boxes;
-	std::vector<RigidSphere> spheres;
-	RigidBox groundBox;
+	std::vector<Rigidbody> bodies;
+	Rigidbody groundBox;
 
 	bool size_imgui_window;
 	bool isPaused;

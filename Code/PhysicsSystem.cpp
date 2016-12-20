@@ -7,6 +7,10 @@ PhysicsSystem::PhysicsSystem() : RenderRandomColors(false) {
 	LinearProjectionPercent = 0.45f;
 	PenetrationSlack = 0.01f;
 	ImpulseIteration = 5;
+
+	colliders1.reserve(100);
+	colliders2.reserve(100);
+	results.reserve(100);
 }
 
 void PhysicsSystem::Update(float deltaTime) {
@@ -21,7 +25,7 @@ void PhysicsSystem::Update(float deltaTime) {
 				if (i == j) {
 					continue;
 				}
-				CollisionManifest result = bodies[i]->IsColliding(*bodies[j]);
+				CollisionManifest result = FindCollisionFeatures(*bodies[i], *bodies[j]);
 				if (result.colliding) {
 					bool isDuplicate = false;
 
@@ -68,7 +72,7 @@ void PhysicsSystem::Update(float deltaTime) {
 	for (int k = 0; k < ImpulseIteration; ++k) { // Apply impulses
 		for (int i = 0, size = results.size(); i < size; ++i) {
 			for (int j = 0, jSize = results[i].contacts.size(); j < jSize; ++j) {
-				colliders1[i]->ApplyImpulse(*colliders2[i], results[i]);
+				ApplyImpulse(*colliders1[i] , *colliders2[i], results[i]);
 			}
 		}
 	}
@@ -83,8 +87,8 @@ void PhysicsSystem::Update(float deltaTime) {
 		float scalar = (totalMass == 0.0f) ? 0.0f : depth / totalMass;
 		vec3 correction = results[i].normal * (scalar * LinearProjectionPercent);
 
-		colliders1[i]->position = colliders1[i]->position + correction * invMass1;
-		colliders2[i]->position = colliders2[i]->position - correction * invMass2;
+		colliders1[i]->position = colliders1[i]->position - correction * invMass1;
+		colliders2[i]->position = colliders2[i]->position + correction * invMass2;
 	}
 
 	// Update object positions
