@@ -1034,8 +1034,8 @@ namespace ImGuizmo
          const float len = IntersectRayPlane(gContext.mRayOrigin, gContext.mRayVector, BuildPlan(gContext.mModel.v.position, direction[planNormal]));
          vec_t posOnPlan = gContext.mRayOrigin + gContext.mRayVector * len;
 
-         const float dx = dirPlaneX.Dot3((posOnPlan - gContext.mModel.v.position) * (1.f / gContext.mScreenFactor));
-         const float dy = dirPlaneY.Dot3((posOnPlan - gContext.mModel.v.position) * (1.f / gContext.mScreenFactor));
+         const float dx = dirPlaneX.Dot3((posOnPlan - gContext.mModel.v.position) * (gContext.mScreenFactor == 0.0f? 0.0f : (1.f / gContext.mScreenFactor)));
+         const float dy = dirPlaneY.Dot3((posOnPlan - gContext.mModel.v.position) * (gContext.mScreenFactor == 0.0f? 0.0f : (1.f / gContext.mScreenFactor)));
          if (belowAxisLimit && dy > -0.1f && dy < 0.1f && dx > 0.1f  && dx < 1.f)
             type = SCALE_X + i;
       }
@@ -1065,7 +1065,7 @@ namespace ImGuizmo
          if (Dot(Normalized(localPos), gContext.mRayVector) > FLT_EPSILON)
             continue;
 
-         float distance = localPos.Length() / gContext.mScreenFactor;
+         float distance = gContext.mScreenFactor == 0.0f? 0.0f : localPos.Length() / gContext.mScreenFactor;
          if (distance > 0.9f && distance < 1.1f)
             type = ROTATE_X + i;
       }
@@ -1099,8 +1099,8 @@ namespace ImGuizmo
          const float len = IntersectRayPlane(gContext.mRayOrigin, gContext.mRayVector, BuildPlan(gContext.mModel.v.position, direction[planNormal]));
          vec_t posOnPlan = gContext.mRayOrigin + gContext.mRayVector * len;
 
-         const float dx = dirPlaneX.Dot3((posOnPlan - gContext.mModel.v.position) * (1.f / gContext.mScreenFactor));
-         const float dy = dirPlaneY.Dot3((posOnPlan - gContext.mModel.v.position) * (1.f / gContext.mScreenFactor));
+         const float dx = dirPlaneX.Dot3((posOnPlan - gContext.mModel.v.position) * (gContext.mScreenFactor == 0.0f? 0.0f : (1.f / gContext.mScreenFactor)));
+         const float dy = dirPlaneY.Dot3((posOnPlan - gContext.mModel.v.position) * (gContext.mScreenFactor == 0.0f? 0.0f : (1.f / gContext.mScreenFactor)));
          if (belowAxisLimit && dy > -0.1f && dy < 0.1f && dx > 0.1f  && dx < 1.f)
             type = MOVE_X + i;
 

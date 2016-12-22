@@ -148,6 +148,7 @@
     <ClInclude Include="..\Code\Camera.h" />
     <ClInclude Include="..\Code\CH14Demo.h" />
     <ClInclude Include="..\Code\Compare.h" />
+    <ClInclude Include="..\Code\ConservationOfMomentum.h" />
     <ClInclude Include="..\Code\DemoBase.h" />
     <ClInclude Include="..\Code\DemoWindow.h" />
     <ClInclude Include="..\Code\FixedFunctionPrimitives.h" />
@@ -181,6 +182,7 @@
   <ItemGroup>
     <ClCompile Include="..\Code\Camera.cpp" />
     <ClCompile Include="..\Code\CH14Demo.cpp" />
+    <ClCompile Include="..\Code\ConservationOfMomentum.cpp" />
     <ClCompile Include="..\Code\DemoBase.cpp" />
     <ClCompile Include="..\Code\DemoWindow.cpp" />
     <ClCompile Include="..\Code\FixedFunctionPrimitives.cpp" />

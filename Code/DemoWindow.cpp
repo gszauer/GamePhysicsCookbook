@@ -5,6 +5,7 @@
 #include "RaycastDemo.h"
 #include "CollisionFeature.h"
 #include "LinearImpulse.h"
+#include "ConservationOfMomentum.h"
 
 #include <cstdlib>
 
@@ -67,9 +68,9 @@ void DemoWindow::OnUpdate(float deltaTime) {
 	//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
 	if (select_all) {
-		const char* listbox_items[] = { "Raycast Demo", "Chapter 14", "Collision Features", "Linear Impulse" };
+		const char* listbox_items[] = { "Raycast Demo", "Chapter 14", "Collision Features", "Linear Impulse", "Conservation Of Momentum" };
 		int lastSelected = m_selectedDemo;
-		ImGui::ListBox("", &m_selectedDemo, listbox_items, 4, 4);
+		ImGui::ListBox("", &m_selectedDemo, listbox_items, 5, 4);
 
 		if (m_selectedDemo != lastSelected) {
 			StopDemo();
@@ -79,6 +80,7 @@ void DemoWindow::OnUpdate(float deltaTime) {
 				case 1: m_pDemo = new CH14Demo(); break;
 				case 2: m_pDemo = new CollisionFeature(); break;
 				case 3: m_pDemo = new LinearImpulse(); break;
+				case 4: m_pDemo = new ConservationOfMomentum(); break;
 			}
 			
 			m_pDemo->Initialize(GetWidth(), GetHeight());
