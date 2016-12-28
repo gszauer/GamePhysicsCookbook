@@ -568,7 +568,7 @@ bool Raycast(const Sphere& sphere, const Ray& ray, RaycastResult* outResult) {
 	float eSq = MagnitudeSq(e);
 	float a = Dot(e, ray.direction); // ray.direction is assumed to be normalized
 	float bSq = /*sqrtf(*/eSq - (a * a)/*)*/;
-	float f = sqrt((rSq)- /*(b * b)*/bSq);
+	float f = sqrt(fabsf((rSq)- /*(b * b)*/bSq));
 
 	// Assume normal intersection!
 	float t = a - f;

@@ -105,6 +105,7 @@ void PhysicsSystem::Update(float deltaTime) {
 }
 
 void PhysicsSystem::Render() {
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	static const float rigidbodyDiffuse[]{ 200.0f / 255.0f, 0.0f, 0.0f, 0.0f };
 	static const float rigidbodyAmbient[]{ 200.0f / 255.0f, 50.0f / 255.0f, 50.0f / 255.0f, 0.0f };
 
@@ -160,6 +161,18 @@ void PhysicsSystem::Render() {
 	glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 	for (int i = 1, size = constraints.size(); i < size; ++i) {
 		::Render(constraints[i]);
+	}
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	GLboolean status;
+	glGetBooleanv(GL_LIGHTING, &status);
+
+	glDisable(GL_LIGHTING);
+	for (int i = 0; i < results.size(); ++i) {
+		::Render(results[i]);
+	}
+	if (status) {
+		glEnable(GL_LIGHTING);
 	}
 }
 
