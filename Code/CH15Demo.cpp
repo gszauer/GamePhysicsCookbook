@@ -1,21 +1,17 @@
-#include "AngularVelocity.h"
+#include "CH15Demo.h"
 #include "FixedFunctionPrimitives.h"
 #include "glad/glad.h"
 #include "imgui/imgui.h"
 #include "imgui/ImGuizmo.h"
 #include <iostream>
 
-void AngularVelocity::Initialize(int width, int height) {
+void CH15Demo::Initialize(int width, int height) {
 	DemoBase::Initialize(width, height);
 
 	physicsSystem.RenderRandomColors = true;
 	physicsSystem.ImpulseIteration = 8;
-	//physicsSystem.PenetrationSlack = 0.1f;
-	//physicsSystem.LinearProjectionPercent = 0.8f;
 
 	size_imgui_window = true;
-	applyRaycast = false;
-	force = 10.0f;
 
 	glPointSize(5.0f);
 	glEnable(GL_LIGHTING);
@@ -31,7 +27,7 @@ void AngularVelocity::Initialize(int width, int height) {
 	ResetDemo();
 }
 
-void AngularVelocity::ResetDemo() {
+void CH15Demo::ResetDemo() {
 	physicsSystem.ClearRigidbodys();
 	physicsSystem.ClearConstraints();
 
@@ -59,22 +55,16 @@ void AngularVelocity::ResetDemo() {
 	physicsSystem.AddRigidbody(&groundBox);
 }
 
-void AngularVelocity::ImGUI() {
+void CH15Demo::ImGUI() {
 	DemoBase::ImGUI();
 
 	if (size_imgui_window) {
 		size_imgui_window = false;
 		ImGui::SetNextWindowPos(ImVec2(400, 10));
-		ImGui::SetNextWindowSize(ImVec2(370, 100));
+		ImGui::SetNextWindowSize(ImVec2(370, 75));
 	}
 
-	ImGui::Begin("Conservation Demo", 0, ImGuiWindowFlags_NoResize);
-
-	ImGui::DragFloat("Force", &force, 1.0f, 0.0f, 50.0f);
-	ImGui::SameLine();
-	if (ImGui::Button("Raycast")) {
-		applyRaycast = true;
-	}
+	ImGui::Begin("Chapter 15 Demo", 0, ImGuiWindowFlags_NoResize);
 
 	if (ImGui::Button("Reset")) {
 		ResetDemo();
@@ -83,36 +73,18 @@ void AngularVelocity::ImGUI() {
 	ImGui::End();
 }
 
-void AngularVelocity::Render() {
+void CH15Demo::Render() {
 	DemoBase::Render();
 
 	float val[] = { 0.0f, 1.0f, 0.0f, 0.0f };
 	glLightfv(GL_LIGHT0, GL_POSITION, val);
 
 	physicsSystem.Render();
-
-	glDisable(GL_LIGHTING);
-	glColor3f(1.0f, 0.0f, 1.0f);
-	::Render(ray);
-	glEnable(GL_LIGHTING);
 }
 
-void AngularVelocity::Update(float dt) {
+void CH15Demo::Update(float dt) {
 	DemoBase::Update(dt);
 
-	if (mouseLeftDown) {
-		ray = GetPickRay(mousePos, vec2(), size, camera.GetViewMatrix(), camera.GetProjectionMatrix());
-		ray.NormalizeDirection();
-	}
-
-	if (applyRaycast) {
-		RaycastResult hit;
-		if (Raycast(bodies[0].box, ray, &hit)) {
-			ray.NormalizeDirection();
-			bodies[0].AddRotationalImpulse(hit.point, ray.direction * force);
-		}
-		applyRaycast = false;
-	}
 
 	physicsSystem.Update(dt);
 }

@@ -145,7 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Code\AngularVelocity.h" />
+    <ClInclude Include="..\Code\CH15Demo.h" />
     <ClInclude Include="..\Code\Camera.h" />
     <ClInclude Include="..\Code\CH14Demo.h" />
     <ClInclude Include="..\Code\Compare.h" />
@@ -181,7 +181,7 @@
     <ClInclude Include="..\Code\vectors.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Code\AngularVelocity.cpp" />
+    <ClCompile Include="..\Code\CH15Demo.cpp" />
     <ClCompile Include="..\Code\Camera.cpp" />
     <ClCompile Include="..\Code\CH14Demo.cpp" />
     <ClCompile Include="..\Code\ConservationOfMomentum.cpp" />

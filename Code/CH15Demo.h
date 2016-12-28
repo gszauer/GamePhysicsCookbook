@@ -5,15 +5,11 @@
 #include "Geometry3D.h"
 #include "PhysicsSystem.h"
 
-class AngularVelocity : public DemoBase {
+class CH15Demo : public DemoBase {
 protected:
 	PhysicsSystem physicsSystem;
 	std::vector<Rigidbody> bodies;
 	Rigidbody groundBox;
-
-	bool applyRaycast;
-	Ray ray;
-	float force;
 
 	bool size_imgui_window;
 protected:

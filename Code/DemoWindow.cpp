@@ -6,7 +6,7 @@
 #include "CollisionFeature.h"
 #include "LinearImpulse.h"
 #include "ConservationOfMomentum.h"
-#include "AngularVelocity.h"
+#include "CH15Demo.h"
 
 #include <cstdlib>
 
@@ -20,6 +20,8 @@ void DemoWindow::OnInitialize() {
 	m_selectedDemo = -1;
 	m_pDemo = 0;
 	imgui_init = true;
+
+	select_all = false;
 }
 
 DemoWindow::~DemoWindow() {
@@ -69,7 +71,7 @@ void DemoWindow::OnUpdate(float deltaTime) {
 	//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
 	if (select_all) {
-		const char* listbox_items[] = { "Raycast Demo", "Chapter 14", "Collision Features", "Linear Impulse", "Conservation Of Momentum", "Angular Velocity" };
+		const char* listbox_items[] = { "Raycast Demo", "Chapter 14", "Collision Features", "Linear Impulse", "Conservation Of Momentum", "Chapter 15" };
 		int lastSelected = m_selectedDemo;
 		ImGui::ListBox("", &m_selectedDemo, listbox_items, 6, 4);
 
@@ -82,7 +84,7 @@ void DemoWindow::OnUpdate(float deltaTime) {
 				case 2: m_pDemo = new CollisionFeature(); break;
 				case 3: m_pDemo = new LinearImpulse(); break;
 				case 4: m_pDemo = new ConservationOfMomentum(); break;
-				case 5: m_pDemo = new AngularVelocity(); break;
+				case 5: m_pDemo = new CH15Demo(); break;
 			}
 			
 			m_pDemo->Initialize(GetWidth(), GetHeight());
@@ -183,7 +185,7 @@ void DemoWindow::Start14() {
 
 void DemoWindow::Start15() {
 	StopDemo();
-	m_pDemo = new CollisionFeature(); // TODO: Change to CH15!
+	m_pDemo = new CH15Demo();
 	m_pDemo->Initialize(GetWidth(), GetHeight());
 	ApplyDemoCamera();
 }

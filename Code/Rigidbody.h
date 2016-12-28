@@ -34,39 +34,6 @@ public:
 	OBB box;
 	Sphere sphere;
 public:
-	inline mat4 InvTensor() {
-		if (mass == 0.0f) {
-			return mat4(
-				0,0,0,0,
-				0,0,0,0,
-				0,0,0,0,
-				0,0,0,0
-			);
-		}
-		SynchCollisionVolumes();
-		mat4 matR = FromMat3(box.orientation);
-		mat4 matT = Translation(box.position);
-		mat4 m_matWorld = matR * matT;
-		vec3 size = box.size * 2.0f;
-
-		float x2 = (size.x * size.x);
-		float y2 = (size.y * size.y);
-		float z2 = (size.z * size.z);
-		float ix = (y2 + z2) * mass / 12.0f;
-		float iy = (x2 + z2) * mass / 12.0f;
-		float iz = (x2 + y2) * mass / 12.0f;
-
-
-		mat4 m_boxInertia = mat4(
-			ix, 0, 0, 0,
-			0, iy, 0, 0,
-			0, 0, iz, 0,
-			0, 0, 0, 1);
-
-
-		mat4 m_invInertia = Inverse(matR) * Inverse(m_boxInertia) * matR;
-		return m_invInertia;
-	}
 
 	inline Rigidbody() :
 		cor(0.5f), mass(1.0f),
@@ -88,8 +55,10 @@ public:
 	virtual void UpdateVelocity(float dt);
 	virtual void Update(float dt); // Update Position
 
-	virtual void ApplyForces();
 	float InvMass();
+	mat4 InvTensor();
+
+	virtual void ApplyForces();
 	void SynchCollisionVolumes();
 
 	virtual void AddLinearImpulse(const vec3& impulse);
