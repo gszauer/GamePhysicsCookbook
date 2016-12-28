@@ -142,6 +142,9 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 	float denominator = d1 + Dot(n, d2 + d3);
 
 	float j = (denominator == 0.0f) ? 0.0f : numerator / denominator;
+	if (M.contacts.size() > 0.0f && j != 0.0f) {
+		j /= (float)M.contacts.size();
+	}
 
 	vec3 impulse = relativeNorm * j;
 	A.velocity = A.velocity - impulse *  invMass1;
@@ -158,7 +161,7 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 
 	//relativeVel = B.velocity - A.velocity;
 	relativeVel = (B.velocity + Cross(B.angVel, r2)) - (A.velocity + Cross(A.angVel, r1));
-	vec3 t = relativeVel - relativeNorm * Dot(relativeVel, relativeNorm);
+	vec3 t = relativeVel - (relativeNorm * Dot(relativeVel, relativeNorm));
 	if (CMP(MagnitudeSq(t), 0.0f)) {
 		return;
 	}

@@ -77,21 +77,25 @@ void PhysicsSystem::Update(float deltaTime) {
 		}
 	}
 
+	// Update object positions
+	for (int i = 0, size = bodies.size(); i < size; ++i) {
+		bodies[i]->Update(deltaTime);
+	}
+
 	// Correct position to avoid sinking!
 	for (int i = 0, size = results.size(); i < size; ++i) {
 		float totalMass = colliders1[i]->InvMass() + colliders2[i]->InvMass();
 
+		if (totalMass == 0.0f) {
+			continue;
+		}
+
 		float depth = fmaxf(results[i].depth - PenetrationSlack, 0.0f);
 		float scalar = (totalMass == 0.0f) ? 0.0f : depth / totalMass;
-		vec3 correction = results[i].normal * (scalar * LinearProjectionPercent);
+		vec3 correction = results[i].normal * scalar * LinearProjectionPercent;
 
 		colliders1[i]->position = colliders1[i]->position - correction * colliders1[i]->InvMass();
 		colliders2[i]->position = colliders2[i]->position + correction * colliders2[i]->InvMass();
-	}
-
-	// Update object positions
-	for (int i = 0, size = bodies.size(); i < size; ++i) {
-		bodies[i]->Update(deltaTime);
 	}
 
 	// Solve constraints

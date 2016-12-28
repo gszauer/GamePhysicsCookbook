@@ -9,7 +9,9 @@ void AngularVelocity::Initialize(int width, int height) {
 	DemoBase::Initialize(width, height);
 
 	physicsSystem.RenderRandomColors = true;
-	physicsSystem.ImpulseIteration = 20;
+	physicsSystem.ImpulseIteration = 8;
+	//physicsSystem.PenetrationSlack = 0.1f;
+	//physicsSystem.LinearProjectionPercent = 0.8f;
 
 	size_imgui_window = true;
 	applyRaycast = false;
