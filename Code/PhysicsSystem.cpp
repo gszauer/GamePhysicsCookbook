@@ -77,18 +77,18 @@ void PhysicsSystem::Update(float deltaTime) {
 	for (int k = 0; k < ImpulseIteration; ++k) { // Apply impulses
 		for (int i = 0, size = results.size(); i < size; ++i) {
 			for (int j = 0, jSize = results[i].contacts.size(); j < jSize; ++j) {
-				ApplyImpulse(*colliders1[i] , *colliders2[i], results[i], j, deltaTime);
+				ApplyImpulse(*colliders1[i] , *colliders2[i], results[i], j);
 			}
 		}
 	}
 
 	// Update object positions
 	for (int i = 0, size = bodies.size(); i < size; ++i) {
-		bodies[i]->UpdatePoisition(deltaTime);
+		bodies[i]->Update(deltaTime);
 	}
 
 	// Correct position to avoid sinking!
-	/*for (int i = 0, size = results.size(); i < size; ++i) {
+	for (int i = 0, size = results.size(); i < size; ++i) {
 		float totalMass = colliders1[i]->InvMass() + colliders2[i]->InvMass();
 
 		if (totalMass == 0.0f) {
@@ -101,12 +101,12 @@ void PhysicsSystem::Update(float deltaTime) {
 
 		colliders1[i]->position = colliders1[i]->position - correction * colliders1[i]->InvMass();
 		colliders2[i]->position = colliders2[i]->position + correction * colliders2[i]->InvMass();
-	}*/
+	}
 
 	// Solve constraints
-	/*for (int i = 0, size = bodies.size(); i < size; ++i) {
+	for (int i = 0, size = bodies.size(); i < size; ++i) {
 		bodies[i]->SolveConstraints(constraints);
-	}*/
+	}
 }
 
 void PhysicsSystem::Render() {

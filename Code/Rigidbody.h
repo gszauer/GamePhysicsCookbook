@@ -17,17 +17,14 @@ class Rigidbody {
 public:
 	vec3 position;
 	vec3 velocity;
-	// linear acceleration = F / M
-
-	vec3 forces; // sumForces
-	vec3 torques; // Sum torques
 
 	vec3 orientation;
 	vec3 angVel;
 
-	//vec3 inertia;
-	std::string debug;
+	vec3 forces; // sumForces
+	vec3 torques; // Sum torques
 
+	//vec3 inertia;
 	float mass;
 	float cor; // Coefficient of restitution
 	float staticFriction;
@@ -39,10 +36,12 @@ public:
 public:
 	inline mat4 InvTensor() {
 		if (mass == 0.0f) {
-			return mat4(0,0,0,0
-			,0,0,0,0,
+			return mat4(
 				0,0,0,0,
-				0,0,0,0);
+				0,0,0,0,
+				0,0,0,0,
+				0,0,0,0
+			);
 		}
 		SynchCollisionVolumes();
 		mat4 matR = FromMat3(box.orientation);
@@ -74,8 +73,6 @@ public:
 		staticFriction(0.5f),
 		dynamicFriction(0.3f),
 		type(RIGIDBODY_TYPE_BASE) {
-		angVel = vec3();
-		debug = "none";
 	}
 
 	inline Rigidbody(int bodyType) :
@@ -83,15 +80,13 @@ public:
 		staticFriction(0.5f),
 		dynamicFriction(0.3f),
 		type(bodyType) {
-		angVel = vec3();
-		debug = "none";
 	}
 
 	virtual ~Rigidbody() { }
 
 	virtual void Render();
-	virtual void UpdatePoisition(float dt);
 	virtual void UpdateVelocity(float dt);
+	virtual void Update(float dt); // Update Position
 
 	virtual void ApplyForces();
 	float InvMass();
@@ -103,10 +98,6 @@ public:
 };
 
 CollisionManifold FindCollisionFeatures(Rigidbody& ra, Rigidbody& rb);
-void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c, float dt);
-
-static vec3 operator*(const vec3& v, const mat4& m) {
-	return MultiplyVector(v, m);
-}
+void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c);
 
 #endif

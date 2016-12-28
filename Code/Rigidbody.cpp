@@ -3,7 +3,7 @@
 #include "FixedFunctionPrimitives.h"
 
 void Rigidbody::ApplyForces() {
-	forces = GRAVITY_CONST;
+	forces = GRAVITY_CONST * mass;
 }
 
 void  Rigidbody::AddRotationalImpulse(const vec3& point, const vec3& impulse) {
@@ -17,8 +17,7 @@ void  Rigidbody::AddRotationalImpulse(const vec3& point, const vec3& impulse) {
 		inertia.z == 0.0f ? 0.0f : torque.z / inertia.z
 	);*/
 
-	vec3 angAccel = torque * InvTensor();
-
+	vec3 angAccel = MultiplyVector(torque, InvTensor());
 	angVel = angVel + angAccel;
 }
 
@@ -55,8 +54,11 @@ void Rigidbody::Render() {
 }
 
 void Rigidbody::UpdateVelocity(float dt) {
-	vec3 acceleration = forces * InvMass(); // A = F / M
+	const float damping = 0.99f;
+
+	vec3 acceleration = forces * InvMass();
 	velocity = velocity + acceleration * dt;
+	velocity = velocity * damping;
 
 	if (fabsf(velocity.x) < 0.001f) {
 		velocity.x = 0.0f;
@@ -69,8 +71,9 @@ void Rigidbody::UpdateVelocity(float dt) {
 	}
 
 	if (type == RIGIDBODY_TYPE_BOX) {
-		vec3 angAccel = torques * InvTensor();
+		vec3 angAccel = MultiplyVector(torques, InvTensor());
 		angVel = angVel + angAccel * dt;
+		angVel = angVel *  damping;
 
 		if (fabsf(angVel.x) < 0.001f) {
 			angVel.x = 0.0f;
@@ -85,7 +88,7 @@ void Rigidbody::UpdateVelocity(float dt) {
 	SynchCollisionVolumes();
 }
 
-void Rigidbody::UpdatePoisition(float dt) {
+void Rigidbody::Update(float dt) {
 	position = position + velocity * dt;
 
 	if (type == RIGIDBODY_TYPE_BOX) {
@@ -120,7 +123,7 @@ CollisionManifold FindCollisionFeatures(Rigidbody& ra, Rigidbody& rb) {
 	return result;
 }
 
-void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c, float dt) {
+void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c) {
 	// Linear impulse
 	float invMass1 = A.InvMass();
 	float invMass2 = B.InvMass();
@@ -148,16 +151,10 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c,
 
 	float e = fminf(A.cor, B.cor);
 
-	const float allowedPenetration = 0.1f;
-	const float biasFactor = 0.1f; // 0.1 to 0.3
-	float inv_dt = dt > 0.0f ? 1.0f / dt : 0.0f;
-	float bias = biasFactor * inv_dt * fmaxf(0.0f, M.depth - allowedPenetration);
-
-
-	float numerator = (-(1.0f + e) * Dot(relativeVel, relativeNorm)) +bias;
+	float numerator = (-(1.0f + e) * Dot(relativeVel, relativeNorm));
 	float d1 = invMassSum;
-	vec3 d2 = Cross(Cross(r1, relativeNorm) * i1, r1);
-	vec3 d3 = Cross(Cross(r2, relativeNorm) * i2, r2);
+	vec3 d2 = Cross(MultiplyVector(Cross(r1, relativeNorm), i1), r1);
+	vec3 d3 = Cross(MultiplyVector(Cross(r2, relativeNorm), i2), r2);
 	float denominator = d1 + Dot(relativeNorm, d2 + d3);
 
 	float j = (denominator == 0.0f) ? 0.0f : numerator / denominator;
@@ -169,10 +166,8 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c,
 	A.velocity = A.velocity - impulse *  invMass1;
 	B.velocity = B.velocity + impulse *  invMass2;
 
-	A.angVel = A.angVel - Cross(r1, impulse) *  i1;
-	B.angVel = B.angVel + Cross(r2, impulse) *  i2;
-
-
+	A.angVel = A.angVel - MultiplyVector(Cross(r1, impulse), i1);
+	B.angVel = B.angVel + MultiplyVector(Cross(r2, impulse), i2);
 
 	/// Friction
 	float sf = sqrtf(A.staticFriction * B.staticFriction);
@@ -186,8 +181,8 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c,
 
 	numerator = -Dot(relativeVel, t);
 	d1 = invMassSum;
-	d2 = Cross(Cross(r1, t) * i1, r1);
-	d3 = Cross(Cross(r2, t) * i2, r2);
+	d2 = Cross(MultiplyVector(Cross(r1, t), i1), r1);
+	d3 = Cross(MultiplyVector(Cross(r2, t), i2), r2);
 	denominator = d1 + Dot(t, d2 + d3);
 
 	float jt = (denominator == 0.0f) ? 0.0f : numerator / denominator;
@@ -197,13 +192,6 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c,
 
 	if (CMP(jt, 0.0f)) {
 		return;
-	}
-
-	if (jt < -j * 0.6f) {
-		jt = -j * 0.6f;
-	}
-	else if (jt > j * 0.6f) {
-		jt = j * 0.6f;
 	}
 
 	vec3 tangentImpuse;
@@ -217,6 +205,6 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c,
 	A.velocity = A.velocity - tangentImpuse *  invMass1;
 	B.velocity = B.velocity + tangentImpuse *  invMass2;
 
-	A.angVel = A.angVel - Cross(r1, tangentImpuse) *  i1;
-	B.angVel = B.angVel + Cross(r2, tangentImpuse) *  i2;
+	A.angVel = A.angVel - MultiplyVector(Cross(r1, tangentImpuse), i1);
+	B.angVel = B.angVel + MultiplyVector(Cross(r2, tangentImpuse), i2);
 }
