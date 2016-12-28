@@ -116,14 +116,11 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 
 	vec3 r1 = M.contacts[c] - A.position;
 	vec3 r2 = M.contacts[c] - B.position;
-	/*vec3 r1 = M.contacts[c] - A.position;
-	vec3 r2 = M.contacts[c] - B.position;*/
 	vec3 i1 = A.InvTensor();
 	vec3 i2 = B.InvTensor();
 
 	// Relative velocity
 	vec3 relativeVel = (B.velocity + Cross(B.angVel, r2)) - (A.velocity + Cross(A.angVel, r1));
-	//vec3 relativeVel = B.velocity - A.velocity;
 	// Relative collision normal
 	vec3 relativeNorm = M.normal;
 	Normalize(relativeNorm);
@@ -134,13 +131,12 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 	}
 
 	float e = fminf(A.cor, B.cor);
-	//vec3 vr = B.velocity - A.velocity;
 	vec3 vr = (B.velocity + Cross(B.angVel, r2)) - (A.velocity + Cross(A.angVel, r1));
 	vec3 n = M.normal;
 	Normalize(n);
 
 	float numerator = (-(1.0f + e) * Dot(vr, n));
-	float d1 = Dot(n, n) +( invMassSum);
+	float d1 = Dot(n, n) * invMassSum;
 	vec3 d2 = Cross(Cross(r1, n) * i1, r1);
 	vec3 d3 = Cross(Cross(r2, n) * i2, r2);
 	float denominator = d1 + Dot(n, d2 + d3);
@@ -168,20 +164,14 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 	}
 	Normalize(t);
 
-	/*float jt = -Dot(relativeVel, t);
-	jt /= (invMass1 + invMass2);
-	if (M.contacts.size() > 0.0f) {
-		jt /= (float)M.contacts.size();
-	}*/
-
 	numerator = -Dot(relativeVel, t);
-	d1 = Dot(t, t) + (invMassSum);
+	d1 = Dot(t, t) * (invMassSum);
 	d2 = Cross(Cross(r1, t) * i1, r1);
 	d3 = Cross(Cross(r2, t) * i2, r2);
 	denominator = d1 + Dot(t, d2 + d3);
 
 	float jt = (denominator == 0.0f) ? 0.0f : numerator / denominator;
-	if (M.contacts.size() > 0.0f) {
+	if (M.contacts.size() > 0.0f && jt != 0.0f) {
 		jt /= (float)M.contacts.size();
 	}
 
