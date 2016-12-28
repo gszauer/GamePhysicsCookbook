@@ -15,40 +15,70 @@ class Rigidbody {
 public:
 	vec3 position;
 	vec3 velocity;
+	// linear acceleration = F / M
+
+	vec3 forces; // sumForces
+	vec3 torques; // Sum torques
+
+	vec3 orientation;
+	vec3 angVel;
+
+	//vec3 inertia;
 
 	float mass;
-	vec3 forces;
-
 	float cor; // Coefficient of restitution
 	float staticFriction;
 	float dynamicFriction;
-	
+
 	int type;
 	OBB box;
 	Sphere sphere;
 public:
+	inline vec3 InvTensor() {
+		if (mass == 0.0f) {
+			return vec3();
+		}
+
+		float width = box.size.x;
+		float height = box.size.y;
+		float depth = box.size.z;
+
+		float xTensor = 0.083f * mass*(height*height + depth*depth);
+		float yTensor = 0.083f * mass*(width*width + depth*depth);
+		float zTensor = 0.083f * mass*(width*width + height*height);
+
+		xTensor = (xTensor == 0.0f) ? 0.0f : 1.0f / xTensor;
+		yTensor = (yTensor == 0.0f) ? 0.0f : 1.0f / yTensor;
+		zTensor = (zTensor == 0.0f) ? 0.0f : 1.0f / zTensor;
+
+		return vec3(xTensor, yTensor, zTensor);
+	}
+
 	inline Rigidbody() :
 		cor(0.5f), mass(1.0f),
 		staticFriction(0.5f),
 		dynamicFriction(0.3f),
-		type(RIGIDBODY_TYPE_BASE) { }
+		type(RIGIDBODY_TYPE_BASE) {
+	}
 
 	inline Rigidbody(int bodyType) :
 		cor(0.5f), mass(1.0f),
 		staticFriction(0.5f),
 		dynamicFriction(0.3f),
-		type(bodyType) { }
+		type(bodyType) {
+	}
 
 	virtual ~Rigidbody() { }
 
 	virtual void Render();
 	virtual void Update(float dt);
-	
+
 	virtual void ApplyForces();
 	float InvMass();
 	void SynchCollisionVolumes();
 
 	virtual void AddLinearImpulse(const vec3& impulse);
+	virtual void AddRotationalImpulse(const vec3& point, const vec3& impulse);
 	inline virtual void SolveConstraints(const std::vector<OBB>& constraints) { }
 };
 

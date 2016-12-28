@@ -3,7 +3,23 @@
 #include "FixedFunctionPrimitives.h"
 
 void Rigidbody::ApplyForces() {
-	forces = GRAVITY_CONST;
+	forces = vec3();// GRAVITY_CONST;
+}
+
+void  Rigidbody::AddRotationalImpulse(const vec3& point, const vec3& impulse) {
+	vec3 centerOfMass = position;
+	vec3 torque = Cross(point - centerOfMass, impulse);
+
+	/*vec3 inertia = TensorVector();
+	vec3 angAccel(
+		inertia.x == 0.0f ? 0.0f : torque.x / inertia.x,
+		inertia.y == 0.0f ? 0.0f : torque.y / inertia.y,
+		inertia.z == 0.0f ? 0.0f : torque.z / inertia.z
+	);*/
+
+	vec3 angAccel = torque * InvTensor();
+
+	angVel = angVel + angAccel;
 }
 
 void Rigidbody::AddLinearImpulse(const vec3& impulse) {
@@ -20,6 +36,7 @@ float Rigidbody::InvMass() {
 void Rigidbody::SynchCollisionVolumes() {
 	sphere.position = position;
 	box.position = position;
+	box.orientation = Rotation3x3(orientation.x, orientation.y, orientation.z);
 }
 
 void Rigidbody::Render() {
@@ -33,11 +50,26 @@ void Rigidbody::Render() {
 	}
 }
 
+
+
 void Rigidbody::Update(float dt) {
-	float invMass = InvMass();
-	vec3 acceleration = forces * invMass;
+	// Linear
+	vec3 acceleration = forces * InvMass(); // A = F / M
 	velocity = velocity + acceleration * dt;
 	position = position + velocity * dt;
+
+	if (type == RIGIDBODY_TYPE_BOX) {
+		// Angular
+		/*vec3 inertia = TensorVector();
+		vec3 angAccel(
+			inertia.x == 0.0f ? 0.0f : torques.x / inertia.x,
+			inertia.y == 0.0f ? 0.0f : torques.y / inertia.y,
+			inertia.z == 0.0f ? 0.0f : torques.z / inertia.z
+		);*/
+		vec3 angAccel = torques * InvTensor();
+		angVel = angVel + angAccel * dt;
+		orientation = orientation + angVel * dt;
+	}
 
 	SynchCollisionVolumes();
 }
@@ -60,11 +92,11 @@ CollisionManifold FindCollisionFeatures(Rigidbody& ra, Rigidbody& rb) {
 			result = FindCollisionFeatures(ra.box, rb.box);
 		}
 		else if (rb.type == RIGIDBODY_TYPE_SPHERE) {
-			result =  FindCollisionFeatures(ra.box, rb.sphere);
+			result = FindCollisionFeatures(ra.box, rb.sphere);
 		}
 	}
 
-	
+
 	return result;
 }
 
