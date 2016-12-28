@@ -3,7 +3,7 @@
 #include "FixedFunctionPrimitives.h"
 
 void Rigidbody::ApplyForces() {
-	forces = vec3();// GRAVITY_CONST;
+	forces = GRAVITY_CONST;
 }
 
 void  Rigidbody::AddRotationalImpulse(const vec3& point, const vec3& impulse) {
@@ -100,7 +100,7 @@ CollisionManifold FindCollisionFeatures(Rigidbody& ra, Rigidbody& rb) {
 	return result;
 }
 
-void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M) {
+void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c) {
 	// Linear impulse
 	float invMass1 = A.InvMass();
 	float invMass2 = B.InvMass();
@@ -120,14 +120,37 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M) {
 		return;
 	}
 
+	vec3 i1 = A.InvTensor();
+	vec3 i2 = B.InvTensor();
+	float e = fminf(A.cor, B.cor);
+	vec3 vr = B.velocity - A.velocity;
+	vec3 n = M.normal;
+	vec3 r1 = M.contacts[c] - A.position;
+	vec3 r2 = M.contacts[c] - B.position;
+
+	float numerator = (-(1.0f + e) * Dot(vr, n));
+	float d1 = invMassSum;
+	float d2 = Dot(n, Cross(Cross(r1, n) * i1, r1));
+	float d3 = Dot(n, Cross(Cross(r2, n) * i2, r2));
+	float denominator = d1 + d2 + d3;
+
+	float j = (denominator == 0.0f) ? 0.0f : numerator / denominator;
+
+	/*
 	float e = fminf(A.cor, B.cor);
 	float numerator = (-(1.0f + e) * Dot(relativeVel, relativeNorm));
 	float j = numerator / invMassSum;
+	*/
 
 	vec3 impulse = relativeNorm * j;
 	A.velocity = A.velocity - impulse *  invMass1;
 	B.velocity = B.velocity + impulse *  invMass2;
 
+	A.angVel = A.angVel - Cross(r1, impulse) *  i1;
+	B.angVel = B.angVel + Cross(r2, impulse) *  i2;
+
+
+	return;
 	// Friction
 	float sf = sqrtf(A.staticFriction * A.staticFriction + B.staticFriction * B.staticFriction);
 	float df = sqrtf(A.dynamicFriction * A.dynamicFriction + B.dynamicFriction * B.dynamicFriction);

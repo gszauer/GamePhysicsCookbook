@@ -34,10 +34,13 @@ void AngularVelocity::ResetDemo() {
 	physicsSystem.ClearConstraints();
 
 	bodies.clear();
-	bodies.resize(1);
+	bodies.resize(2);
 
 	bodies[0].type = RIGIDBODY_TYPE_BOX;
 	bodies[0].position = vec3(0, 3, 0);
+
+	bodies[1].type = RIGIDBODY_TYPE_BOX;
+	bodies[1].position = vec3(0, 6, 0);
 
 	groundBox = Rigidbody(RIGIDBODY_TYPE_BOX);
 	groundBox.box.size = vec3(15.0f, 0.15f, 15.0f);

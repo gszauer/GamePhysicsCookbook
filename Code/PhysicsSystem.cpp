@@ -72,7 +72,7 @@ void PhysicsSystem::Update(float deltaTime) {
 	for (int k = 0; k < ImpulseIteration; ++k) { // Apply impulses
 		for (int i = 0, size = results.size(); i < size; ++i) {
 			for (int j = 0, jSize = results[i].contacts.size(); j < jSize; ++j) {
-				ApplyImpulse(*colliders1[i] , *colliders2[i], results[i]);
+				ApplyImpulse(*colliders1[i] , *colliders2[i], results[i], j);
 			}
 		}
 	}

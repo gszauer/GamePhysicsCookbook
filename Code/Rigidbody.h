@@ -83,6 +83,6 @@ public:
 };
 
 CollisionManifold FindCollisionFeatures(Rigidbody& ra, Rigidbody& rb);
-void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M);
+void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c);
 
 #endif
