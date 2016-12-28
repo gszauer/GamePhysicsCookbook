@@ -54,27 +54,43 @@ void Rigidbody::Render() {
 	}
 }
 
-
-
-void Rigidbody::Update(float dt) {
-	// Linear
+void Rigidbody::UpdateVelocity(float dt) {
 	vec3 acceleration = forces * InvMass(); // A = F / M
 	velocity = velocity + acceleration * dt;
+
+	if (fabsf(velocity.x) < 0.001f) {
+		velocity.x = 0.0f;
+	}
+	if (fabsf(velocity.y) < 0.001f) {
+		velocity.y = 0.0f;
+	}
+	if (fabsf(velocity.z) < 0.001f) {
+		velocity.z = 0.0f;
+	}
+
+	if (type == RIGIDBODY_TYPE_BOX) {
+		vec3 angAccel = torques * InvTensor();
+		angVel = angVel + angAccel * dt;
+
+		if (fabsf(angVel.x) < 0.001f) {
+			angVel.x = 0.0f;
+		}
+		if (fabsf(angVel.y) < 0.001f) {
+			angVel.y = 0.0f;
+		}
+		if (fabsf(angVel.z) < 0.001f) {
+			angVel.z = 0.0f;
+		}
+	}
+	SynchCollisionVolumes();
+}
+
+void Rigidbody::UpdatePoisition(float dt) {
 	position = position + velocity * dt;
 
 	if (type == RIGIDBODY_TYPE_BOX) {
-		// Angular
-		/*vec3 inertia = TensorVector();
-		vec3 angAccel(
-			inertia.x == 0.0f ? 0.0f : torques.x / inertia.x,
-			inertia.y == 0.0f ? 0.0f : torques.y / inertia.y,
-			inertia.z == 0.0f ? 0.0f : torques.z / inertia.z
-		);*/
-		vec3 angAccel = torques * InvTensor();
-		angVel = angVel + angAccel * dt;
 		orientation = orientation + angVel * dt;
 	}
-
 	SynchCollisionVolumes();
 }
 
@@ -104,7 +120,7 @@ CollisionManifold FindCollisionFeatures(Rigidbody& ra, Rigidbody& rb) {
 	return result;
 }
 
-void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c) {
+void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c, float dt) {
 	// Linear impulse
 	float invMass1 = A.InvMass();
 	float invMass2 = B.InvMass();
@@ -116,8 +132,8 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 
 	vec3 r1 = M.contacts[c] - A.position;
 	vec3 r2 = M.contacts[c] - B.position;
-	vec3 i1 = A.InvTensor();
-	vec3 i2 = B.InvTensor();
+	mat4 i1 = A.InvTensor();
+	mat4 i2 = B.InvTensor();
 
 	// Relative velocity
 	vec3 relativeVel = (B.velocity + Cross(B.angVel, r2)) - (A.velocity + Cross(A.angVel, r1));
@@ -132,7 +148,13 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 
 	float e = fminf(A.cor, B.cor);
 
-	float numerator = (-(1.0f + e) * Dot(relativeVel, relativeNorm));
+	const float allowedPenetration = 0.1f;
+	const float biasFactor = 0.1f; // 0.1 to 0.3
+	float inv_dt = dt > 0.0f ? 1.0f / dt : 0.0f;
+	float bias = biasFactor * inv_dt * fmaxf(0.0f, M.depth - allowedPenetration);
+
+
+	float numerator = (-(1.0f + e) * Dot(relativeVel, relativeNorm)) +bias;
 	float d1 = invMassSum;
 	vec3 d2 = Cross(Cross(r1, relativeNorm) * i1, r1);
 	vec3 d3 = Cross(Cross(r2, relativeNorm) * i2, r2);
@@ -175,6 +197,13 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 
 	if (CMP(jt, 0.0f)) {
 		return;
+	}
+
+	if (jt < -j * 0.6f) {
+		jt = -j * 0.6f;
+	}
+	else if (jt > j * 0.6f) {
+		jt = j * 0.6f;
 	}
 
 	vec3 tangentImpuse;

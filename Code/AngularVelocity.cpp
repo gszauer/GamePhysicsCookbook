@@ -36,18 +36,30 @@ void AngularVelocity::ResetDemo() {
 	physicsSystem.ClearConstraints();
 
 	bodies.clear();
-	bodies.resize(2);
+	bodies.resize(3);
 
 	bodies[0].type = RIGIDBODY_TYPE_BOX;
-	bodies[0].position = vec3(0, 3, 0);
-	bodies[0].debug = "Red";
+	bodies[0].position = vec3(4.5f, 10, 0);
+	bodies[0].orientation = vec3(0.0f, 0.0f, 0.4f);
+	bodies[0].box.size = vec3(0.75, 0.75, 0.75);
+	bodies[0].mass = 5.0f;
+	bodies[0].debug = "Box 0";
 
 	bodies[1].type = RIGIDBODY_TYPE_BOX;
-	bodies[1].position = vec3(1.5, 6, 0);
-	bodies[1].debug = "Blue";
+	bodies[1].position = vec3(0, 3, 0);
+	bodies[1].box.size = vec3(20, 2, 5) * 0.25f;
+	bodies[1].debug = "Box 1";
+	bodies[1].cor = 0.0f;
+
+	bodies[2].type = RIGIDBODY_TYPE_BOX;
+	bodies[2].position = vec3(0, 1, 0);
+	bodies[2].box.size = vec3(5, 5, 5) * 0.25f;
+	bodies[2].debug = "Blue";
+	bodies[2].cor = 0.0f;
 
 	groundBox = Rigidbody(RIGIDBODY_TYPE_BOX);
-	groundBox.box.size = vec3(15.0f, 0.15f, 15.0f);
+	groundBox.position = vec3(0, -0.5f, 0) * vec3(1, 0.5f, 1);
+	groundBox.box.size = vec3(50, 1, 50) * 0.25f;
 	groundBox.mass = 0.0f;
 	groundBox.SynchCollisionVolumes();
 	groundBox.debug = "Ground";

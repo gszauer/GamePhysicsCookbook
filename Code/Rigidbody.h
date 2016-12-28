@@ -37,24 +37,36 @@ public:
 	OBB box;
 	Sphere sphere;
 public:
-	inline vec3 InvTensor() {
+	inline mat4 InvTensor() {
 		if (mass == 0.0f) {
-			return vec3();
+			return mat4(0,0,0,0
+			,0,0,0,0,
+				0,0,0,0,
+				0,0,0,0);
 		}
+		SynchCollisionVolumes();
+		mat4 matR = FromMat3(box.orientation);
+		mat4 matT = Translation(box.position);
+		mat4 m_matWorld = matR * matT;
+		vec3 size = box.size * 2.0f;
 
-		float width = box.size.x;
-		float height = box.size.y;
-		float depth = box.size.z;
+		float x2 = (size.x * size.x);
+		float y2 = (size.y * size.y);
+		float z2 = (size.z * size.z);
+		float ix = (y2 + z2) * mass / 12.0f;
+		float iy = (x2 + z2) * mass / 12.0f;
+		float iz = (x2 + y2) * mass / 12.0f;
 
-		float xTensor = 0.083f * mass*(height*height + depth*depth);
-		float yTensor = 0.083f * mass*(width*width + depth*depth);
-		float zTensor = 0.083f * mass*(width*width + height*height);
 
-		xTensor = CMP(xTensor, 0.0f) ? 0.0f : 1.0f / xTensor;
-		yTensor = CMP(yTensor, 0.0f) ? 0.0f : 1.0f / yTensor;
-		zTensor = CMP(zTensor, 0.0f) ? 0.0f : 1.0f / zTensor;
+		mat4 m_boxInertia = mat4(
+			ix, 0, 0, 0,
+			0, iy, 0, 0,
+			0, 0, iz, 0,
+			0, 0, 0, 1);
 
-		return vec3(xTensor, yTensor, zTensor);
+
+		mat4 m_invInertia = Inverse(matR) * Inverse(m_boxInertia) * matR;
+		return m_invInertia;
 	}
 
 	inline Rigidbody() :
@@ -78,7 +90,8 @@ public:
 	virtual ~Rigidbody() { }
 
 	virtual void Render();
-	virtual void Update(float dt);
+	virtual void UpdatePoisition(float dt);
+	virtual void UpdateVelocity(float dt);
 
 	virtual void ApplyForces();
 	float InvMass();
@@ -90,6 +103,10 @@ public:
 };
 
 CollisionManifold FindCollisionFeatures(Rigidbody& ra, Rigidbody& rb);
-void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c);
+void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c, float dt);
+
+static vec3 operator*(const vec3& v, const mat4& m) {
+	return MultiplyVector(v, m);
+}
 
 #endif
