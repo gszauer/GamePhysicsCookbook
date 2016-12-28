@@ -131,15 +131,12 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 	}
 
 	float e = fminf(A.cor, B.cor);
-	vec3 vr = (B.velocity + Cross(B.angVel, r2)) - (A.velocity + Cross(A.angVel, r1));
-	vec3 n = M.normal;
-	Normalize(n);
 
-	float numerator = (-(1.0f + e) * Dot(vr, n));
-	float d1 = Dot(n, n) * invMassSum;
-	vec3 d2 = Cross(Cross(r1, n) * i1, r1);
-	vec3 d3 = Cross(Cross(r2, n) * i2, r2);
-	float denominator = d1 + Dot(n, d2 + d3);
+	float numerator = (-(1.0f + e) * Dot(relativeVel, relativeNorm));
+	float d1 = invMassSum;
+	vec3 d2 = Cross(Cross(r1, relativeNorm) * i1, r1);
+	vec3 d3 = Cross(Cross(r2, relativeNorm) * i2, r2);
+	float denominator = d1 + Dot(relativeNorm, d2 + d3);
 
 	float j = (denominator == 0.0f) ? 0.0f : numerator / denominator;
 	if (M.contacts.size() > 0.0f && j != 0.0f) {
@@ -156,11 +153,9 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 
 
 	/// Friction
-	float sf = sqrtf(A.staticFriction * A.staticFriction + B.staticFriction * B.staticFriction);
-	float df = sqrtf(A.dynamicFriction * A.dynamicFriction + B.dynamicFriction * B.dynamicFriction);
+	float sf = sqrtf(A.staticFriction * B.staticFriction);
+	float df = sqrtf(A.dynamicFriction * B.dynamicFriction);
 
-	//relativeVel = B.velocity - A.velocity;
-	relativeVel = (B.velocity + Cross(B.angVel, r2)) - (A.velocity + Cross(A.angVel, r1));
 	vec3 t = relativeVel - (relativeNorm * Dot(relativeVel, relativeNorm));
 	if (CMP(MagnitudeSq(t), 0.0f)) {
 		return;
