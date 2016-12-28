@@ -163,7 +163,7 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 	Normalize(t);
 
 	numerator = -Dot(relativeVel, t);
-	d1 = Dot(t, t) * (invMassSum);
+	d1 = invMassSum;
 	d2 = Cross(Cross(r1, t) * i1, r1);
 	d3 = Cross(Cross(r2, t) * i2, r2);
 	denominator = d1 + Dot(t, d2 + d3);
