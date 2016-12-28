@@ -38,15 +38,20 @@ void AngularVelocity::ResetDemo() {
 
 	bodies[0].type = RIGIDBODY_TYPE_BOX;
 	bodies[0].position = vec3(0, 3, 0);
+	bodies[0].debug = "Red";
 
 	bodies[1].type = RIGIDBODY_TYPE_BOX;
-	bodies[1].position = vec3(0, 6, 0);
+	bodies[1].position = vec3(1.5, 6, 0);
+	bodies[1].debug = "Blue";
 
 	groundBox = Rigidbody(RIGIDBODY_TYPE_BOX);
 	groundBox.box.size = vec3(15.0f, 0.15f, 15.0f);
 	groundBox.mass = 0.0f;
+	groundBox.SynchCollisionVolumes();
+	groundBox.debug = "Ground";
 
 	for (int i = 0; i < bodies.size(); ++i) {
+		bodies[i].SynchCollisionVolumes();
 		physicsSystem.AddRigidbody(&bodies[i]);
 	}
 	physicsSystem.AddRigidbody(&groundBox);

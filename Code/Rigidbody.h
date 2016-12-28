@@ -2,7 +2,9 @@
 #define _H_RIGIDBODY_
 
 #include <vector>
+#include <string>
 #include "Geometry3D.h"
+#include "Compare.h"
 
 #define RIGIDBODY_TYPE_BASE		0
 #define RIGIDBODY_TYPE_PARTICLE	1
@@ -24,6 +26,7 @@ public:
 	vec3 angVel;
 
 	//vec3 inertia;
+	std::string debug;
 
 	float mass;
 	float cor; // Coefficient of restitution
@@ -47,9 +50,9 @@ public:
 		float yTensor = 0.083f * mass*(width*width + depth*depth);
 		float zTensor = 0.083f * mass*(width*width + height*height);
 
-		xTensor = (xTensor == 0.0f) ? 0.0f : 1.0f / xTensor;
-		yTensor = (yTensor == 0.0f) ? 0.0f : 1.0f / yTensor;
-		zTensor = (zTensor == 0.0f) ? 0.0f : 1.0f / zTensor;
+		xTensor = CMP(xTensor, 0.0f) ? 0.0f : 1.0f / xTensor;
+		yTensor = CMP(yTensor, 0.0f) ? 0.0f : 1.0f / yTensor;
+		zTensor = CMP(zTensor, 0.0f) ? 0.0f : 1.0f / zTensor;
 
 		return vec3(xTensor, yTensor, zTensor);
 	}
@@ -59,6 +62,8 @@ public:
 		staticFriction(0.5f),
 		dynamicFriction(0.3f),
 		type(RIGIDBODY_TYPE_BASE) {
+		angVel = vec3();
+		debug = "none";
 	}
 
 	inline Rigidbody(int bodyType) :
@@ -66,6 +71,8 @@ public:
 		staticFriction(0.5f),
 		dynamicFriction(0.3f),
 		type(bodyType) {
+		angVel = vec3();
+		debug = "none";
 	}
 
 	virtual ~Rigidbody() { }
