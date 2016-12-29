@@ -2465,7 +2465,10 @@ CollisionManifold FindCollisionFeatures(const OBB& A, const OBB& B) {
 	bool shouldFlip;
 
 	for (int i = 0; i < 15; ++i) {
-		if (CMP(MagnitudeSq(test[i]), 0)) {
+		if (test[i].x < 0.000001f) test[i].x = 0.0f;
+		if (test[i].y < 0.000001f) test[i].y = 0.0f;
+		if (test[i].z < 0.000001f) test[i].z = 0.0f;
+		if (MagnitudeSq(test[i])< 0.001f) {
 			continue;
 		}
 

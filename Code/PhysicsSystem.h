@@ -15,6 +15,7 @@ public:
 	float LinearProjectionPercent; // [0.2 to 0.8], Smaller = less jitter / more penetration
 	float PenetrationSlack; // [0.01 to 0.1],  Samller = more accurate
 	int ImpulseIteration;
+	bool DebugRender;
 
 	bool RenderRandomColors;
 

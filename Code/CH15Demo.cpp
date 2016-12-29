@@ -32,15 +32,15 @@ void CH15Demo::ResetDemo() {
 	physicsSystem.ClearConstraints();
 
 	bodies.clear();
-	bodies.resize(3);
+	bodies.resize(2);
 
 	bodies[0].type = RIGIDBODY_TYPE_BOX;
 	bodies[0].position = vec3(0.5f, 6, 0);
 	bodies[0].orientation = vec3(0.0f, 0.0f, 0.4f);
-	bodies[0].mass = 5.0f;
 
-	bodies[2].type = RIGIDBODY_TYPE_BOX;
-	bodies[2].position = vec3(0, 1, 0);
+	bodies[1].type = RIGIDBODY_TYPE_BOX;
+	bodies[1].position = vec3(0, 1, 0);
+	bodies[1].mass = 5.0f;
 
 	groundBox = Rigidbody(RIGIDBODY_TYPE_BOX);
 	groundBox.position = vec3(0, -0.5f, 0) * vec3(1, 0.5f, 1);
@@ -69,6 +69,11 @@ void CH15Demo::ImGUI() {
 	if (ImGui::Button("Reset")) {
 		ResetDemo();
 	}
+	ImGui::SameLine();
+	ImGui::Checkbox("Debug Render", &physicsSystem.DebugRender);
+	ImGui::SameLine();
+	ImGui::PushItemWidth(70);
+	ImGui::SliderInt("Impulse Iteration", &physicsSystem.ImpulseIteration, 1, 20);
 
 	ImGui::End();
 }

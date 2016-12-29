@@ -7,6 +7,7 @@ PhysicsSystem::PhysicsSystem() : RenderRandomColors(false) {
 	LinearProjectionPercent = 0.45f;
 	PenetrationSlack = 0.01f;
 	ImpulseIteration = 5;
+	DebugRender = false;
 
 	colliders1.reserve(100);
 	colliders2.reserve(100);
@@ -21,7 +22,7 @@ void PhysicsSystem::Update(float deltaTime) {
 	{ // Find objects whom are colliding
 	  // First, build a list of colliding objects
 		for (int i = 0, size = bodies.size(); i < size; ++i) {
-			for (int j = 0; j < size; ++j) {
+			for (int j = i; j < size; ++j) {
 				if (i == j) {
 					continue;
 				}
@@ -110,7 +111,9 @@ void PhysicsSystem::Update(float deltaTime) {
 }
 
 void PhysicsSystem::Render() {
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	if (DebugRender) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
 	static const float rigidbodyDiffuse[]{ 200.0f / 255.0f, 0.0f, 0.0f, 0.0f };
 	static const float rigidbodyAmbient[]{ 200.0f / 255.0f, 50.0f / 255.0f, 50.0f / 255.0f, 0.0f };
 
@@ -146,7 +149,13 @@ void PhysicsSystem::Render() {
 			glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse[d_i]);
 			glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 		}
-		bodies[i]->Render();
+		if (DebugRender && bodies[i]->type == RIGIDBODY_TYPE_BOX) {
+			bodies[i]->SynchCollisionVolumes();
+			::Render(GetEdges(bodies[i]->box));
+		}
+		else {
+			bodies[i]->Render();
+		}
 	}
 
 	// First constraint is usually the ground
@@ -167,18 +176,20 @@ void PhysicsSystem::Render() {
 	for (int i = 1, size = constraints.size(); i < size; ++i) {
 		::Render(constraints[i]);
 	}
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	if (DebugRender) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	/*GLboolean status;
-	glGetBooleanv(GL_LIGHTING, &status);
+		GLboolean status;
+		glGetBooleanv(GL_LIGHTING, &status);
 
-	glDisable(GL_LIGHTING);
-	for (int i = 0; i < results.size(); ++i) {
-		::Render(results[i]);
+		glDisable(GL_LIGHTING);
+		for (int i = 0; i < results.size(); ++i) {
+			::Render(results[i]);
+		}
+		if (status) {
+			glEnable(GL_LIGHTING);
+		}
 	}
-	if (status) {
-		glEnable(GL_LIGHTING);
-	}*/
 }
 
 void PhysicsSystem::AddRigidbody(Rigidbody* body) {
