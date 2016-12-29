@@ -2511,6 +2511,10 @@ CollisionManifold FindCollisionFeatures(const OBB& A, const OBB& B) {
 				break;
 			}
 		}
+
+		/*if (!PointInOBB(result.contacts[i], B) && !PointInOBB(result.contacts[i], A)) {
+			result.contacts.erase(result.contacts.begin() + i);
+		}*/
 	}
 
 	result.colliding = true;
