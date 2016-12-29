@@ -6,6 +6,8 @@
 #include "Geometry3D.h"
 #include "Compare.h"
 
+#define LINEAR_ONLY
+
 #define RIGIDBODY_TYPE_BASE		0
 #define RIGIDBODY_TYPE_PARTICLE	1
 #define RIGIDBODY_TYPE_SPHERE	2
@@ -18,8 +20,10 @@ public:
 	vec3 position;
 	vec3 velocity;
 
+#ifndef LINEAR_ONLY
 	vec3 orientation;
 	vec3 angVel;
+#endif
 
 	vec3 forces; // sumForces
 	vec3 torques; // Sum torques
@@ -62,7 +66,9 @@ public:
 	void SynchCollisionVolumes();
 
 	virtual void AddLinearImpulse(const vec3& impulse);
+#ifndef LINEAR_ONLY
 	virtual void AddRotationalImpulse(const vec3& point, const vec3& impulse);
+#endif
 	inline virtual void SolveConstraints(const std::vector<OBB>& constraints) { }
 };
 

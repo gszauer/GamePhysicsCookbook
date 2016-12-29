@@ -6,6 +6,7 @@ void Rigidbody::ApplyForces() {
 	forces = GRAVITY_CONST * mass;
 }
 
+#ifndef LINEAR_ONLY
 void  Rigidbody::AddRotationalImpulse(const vec3& point, const vec3& impulse) {
 	vec3 centerOfMass = position;
 	vec3 torque = Cross(point - centerOfMass, impulse);
@@ -20,6 +21,7 @@ void  Rigidbody::AddRotationalImpulse(const vec3& point, const vec3& impulse) {
 	vec3 angAccel = MultiplyVector(torque, InvTensor());
 	angVel = angVel + angAccel;
 }
+#endif
 
 void Rigidbody::AddLinearImpulse(const vec3& impulse) {
 	velocity = velocity + impulse;
@@ -35,11 +37,14 @@ float Rigidbody::InvMass() {
 void Rigidbody::SynchCollisionVolumes() {
 	sphere.position = position;
 	box.position = position;
+
+#ifndef LINEAR_ONLY
 	box.orientation = Rotation3x3(
 		RAD2DEG(orientation.x), 
 		RAD2DEG(orientation.y), 
 		RAD2DEG(orientation.z)
 	);
+#endif
 }
 
 void Rigidbody::Render() {
@@ -70,6 +75,7 @@ void Rigidbody::UpdateVelocity(float dt) {
 		velocity.z = 0.0f;
 	}
 
+#ifndef LINEAR_ONLY
 	if (type == RIGIDBODY_TYPE_BOX) {
 		vec3 angAccel = MultiplyVector(torques, InvTensor());
 		angVel = angVel + angAccel * dt;
@@ -85,6 +91,8 @@ void Rigidbody::UpdateVelocity(float dt) {
 			angVel.z = 0.0f;
 		}
 	}
+#endif
+
 	SynchCollisionVolumes();
 }
 
@@ -127,9 +135,12 @@ mat4 Rigidbody::InvTensor() {
 void Rigidbody::Update(float dt) {
 	position = position + velocity * dt;
 
+#ifndef LINEAR_ONLY
 	if (type == RIGIDBODY_TYPE_BOX) {
 		orientation = orientation + angVel * dt;
 	}
+#endif
+
 	SynchCollisionVolumes();
 }
 
@@ -169,13 +180,19 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 		return; // Both objects have infinate mass!
 	}
 
+#ifndef LINEAR_ONLY
 	vec3 r1 = M.contacts[c] - A.position;
 	vec3 r2 = M.contacts[c] - B.position;
+#endif
 	mat4 i1 = A.InvTensor();
 	mat4 i2 = B.InvTensor();
 
 	// Relative velocity
+#ifndef LINEAR_ONLY
 	vec3 relativeVel = (B.velocity + Cross(B.angVel, r2)) - (A.velocity + Cross(A.angVel, r1));
+#else
+	vec3 relativeVel = B.velocity - A.velocity;
+#endif
 	// Relative collision normal
 	vec3 relativeNorm = M.normal;
 	Normalize(relativeNorm);
@@ -189,9 +206,13 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 
 	float numerator = (-(1.0f + e) * Dot(relativeVel, relativeNorm));
 	float d1 = invMassSum;
+#ifndef LINEAR_ONLY
 	vec3 d2 = Cross(MultiplyVector(Cross(r1, relativeNorm), i1), r1);
 	vec3 d3 = Cross(MultiplyVector(Cross(r2, relativeNorm), i2), r2);
 	float denominator = d1 + Dot(relativeNorm, d2 + d3);
+#else
+	float denominator = d1;
+#endif
 
 	float j = (denominator == 0.0f) ? 0.0f : numerator / denominator;
 	if (M.contacts.size() > 0.0f && j != 0.0f) {
@@ -202,8 +223,10 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 	A.velocity = A.velocity - impulse *  invMass1;
 	B.velocity = B.velocity + impulse *  invMass2;
 
+#ifndef LINEAR_ONLY
 	A.angVel = A.angVel - MultiplyVector(Cross(r1, impulse), i1);
 	B.angVel = B.angVel + MultiplyVector(Cross(r2, impulse), i2);
+#endif
 
 	// Friction
 	float sf = sqrtf(A.staticFriction * B.staticFriction);
@@ -217,9 +240,13 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 
 	numerator = -Dot(relativeVel, t);
 	d1 = invMassSum;
+#ifndef LINEAR_ONLY
 	d2 = Cross(MultiplyVector(Cross(r1, t), i1), r1);
 	d3 = Cross(MultiplyVector(Cross(r2, t), i2), r2);
 	denominator = d1 + Dot(t, d2 + d3);
+#else
+	denominator = d1;
+#endif
 
 	float jt = (denominator == 0.0f) ? 0.0f : numerator / denominator;
 	if (M.contacts.size() > 0.0f && jt != 0.0f) {
@@ -241,6 +268,8 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 	A.velocity = A.velocity - tangentImpuse *  invMass1;
 	B.velocity = B.velocity + tangentImpuse *  invMass2;
 
+#ifndef LINEAR_ONLY
 	A.angVel = A.angVel - MultiplyVector(Cross(r1, tangentImpuse), i1);
 	B.angVel = B.angVel + MultiplyVector(Cross(r2, tangentImpuse), i2);
+#endif
 }

@@ -38,7 +38,9 @@ void CH15Demo::ResetDemo() {
 
 	bodies[0].type = RIGIDBODY_TYPE_BOX;
 	bodies[0].position = vec3(seesaw ? 5.0f : 0.5f, 6, 0);
+#ifndef LINEAR_ONLY
 	bodies[0].orientation = vec3(0.0f, 0.0f, 0.4f);
+#endif
 	if (seesaw) {
 		bodies[0].mass = 5.0f;
 	}
