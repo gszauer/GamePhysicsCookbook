@@ -10,8 +10,10 @@ void CH15Demo::Initialize(int width, int height) {
 
 	physicsSystem.RenderRandomColors = true;
 	physicsSystem.ImpulseIteration = 8;
+	physicsSystem.DoLinearProjection = true;
 	seesaw = false;
 	size_imgui_window = true;
+
 
 	glPointSize(5.0f);
 	glEnable(GL_LIGHTING);
@@ -98,6 +100,8 @@ void CH15Demo::ImGUI() {
 	ImGui::SameLine();
 	ImGui::PushItemWidth(70);
 	ImGui::SliderInt("Impulse Iteration", &physicsSystem.ImpulseIteration, 1, 20);
+	
+	ImGui::Checkbox("Do Linear Projection", &physicsSystem.DoLinearProjection);
 
 	ImGui::End();
 }
