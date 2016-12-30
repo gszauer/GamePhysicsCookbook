@@ -183,9 +183,9 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 #ifndef LINEAR_ONLY
 	vec3 r1 = M.contacts[c] - A.position;
 	vec3 r2 = M.contacts[c] - B.position;
-#endif
 	mat4 i1 = A.InvTensor();
 	mat4 i2 = B.InvTensor();
+#endif
 
 	// Relative velocity
 #ifndef LINEAR_ONLY

@@ -3,12 +3,14 @@
 #include "glad/glad.h"
 #include <iostream>
 
-PhysicsSystem::PhysicsSystem() : RenderRandomColors(false) {
+PhysicsSystem::PhysicsSystem() {
 	LinearProjectionPercent = 0.45f;
 	PenetrationSlack = 0.01f;
 	ImpulseIteration = 5;
+
 	DebugRender = false;
 	DoLinearProjection = true;
+	RenderRandomColors = false;
 
 	colliders1.reserve(100);
 	colliders2.reserve(100);

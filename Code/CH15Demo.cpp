@@ -11,7 +11,7 @@ void CH15Demo::Initialize(int width, int height) {
 	physicsSystem.RenderRandomColors = true;
 	physicsSystem.ImpulseIteration = 8;
 	physicsSystem.DoLinearProjection = true;
-	seesaw = false;
+	seesaw = false; // Can't seesaw because of manifest
 	size_imgui_window = true;
 
 
@@ -82,28 +82,29 @@ void CH15Demo::ImGUI() {
 
 	ImGui::Begin("Chapter 15 Demo", 0, ImGuiWindowFlags_NoResize);
 
-	bool wasSaw = seesaw;
+	/*bool wasSaw = seesaw;
 	ImGui::Checkbox("Seesaw", &seesaw);
-	ImGui::SameLine();
-	ImGui::PushItemWidth(70);
+	ImGui::SameLine();*/
+	ImGui::PushItemWidth(55);
 	ImGui::SliderFloat("Porjection", &physicsSystem.LinearProjectionPercent, 0.2f, 0.8f);
 	ImGui::SameLine();
-	ImGui::PushItemWidth(70);
+	ImGui::PushItemWidth(55);
 	ImGui::SliderFloat("Slop", &physicsSystem.PenetrationSlack, 0.01f, 0.1f);
+	ImGui::SameLine();
+	ImGui::PushItemWidth(55);
+	ImGui::SliderInt("Iteration", &physicsSystem.ImpulseIteration, 1, 20);
 
-	if (wasSaw != seesaw) {
+
+	/*if (wasSaw != seesaw) {
 		ResetDemo();
-	}
+	}*/
 	if (ImGui::Button("Reset")) {
 		ResetDemo();
 	}
 	ImGui::SameLine();
 	ImGui::Checkbox("Debug Render", &physicsSystem.DebugRender);
 	ImGui::SameLine();
-	ImGui::PushItemWidth(70);
-	ImGui::SliderInt("Impulse Iteration", &physicsSystem.ImpulseIteration, 1, 20);
-	
-	ImGui::Checkbox("Do Linear Projection", &physicsSystem.DoLinearProjection);
+	ImGui::Checkbox("Linear Projection", &physicsSystem.DoLinearProjection);
 
 	ImGui::End();
 }
