@@ -6,7 +6,8 @@
 #include "Geometry3D.h"
 #include "Compare.h"
 
-#define LINEAR_ONLY
+//#define LINEAR_ONLY
+//#define DYNAMIC_FRICTION
 
 #define RIGIDBODY_TYPE_BASE		0
 #define RIGIDBODY_TYPE_PARTICLE	1
@@ -31,8 +32,12 @@ public:
 	//vec3 inertia;
 	float mass;
 	float cor; // Coefficient of restitution
+#ifdef DYNAMIC_FRICTION
 	float staticFriction;
 	float dynamicFriction;
+#else
+	float friction;
+#endif
 
 	int type;
 	OBB box;
@@ -41,15 +46,23 @@ public:
 
 	inline Rigidbody() :
 		cor(0.5f), mass(1.0f),
+#ifdef DYNAMIC_FRICTION
 		staticFriction(0.5f),
 		dynamicFriction(0.3f),
+#else
+		friction(0.6f),
+#endif
 		type(RIGIDBODY_TYPE_BASE) {
 	}
 
 	inline Rigidbody(int bodyType) :
 		cor(0.5f), mass(1.0f),
+#ifdef DYNAMIC_FRICTION
 		staticFriction(0.5f),
 		dynamicFriction(0.3f),
+#else
+		friction(0.6f),
+#endif
 		type(bodyType) {
 	}
 

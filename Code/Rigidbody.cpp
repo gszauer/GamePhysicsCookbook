@@ -59,7 +59,7 @@ void Rigidbody::Render() {
 }
 
 void Rigidbody::UpdateVelocity(float dt) {
-	const float damping = 0.99f;
+	const float damping = 0.98f;
 
 	vec3 acceleration = forces * InvMass();
 	velocity = velocity + acceleration * dt;
@@ -229,9 +229,6 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 #endif
 
 	// Friction
-	float sf = sqrtf(A.staticFriction * B.staticFriction);
-	float df = sqrtf(A.dynamicFriction * B.dynamicFriction);
-
 	vec3 t = relativeVel - (relativeNorm * Dot(relativeVel, relativeNorm));
 	if (CMP(MagnitudeSq(t), 0.0f)) {
 		return;
@@ -258,12 +255,25 @@ void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c)
 	}
 
 	vec3 tangentImpuse;
+#ifdef DYNAMIC_FRICTION
+	float sf = sqrtf(A.staticFriction * B.staticFriction);
+	float df = sqrtf(A.dynamicFriction * B.dynamicFriction);
 	if (fabsf(jt) < j * sf) {
 		tangentImpuse = t * jt;
 	}
 	else {
 		tangentImpuse = t * -j * df;
 	}
+#else
+	float friction = sqrtf(A.friction * B.friction);
+	if (jt > j * friction) {
+		jt = j * friction;
+	}
+	else if (jt < -j * friction) {
+		jt = -j * friction;
+	}
+	tangentImpuse = t * jt;
+#endif
 
 	A.velocity = A.velocity - tangentImpuse *  invMass1;
 	B.velocity = B.velocity + tangentImpuse *  invMass2;
