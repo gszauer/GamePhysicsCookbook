@@ -96,6 +96,7 @@ void Rigidbody::UpdateVelocity(float dt) {
 	SynchCollisionVolumes();
 }
 
+#ifndef LINEAR_ONLY
 mat4 Rigidbody::InvTensor() {
 	float ix = 0.0f;
 	float iy = 0.0f;
@@ -128,6 +129,7 @@ mat4 Rigidbody::InvTensor() {
 		0, 0, iz, 0,
 		0, 0, 0, 1));
 }
+#endif
 
 void Rigidbody::Update(float dt) {
 	position = position + velocity * dt;

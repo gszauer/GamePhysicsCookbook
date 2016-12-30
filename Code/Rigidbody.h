@@ -27,7 +27,9 @@ public:
 #endif
 
 	vec3 forces; // sumForces
+#ifndef LINEAR_ONLY
 	vec3 torques; // Sum torques
+#endif
 
 	//vec3 inertia;
 	float mass;
@@ -73,7 +75,9 @@ public:
 	virtual void Update(float dt); // Update Position
 
 	float InvMass();
+#ifndef LINEAR_ONLY
 	mat4 InvTensor();
+#endif
 
 	virtual void ApplyForces();
 	void SynchCollisionVolumes();
