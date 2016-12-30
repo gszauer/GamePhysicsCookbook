@@ -31,11 +31,8 @@ void PhysicsSystem::Update(float deltaTime) {
 				}
 				CollisionManifold result = FindCollisionFeatures(*bodies[i], *bodies[j]);
 				if (result.colliding) {
+#if 0 
 					bool isDuplicate = false;
-
-					// Duplicate detection code was left out of the book
-					// Mostly a matter of space and performance!
-#if 0
 					for (int k = 0, kSize = colliders1.size(); k < kSize; ++k) {
 						if (colliders1[k] == bodies[i] || colliders1[k] == bodies[j]) {
 							if (colliders2[k] == bodies[i] || colliders2[k] == bodies[j]) {
@@ -55,9 +52,10 @@ void PhysicsSystem::Update(float deltaTime) {
 							}
 						}
 					}
+					if (!isDuplicate)
 #endif
 
-					if (!isDuplicate) {
+					{
 						colliders1.push_back(bodies[i]);
 						colliders2.push_back(bodies[j]);
 						results.push_back(result);
