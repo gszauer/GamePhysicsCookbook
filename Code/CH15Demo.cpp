@@ -11,7 +11,6 @@ void CH15Demo::Initialize(int width, int height) {
 	physicsSystem.RenderRandomColors = true;
 	physicsSystem.ImpulseIteration = 8;
 	physicsSystem.DoLinearProjection = true;
-	seesaw = false; // Can't seesaw because of manifest
 	size_imgui_window = true;
 
 
@@ -34,29 +33,17 @@ void CH15Demo::ResetDemo() {
 	physicsSystem.ClearConstraints();
 
 	bodies.clear();
-	bodies.resize(seesaw? 3 : 2);
+	bodies.resize(2);
 
 	bodies[0].type = RIGIDBODY_TYPE_BOX;
-	bodies[0].position = vec3(seesaw ? 5.0f : 0.5f, 6, 0);
+	bodies[0].position = vec3(0.5f, 6, 0);
 #ifndef LINEAR_ONLY
 	bodies[0].orientation = vec3(0.0f, 0.0f, 0.4f);
 #endif
-	if (seesaw) {
-		bodies[0].mass = 5.0f;
-	}
 
 	bodies[1].type = RIGIDBODY_TYPE_BOX;
 	bodies[1].position = vec3(0, 1, 0);
-	if (!seesaw) {
-		bodies[1].mass = 5.0f;
-	}
-
-	if (seesaw) {
-		bodies[2].type = RIGIDBODY_TYPE_BOX;
-		bodies[2].position = vec3(0, 3, 0);
-		bodies[2].box.size = vec3(5, 0.3f, 1);
-		bodies[2].cor = 0.0f;
-	}
+	bodies[1].mass = 5.0f;
 
 	groundBox = Rigidbody(RIGIDBODY_TYPE_BOX);
 	groundBox.position = vec3(0, -0.5f, 0) * vec3(1, 0.5f, 1);
@@ -82,9 +69,6 @@ void CH15Demo::ImGUI() {
 
 	ImGui::Begin("Chapter 15 Demo", 0, ImGuiWindowFlags_NoResize);
 
-	/*bool wasSaw = seesaw;
-	ImGui::Checkbox("Seesaw", &seesaw);
-	ImGui::SameLine();*/
 	ImGui::PushItemWidth(55);
 	ImGui::SliderFloat("Porjection", &physicsSystem.LinearProjectionPercent, 0.2f, 0.8f);
 	ImGui::SameLine();
@@ -94,10 +78,6 @@ void CH15Demo::ImGUI() {
 	ImGui::PushItemWidth(55);
 	ImGui::SliderInt("Iteration", &physicsSystem.ImpulseIteration, 1, 20);
 
-
-	/*if (wasSaw != seesaw) {
-		ResetDemo();
-	}*/
 	if (ImGui::Button("Reset")) {
 		ResetDemo();
 	}

@@ -11,8 +11,6 @@ protected:
 	std::vector<Rigidbody> bodies;
 	Rigidbody groundBox;
 
-	bool seesaw;
-
 	bool size_imgui_window;
 protected:
 	void ResetDemo();
