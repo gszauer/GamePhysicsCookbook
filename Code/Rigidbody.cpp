@@ -97,39 +97,36 @@ void Rigidbody::UpdateVelocity(float dt) {
 }
 
 mat4 Rigidbody::InvTensor() {
-	if (mass == 0.0f) {
-		return mat4(
-			0, 0, 0, 0,
-			0, 0, 0, 0,
-			0, 0, 0, 0,
-			0, 0, 0, 0
-		);
+	float ix = 0.0f;
+	float iy = 0.0f;
+	float iz = 0.0f;
+
+	if (mass != 0 && type == RIGIDBODY_TYPE_SPHERE) {
+		float r2 = sphere.radius * sphere.radius;
+		float fraction = (2.0f / 5.0f);
+
+		float ix = r2 * mass * fraction;
+		float iy = r2 * mass * fraction;
+		float iz = r2 * mass * fraction;
 	}
-	SynchCollisionVolumes();
+	else if (mass != 0 && type == RIGIDBODY_TYPE_BOX) {
+		vec3 size = box.size * 2.0f;
+		float fraction = (1.0f / 3.0f);
 
-	// TODO: SPHERE: http://scienceworld.wolfram.com/physics/MomentofInertiaSphere.html
+		float x2 = size.x * size.x;
+		float y2 = size.y * size.y;
+		float z2 = size.z * size.z;
 
-	mat4 matR = FromMat3(box.orientation);
-	mat4 matT = Translation(box.position);
-	mat4 m_matWorld = matR * matT;
-	vec3 size = box.size * 2.0f;
+		float ix = (y2 + z2) * mass * fraction;
+		float iy = (x2 + z2) * mass * fraction;
+		float iz = (x2 + y2) * mass * fraction;
+	}
 
-	float x2 = (size.x * size.x);
-	float y2 = (size.y * size.y);
-	float z2 = (size.z * size.z);
-	float ix = (y2 + z2) * mass / 12.0f;
-	float iy = (x2 + z2) * mass / 12.0f;
-	float iz = (x2 + y2) * mass / 12.0f;
-
-	mat4 m_boxInertia = mat4(
+	return Inverse(mat4(
 		ix, 0, 0, 0,
 		0, iy, 0, 0,
 		0, 0, iz, 0,
-		0, 0, 0, 1);
-
-
-	mat4 m_invInertia = Inverse(matR) * Inverse(m_boxInertia) * matR;
-	return m_invInertia;
+		0, 0, 0, 1));
 }
 
 void Rigidbody::Update(float dt) {

@@ -13,7 +13,6 @@ void CH15Demo::Initialize(int width, int height) {
 	physicsSystem.DoLinearProjection = true;
 	size_imgui_window = true;
 
-
 	glPointSize(5.0f);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
