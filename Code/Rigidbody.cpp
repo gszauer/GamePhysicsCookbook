@@ -112,7 +112,7 @@ mat4 Rigidbody::InvTensor() {
 	}
 	else if (mass != 0 && type == RIGIDBODY_TYPE_BOX) {
 		vec3 size = box.size * 2.0f;
-		float fraction = (1.0f / 3.0f);
+		float fraction = (1.0f / 12.0f);
 
 		float x2 = size.x * size.x;
 		float y2 = size.y * size.y;
