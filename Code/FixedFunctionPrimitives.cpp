@@ -38,6 +38,48 @@ void Render(const Model& model) {
 	glPopMatrix();
 }
 
+void Render(const CollisionManifold& manifold) {
+	if (!manifold.colliding) {
+		return;
+	}
+
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glBegin(GL_POINTS);
+	for (int i = 0; i < manifold.contacts.size(); ++i) {
+		glVertex3f(manifold.contacts[i].x, manifold.contacts[i].y, manifold.contacts[i].z);
+	}
+	glEnd();
+
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glBegin(GL_LINES);
+	vec3 center = vec3();
+	for (int i = 0; i < manifold.contacts.size(); ++i) {
+		vec3 start = manifold.contacts[i];
+		vec3 end = start + manifold.normal * manifold.depth;
+		center = center + start;
+
+		glVertex3fv(start.asArray);
+		glVertex3fv(end.asArray);
+	}
+	glEnd();
+
+	if (manifold.contacts.size() == 0) {
+		return;
+	}
+	float denom = 1.0f / (float)manifold.contacts.size();
+	center = center * denom;
+
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glBegin(GL_LINES);
+	vec3 start = center;
+	vec3 end = center + manifold.normal;
+
+	glVertex3fv(start.asArray);
+	glVertex3fv(end.asArray);
+	glEnd();
+
+}
+
 void RenderNormals(const Frustum& frustum) {
 	vec3 NTL = Intersection(frustum._near, frustum.top, frustum.left);
 	vec3 NTR = Intersection(frustum._near, frustum.top, frustum.right);

@@ -3,10 +3,14 @@
 #include "glad/glad.h"
 #include <iostream>
 
-PhysicsSystem::PhysicsSystem() : RenderRandomColors(false) {
+PhysicsSystem::PhysicsSystem() {
 	LinearProjectionPercent = 0.45f;
 	PenetrationSlack = 0.01f;
 	ImpulseIteration = 5;
+
+	DebugRender = false;
+	DoLinearProjection = true;
+	RenderRandomColors = false;
 
 	colliders1.reserve(100);
 	colliders2.reserve(100);
@@ -21,17 +25,14 @@ void PhysicsSystem::Update(float deltaTime) {
 	{ // Find objects whom are colliding
 	  // First, build a list of colliding objects
 		for (int i = 0, size = bodies.size(); i < size; ++i) {
-			for (int j = 0; j < size; ++j) {
+			for (int j = i; j < size; ++j) {
 				if (i == j) {
 					continue;
 				}
 				CollisionManifold result = FindCollisionFeatures(*bodies[i], *bodies[j]);
 				if (result.colliding) {
+#if 0 
 					bool isDuplicate = false;
-
-					// Duplicate detection code was left out of the book
-					// Mostly a matter of space and performance!
-#if 0
 					for (int k = 0, kSize = colliders1.size(); k < kSize; ++k) {
 						if (colliders1[k] == bodies[i] || colliders1[k] == bodies[j]) {
 							if (colliders2[k] == bodies[i] || colliders2[k] == bodies[j]) {
@@ -51,9 +52,10 @@ void PhysicsSystem::Update(float deltaTime) {
 							}
 						}
 					}
+					if (!isDuplicate)
 #endif
 
-					if (!isDuplicate) {
+					{
 						colliders1.push_back(bodies[i]);
 						colliders2.push_back(bodies[j]);
 						results.push_back(result);
@@ -68,30 +70,41 @@ void PhysicsSystem::Update(float deltaTime) {
 		bodies[i]->ApplyForces();
 	}
 
+	// Update object velocities
+	for (int i = 0, size = bodies.size(); i < size; ++i) {
+		bodies[i]->UpdateVelocity(deltaTime);
+	}
+
 	// Apply impulses to resolve collisions
 	for (int k = 0; k < ImpulseIteration; ++k) { // Apply impulses
 		for (int i = 0, size = results.size(); i < size; ++i) {
 			for (int j = 0, jSize = results[i].contacts.size(); j < jSize; ++j) {
-				ApplyImpulse(*colliders1[i] , *colliders2[i], results[i]);
+				ApplyImpulse(*colliders1[i] , *colliders2[i], results[i], j);
 			}
 		}
-	}
-
-	// Correct position to avoid sinking!
-	for (int i = 0, size = results.size(); i < size; ++i) {
-		float totalMass = colliders1[i]->InvMass() + colliders2[i]->InvMass();
-
-		float depth = fmaxf(results[i].depth - PenetrationSlack, 0.0f);
-		float scalar = (totalMass == 0.0f) ? 0.0f : depth / totalMass;
-		vec3 correction = results[i].normal * (scalar * LinearProjectionPercent);
-
-		colliders1[i]->position = colliders1[i]->position - correction * colliders1[i]->InvMass();
-		colliders2[i]->position = colliders2[i]->position + correction * colliders2[i]->InvMass();
 	}
 
 	// Update object positions
 	for (int i = 0, size = bodies.size(); i < size; ++i) {
 		bodies[i]->Update(deltaTime);
+	}
+
+	// Correct position to avoid sinking!
+	if (DoLinearProjection) {
+		for (int i = 0, size = results.size(); i < size; ++i) {
+			float totalMass = colliders1[i]->InvMass() + colliders2[i]->InvMass();
+
+			if (totalMass == 0.0f) {
+				continue;
+			}
+
+			float depth = fmaxf(results[i].depth - PenetrationSlack, 0.0f);
+			float scalar = (totalMass == 0.0f) ? 0.0f : depth / totalMass;
+			vec3 correction = results[i].normal * scalar * LinearProjectionPercent;
+
+			colliders1[i]->position = colliders1[i]->position - correction * colliders1[i]->InvMass();
+			colliders2[i]->position = colliders2[i]->position + correction * colliders2[i]->InvMass();
+		}
 	}
 
 	// Solve constraints
@@ -101,6 +114,9 @@ void PhysicsSystem::Update(float deltaTime) {
 }
 
 void PhysicsSystem::Render() {
+	if (DebugRender) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
 	static const float rigidbodyDiffuse[]{ 200.0f / 255.0f, 0.0f, 0.0f, 0.0f };
 	static const float rigidbodyAmbient[]{ 200.0f / 255.0f, 50.0f / 255.0f, 50.0f / 255.0f, 0.0f };
 
@@ -136,7 +152,13 @@ void PhysicsSystem::Render() {
 			glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse[d_i]);
 			glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 		}
-		bodies[i]->Render();
+		if (DebugRender && bodies[i]->type == RIGIDBODY_TYPE_BOX) {
+			bodies[i]->SynchCollisionVolumes();
+			::Render(GetEdges(bodies[i]->box));
+		}
+		else {
+			bodies[i]->Render();
+		}
 	}
 
 	// First constraint is usually the ground
@@ -156,6 +178,20 @@ void PhysicsSystem::Render() {
 	glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 	for (int i = 1, size = constraints.size(); i < size; ++i) {
 		::Render(constraints[i]);
+	}
+	if (DebugRender) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		GLboolean status;
+		glGetBooleanv(GL_LIGHTING, &status);
+
+		glDisable(GL_LIGHTING);
+		for (int i = 0; i < results.size(); ++i) {
+			::Render(results[i]);
+		}
+		if (status) {
+			glEnable(GL_LIGHTING);
+		}
 	}
 }
 

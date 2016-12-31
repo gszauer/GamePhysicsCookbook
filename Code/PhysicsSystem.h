@@ -16,6 +16,9 @@ public:
 	float PenetrationSlack; // [0.01 to 0.1],  Samller = more accurate
 	int ImpulseIteration;
 
+	// Not in book, just for debug purposes
+	bool DebugRender;
+	bool DoLinearProjection;
 	bool RenderRandomColors;
 
 	PhysicsSystem();
