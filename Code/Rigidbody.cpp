@@ -98,17 +98,27 @@ void Rigidbody::UpdateVelocity(float dt) {
 
 #ifndef LINEAR_ONLY
 mat4 Rigidbody::InvTensor() {
+	if (mass == 0) {
+		return mat4(
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			0, 0, 0, 0
+		);
+	}
 	float ix = 0.0f;
 	float iy = 0.0f;
 	float iz = 0.0f;
+	float iw = 0.0f;
 
 	if (mass != 0 && type == RIGIDBODY_TYPE_SPHERE) {
 		float r2 = sphere.radius * sphere.radius;
 		float fraction = (2.0f / 5.0f);
 
-		float ix = r2 * mass * fraction;
-		float iy = r2 * mass * fraction;
-		float iz = r2 * mass * fraction;
+		ix = r2 * mass * fraction;
+		iy = r2 * mass * fraction;
+		iz = r2 * mass * fraction;
+		iw = 1.0f;
 	}
 	else if (mass != 0 && type == RIGIDBODY_TYPE_BOX) {
 		vec3 size = box.size * 2.0f;
@@ -118,16 +128,17 @@ mat4 Rigidbody::InvTensor() {
 		float y2 = size.y * size.y;
 		float z2 = size.z * size.z;
 
-		float ix = (y2 + z2) * mass * fraction;
-		float iy = (x2 + z2) * mass * fraction;
-		float iz = (x2 + y2) * mass * fraction;
+		ix = (y2 + z2) * mass * fraction;
+		iy = (x2 + z2) * mass * fraction;
+		iz = (x2 + y2) * mass * fraction;
+		iw = 1.0f;
 	}
 
 	return Inverse(mat4(
 		ix, 0, 0, 0,
 		0, iy, 0, 0,
 		0, 0, iz, 0,
-		0, 0, 0, 1));
+		0, 0, 0, iw));
 }
 #endif
 
