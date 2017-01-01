@@ -2147,7 +2147,7 @@ bool ClipToPlane(const Plane& plane, const Line& line, Point* outPoint) {
 
 std::vector<Point> ClipEdgesToOBB(const std::vector<Line>& edges, const OBB& obb) {
 	std::vector<Point> result;
-	result.reserve(edges.size());
+	result.reserve(edges.size() * 3);
 	Point intersection;
 
 	std::vector<Plane>& planes = GetPlanes(obb);
