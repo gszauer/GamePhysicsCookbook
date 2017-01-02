@@ -51,44 +51,6 @@ void RigidbodyVolume::Render() {
 	}
 }
 
-void RigidbodyVolume::UpdateVelocity(float dt) {
-	const float damping = 0.98f;
-
-	vec3 acceleration = forces * InvMass();
-	velocity = velocity + acceleration * dt;
-	velocity = velocity * damping;
-
-	if (fabsf(velocity.x) < 0.001f) {
-		velocity.x = 0.0f;
-	}
-	if (fabsf(velocity.y) < 0.001f) {
-		velocity.y = 0.0f;
-	}
-	if (fabsf(velocity.z) < 0.001f) {
-		velocity.z = 0.0f;
-	}
-
-#ifndef LINEAR_ONLY
-	if (type == RIGIDBODY_TYPE_BOX) {
-		vec3 angAccel = MultiplyVector(torques, InvTensor());
-		angVel = angVel + angAccel * dt;
-		angVel = angVel *  damping;
-
-		if (fabsf(angVel.x) < 0.001f) {
-			angVel.x = 0.0f;
-		}
-		if (fabsf(angVel.y) < 0.001f) {
-			angVel.y = 0.0f;
-		}
-		if (fabsf(angVel.z) < 0.001f) {
-			angVel.z = 0.0f;
-		}
-	}
-#endif
-
-	SynchCollisionVolumes();
-}
-
 #ifndef LINEAR_ONLY
 mat4 RigidbodyVolume::InvTensor() {
 	if (mass == 0) {
@@ -136,6 +98,42 @@ mat4 RigidbodyVolume::InvTensor() {
 #endif
 
 void RigidbodyVolume::Update(float dt) {
+	// Integrate velocity
+	const float damping = 0.98f;
+
+	vec3 acceleration = forces * InvMass();
+	velocity = velocity + acceleration * dt;
+	velocity = velocity * damping;
+
+	if (fabsf(velocity.x) < 0.001f) {
+		velocity.x = 0.0f;
+	}
+	if (fabsf(velocity.y) < 0.001f) {
+		velocity.y = 0.0f;
+	}
+	if (fabsf(velocity.z) < 0.001f) {
+		velocity.z = 0.0f;
+	}
+
+#ifndef LINEAR_ONLY
+	if (type == RIGIDBODY_TYPE_BOX) {
+		vec3 angAccel = MultiplyVector(torques, InvTensor());
+		angVel = angVel + angAccel * dt;
+		angVel = angVel *  damping;
+
+		if (fabsf(angVel.x) < 0.001f) {
+			angVel.x = 0.0f;
+		}
+		if (fabsf(angVel.y) < 0.001f) {
+			angVel.y = 0.0f;
+		}
+		if (fabsf(angVel.z) < 0.001f) {
+			angVel.z = 0.0f;
+		}
+	}
+#endif
+
+	// Integrate position
 	position = position + velocity * dt;
 
 #ifndef LINEAR_ONLY

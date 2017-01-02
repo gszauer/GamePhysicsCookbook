@@ -18,7 +18,6 @@ public:
 	}
 	virtual inline ~Rigidbody() { }
 
-	virtual inline void UpdateVelocity(float dt) { }
 	virtual inline void Update(float deltaTime) { }
 	virtual inline void Render() { }
 	virtual inline void ApplyForces() { }

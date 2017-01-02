@@ -77,11 +77,6 @@ void PhysicsSystem::Update(float deltaTime) {
 		bodies[i]->ApplyForces();
 	}
 
-	// Update object velocities
-	for (int i = 0, size = bodies.size(); i < size; ++i) {
-		bodies[i]->UpdateVelocity(deltaTime);
-	}
-
 	// Apply impulses to resolve collisions
 	for (int k = 0; k < ImpulseIteration; ++k) { // Apply impulses
 		for (int i = 0, size = results.size(); i < size; ++i) {
@@ -95,7 +90,7 @@ void PhysicsSystem::Update(float deltaTime) {
 		}
 	}
 
-	// Update object positions
+	// Integrate velocity and impulse of objects
 	for (int i = 0, size = bodies.size(); i < size; ++i) {
 		bodies[i]->Update(deltaTime);
 	}
@@ -121,6 +116,9 @@ void PhysicsSystem::Update(float deltaTime) {
 
 			m1->position = m1->position - correction * m1->InvMass();
 			m2->position = m2->position + correction * m2->InvMass();
+
+			m1->SynchCollisionVolumes();
+			m2->SynchCollisionVolumes();
 		}
 	}
 

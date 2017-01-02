@@ -61,7 +61,6 @@ public:
 	virtual ~RigidbodyVolume() { }
 
 	virtual void Render();
-	virtual void UpdateVelocity(float dt);
 	virtual void Update(float dt); // Update Position
 
 	float InvMass();
