@@ -68,7 +68,7 @@ void DemoWindow::OnUpdate(float deltaTime) {
 	}
 	ImGui::SetNextWindowSize(ImVec2(370, (select_all)? 145 : 75));
 	ImGui::Begin("Physics Demo", 0, ImGuiWindowFlags_NoResize);
-	//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
 	if (select_all) {
 		const char* listbox_items[] = { "Raycast Demo", "Chapter 14", "Collision Features", "Linear Impulse", "Conservation Of Momentum", "Chapter 15" };
