@@ -4,12 +4,13 @@
 #include "DemoBase.h"
 #include "Geometry3D.h"
 #include "PhysicsSystem.h"
+#include "RigidbodyVolume.h"
 
 class CH15Demo : public DemoBase {
 protected:
 	PhysicsSystem physicsSystem;
-	std::vector<Rigidbody> bodies;
-	Rigidbody groundBox;
+	std::vector<RigidbodyVolume> bodies;
+	RigidbodyVolume groundBox;
 
 	bool size_imgui_window;
 protected:

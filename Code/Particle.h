@@ -15,10 +15,18 @@
 #define ACCURATE_EULER_INTEGRATION
 
 class Particle : public Rigidbody {
+	vec3 position;
 	vec3 oldPosition;
+	vec3 forces;
 
+	vec3 gravity;
 	float friction;
 	float bounce;
+
+#ifdef EULER_INTEGRATION
+	vec3 velocity;
+	float mass;
+#endif
 public:
 	Particle();
 

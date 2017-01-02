@@ -47,7 +47,7 @@ void ConservationOfMomentum::ResetDemo() {
 	Normalize(impulse);
 	bodies[4].AddLinearImpulse(impulse * 20.0f);
 
-	groundBox = Rigidbody(RIGIDBODY_TYPE_BOX);
+	groundBox = RigidbodyVolume(RIGIDBODY_TYPE_BOX);
 	groundBox.box.size = vec3(15.0f, 0.15f, 15.0f);
 	groundBox.mass = 0.0f;
 

@@ -44,7 +44,7 @@ void CH15Demo::ResetDemo() {
 	bodies[1].position = vec3(0, 1, 0);
 	bodies[1].mass = 5.0f;
 
-	groundBox = Rigidbody(RIGIDBODY_TYPE_BOX);
+	groundBox = RigidbodyVolume(RIGIDBODY_TYPE_BOX);
 	groundBox.position = vec3(0, -0.5f, 0) * vec3(1, 0.5f, 1);
 	groundBox.box.size = vec3(50, 1, 50) * 0.25f;
 	groundBox.mass = 0.0f;

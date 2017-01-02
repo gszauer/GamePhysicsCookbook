@@ -1,53 +1,46 @@
-#include "Rigidbody.h"
+#include "RigidbodyVolume.h"
 #include "Compare.h"
 #include "FixedFunctionPrimitives.h"
 
-void Rigidbody::ApplyForces() {
+void RigidbodyVolume::ApplyForces() {
 	forces = GRAVITY_CONST * mass;
 }
 
 #ifndef LINEAR_ONLY
-void  Rigidbody::AddRotationalImpulse(const vec3& point, const vec3& impulse) {
+void  RigidbodyVolume::AddRotationalImpulse(const vec3& point, const vec3& impulse) {
 	vec3 centerOfMass = position;
 	vec3 torque = Cross(point - centerOfMass, impulse);
-
-	/*vec3 inertia = TensorVector();
-	vec3 angAccel(
-		inertia.x == 0.0f ? 0.0f : torque.x / inertia.x,
-		inertia.y == 0.0f ? 0.0f : torque.y / inertia.y,
-		inertia.z == 0.0f ? 0.0f : torque.z / inertia.z
-	);*/
 
 	vec3 angAccel = MultiplyVector(torque, InvTensor());
 	angVel = angVel + angAccel;
 }
 #endif
 
-void Rigidbody::AddLinearImpulse(const vec3& impulse) {
+void RigidbodyVolume::AddLinearImpulse(const vec3& impulse) {
 	velocity = velocity + impulse;
 }
 
-float Rigidbody::InvMass() {
+float RigidbodyVolume::InvMass() {
 	if (mass == 0.0f) {
 		return 0.0f;
 	}
 	return 1.0f / mass;
 }
 
-void Rigidbody::SynchCollisionVolumes() {
+void RigidbodyVolume::SynchCollisionVolumes() {
 	sphere.position = position;
 	box.position = position;
 
 #ifndef LINEAR_ONLY
 	box.orientation = Rotation3x3(
-		RAD2DEG(orientation.x), 
-		RAD2DEG(orientation.y), 
+		RAD2DEG(orientation.x),
+		RAD2DEG(orientation.y),
 		RAD2DEG(orientation.z)
 	);
 #endif
 }
 
-void Rigidbody::Render() {
+void RigidbodyVolume::Render() {
 	SynchCollisionVolumes();
 
 	if (type == RIGIDBODY_TYPE_SPHERE) {
@@ -58,7 +51,7 @@ void Rigidbody::Render() {
 	}
 }
 
-void Rigidbody::UpdateVelocity(float dt) {
+void RigidbodyVolume::UpdateVelocity(float dt) {
 	const float damping = 0.98f;
 
 	vec3 acceleration = forces * InvMass();
@@ -97,7 +90,7 @@ void Rigidbody::UpdateVelocity(float dt) {
 }
 
 #ifndef LINEAR_ONLY
-mat4 Rigidbody::InvTensor() {
+mat4 RigidbodyVolume::InvTensor() {
 	if (mass == 0) {
 		return mat4(
 			0, 0, 0, 0,
@@ -142,7 +135,7 @@ mat4 Rigidbody::InvTensor() {
 }
 #endif
 
-void Rigidbody::Update(float dt) {
+void RigidbodyVolume::Update(float dt) {
 	position = position + velocity * dt;
 
 #ifndef LINEAR_ONLY
@@ -154,7 +147,7 @@ void Rigidbody::Update(float dt) {
 	SynchCollisionVolumes();
 }
 
-CollisionManifold FindCollisionFeatures(Rigidbody& ra, Rigidbody& rb) {
+CollisionManifold FindCollisionFeatures(RigidbodyVolume& ra, RigidbodyVolume& rb) {
 	CollisionManifold result;
 	ResetCollisionManifold(&result);
 
@@ -180,7 +173,7 @@ CollisionManifold FindCollisionFeatures(Rigidbody& ra, Rigidbody& rb) {
 	return result;
 }
 
-void ApplyImpulse(Rigidbody& A, Rigidbody& B, const CollisionManifold& M, int c) {
+void ApplyImpulse(RigidbodyVolume& A, RigidbodyVolume& B, const CollisionManifold& M, int c) {
 	// Linear impulse
 	float invMass1 = A.InvMass();
 	float invMass2 = B.InvMass();

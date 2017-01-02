@@ -2052,7 +2052,9 @@ void ResetCollisionManifold(CollisionManifold* result) {
 		result->colliding = false;
 		result->normal = vec3(0, 0, 1);
 		result->depth = FLT_MAX;
-		result->contacts.clear();
+		if (result->contacts.size() > 0) {
+			result->contacts.clear();
+		}
 	}
 }
 

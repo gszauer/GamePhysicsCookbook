@@ -3,9 +3,10 @@
 #include "FixedFunctionPrimitives.h"
 
 Particle::Particle() {
+	type = RIGIDBODY_TYPE_PARTICLE;
 	friction = 0.95f;
 	bounce = 0.7f;
-	type = RIGIDBODY_TYPE_PARTICLE;
+	gravity = vec3(0.0f, -9.82f, 0.0f);
 
 #ifdef EULER_INTEGRATION
 	mass = 1.0f;
@@ -15,8 +16,7 @@ Particle::Particle() {
 void Particle::Update(float deltaTime) {
 #ifdef EULER_INTEGRATION
 	oldPosition = position;
-	float invMass = (mass == 0.0f)? 0.0f : (1.0f / mass);
-	vec3 acceleration = forces * invMass;
+	vec3 acceleration = forces * (1.0f / mass);
 #ifdef ACCURATE_EULER_INTEGRATION
 	vec3 oldVelocity = velocity;
 	velocity = velocity * friction + acceleration * deltaTime;
@@ -26,7 +26,7 @@ void Particle::Update(float deltaTime) {
 	position = position + velocity * deltaTime;
 #endif
 #else
-	velocity = position - oldPosition;
+	vec3 velocity = position - oldPosition;
 	oldPosition = position;
 	float deltaSquare = deltaTime * deltaTime;
 	position = position + (velocity * friction + forces * deltaSquare);
@@ -39,7 +39,7 @@ void Particle::Render() {
 }
 
 void Particle::ApplyForces() {
-	forces = GRAVITY_CONST;
+	forces = gravity;
 }
 
 void Particle::SolveConstraints(const std::vector<OBB>& constraints) {
@@ -47,14 +47,14 @@ void Particle::SolveConstraints(const std::vector<OBB>& constraints) {
 	for (int i = 0; i < size; ++i) {
 		Line traveled(oldPosition, position);
 		if (Linetest(constraints[i], traveled)) {
-		//if (PointInOBB(position, constraints[i])) {
+			//if (PointInOBB(position, constraints[i])) {
 #ifndef EULER_INTEGRATION
-			velocity = position - oldPosition;
+			vec3 velocity = position - oldPosition;
 #endif
 			vec3 direction = Normalized(velocity);
 			Ray ray(oldPosition, direction);
 			RaycastResult result;
-			
+
 			if (Raycast(constraints[i], ray, &result)) {
 				// Place object just a little above collision result
 				position = result.point + result.normal * 0.003f;

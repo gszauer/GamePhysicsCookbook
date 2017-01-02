@@ -1,4 +1,5 @@
 #include "PhysicsSystem.h"
+#include "RigidbodyVolume.h"
 #include "FixedFunctionPrimitives.h"
 #include "glad/glad.h"
 #include <iostream>
@@ -24,12 +25,18 @@ void PhysicsSystem::Update(float deltaTime) {
 
 	{ // Find objects whom are colliding
 	  // First, build a list of colliding objects
+		CollisionManifold result;
 		for (int i = 0, size = bodies.size(); i < size; ++i) {
 			for (int j = i; j < size; ++j) {
 				if (i == j) {
 					continue;
 				}
-				CollisionManifold result = FindCollisionFeatures(*bodies[i], *bodies[j]);
+				ResetCollisionManifold(&result);
+				if (bodies[i]->HasVolume() && bodies[j]->HasVolume()) {
+					RigidbodyVolume* m1 = (RigidbodyVolume*)bodies[i];
+					RigidbodyVolume* m2 = (RigidbodyVolume*)bodies[j];
+					result = FindCollisionFeatures(*m1, *m2);
+				}
 				if (result.colliding) {
 #if 0 
 					bool isDuplicate = false;
@@ -79,7 +86,11 @@ void PhysicsSystem::Update(float deltaTime) {
 	for (int k = 0; k < ImpulseIteration; ++k) { // Apply impulses
 		for (int i = 0, size = results.size(); i < size; ++i) {
 			for (int j = 0, jSize = results[i].contacts.size(); j < jSize; ++j) {
-				ApplyImpulse(*colliders1[i] , *colliders2[i], results[i], j);
+				if (colliders1[i]->HasVolume() && colliders2[i]->HasVolume()) {
+					RigidbodyVolume* m1 = (RigidbodyVolume*)colliders1[i];
+					RigidbodyVolume* m2 = (RigidbodyVolume*)colliders2[i];
+					ApplyImpulse(*m1, *m2, results[i], j);
+				}
 			}
 		}
 	}
@@ -92,7 +103,13 @@ void PhysicsSystem::Update(float deltaTime) {
 	// Correct position to avoid sinking!
 	if (DoLinearProjection) {
 		for (int i = 0, size = results.size(); i < size; ++i) {
-			float totalMass = colliders1[i]->InvMass() + colliders2[i]->InvMass();
+			if (!colliders1[i]->HasVolume() && !colliders2[i]->HasVolume()) {
+				continue;
+			}
+
+			RigidbodyVolume* m1 = (RigidbodyVolume*)colliders1[i];
+			RigidbodyVolume* m2 = (RigidbodyVolume*)colliders2[i];
+			float totalMass = m1->InvMass() + m2->InvMass();
 
 			if (totalMass == 0.0f) {
 				continue;
@@ -102,8 +119,8 @@ void PhysicsSystem::Update(float deltaTime) {
 			float scalar = (totalMass == 0.0f) ? 0.0f : depth / totalMass;
 			vec3 correction = results[i].normal * scalar * LinearProjectionPercent;
 
-			colliders1[i]->position = colliders1[i]->position - correction * colliders1[i]->InvMass();
-			colliders2[i]->position = colliders2[i]->position + correction * colliders2[i]->InvMass();
+			m1->position = m1->position - correction * m1->InvMass();
+			m2->position = m2->position + correction * m2->InvMass();
 		}
 	}
 
@@ -153,8 +170,9 @@ void PhysicsSystem::Render() {
 			glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 		}
 		if (DebugRender && bodies[i]->type == RIGIDBODY_TYPE_BOX) {
-			bodies[i]->SynchCollisionVolumes();
-			::Render(GetEdges(bodies[i]->box));
+			RigidbodyVolume* mb = (RigidbodyVolume*)bodies[i];
+			mb->SynchCollisionVolumes();
+			::Render(GetEdges(mb->box));
 		}
 		else {
 			bodies[i]->Render();

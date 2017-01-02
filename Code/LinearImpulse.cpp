@@ -68,7 +68,7 @@ void LinearImpulse::ResetDemo() {
 		box1.position = vec3(0, 4, 0);
 	}
 
-	groundBox = Rigidbody(RIGIDBODY_TYPE_BOX);
+	groundBox = RigidbodyVolume(RIGIDBODY_TYPE_BOX);
 	groundBox.box.size = vec3(10.0f, 0.15f, 10.0f);
 	groundBox.mass = 0.0f;
 
