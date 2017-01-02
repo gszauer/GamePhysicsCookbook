@@ -1,8 +1,6 @@
 #ifndef _H_MASS_RIGIDBODY_
 #define _H_MASS_RIGIDBODY_
 
-#include <vector>
-#include <string>
 #include "Rigidbody.h"
 
 #define GRAVITY_CONST vec3(0.0f, -9.82f, 0.0f)
@@ -78,7 +76,6 @@ public:
 #ifndef LINEAR_ONLY
 	virtual void AddRotationalImpulse(const vec3& point, const vec3& impulse);
 #endif
-	inline virtual void SolveConstraints(const std::vector<OBB>& constraints) { }
 };
 
 CollisionManifold FindCollisionFeatures(RigidbodyVolume& ra, RigidbodyVolume& rb);
