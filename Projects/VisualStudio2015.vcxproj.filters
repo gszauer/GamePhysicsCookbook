@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Code\glad\glad.c">
+      <Filter>GLAD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\GLWindow.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\IWindow.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\main-win32.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\matrices.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\vectors.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Geometry2D.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FixedFunctionPrimitives.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Camera.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Geometry3D.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ObjLoader.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\QuadTree.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Scene.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\imgui\imgui_draw.cpp">
+      <Filter>IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\imgui\imgui.cpp">
+      <Filter>IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\imgui\imgui_implementation.cpp">
+      <Filter>IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\DemoWindow.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\DemoBase.cpp">
+      <Filter>Demos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CH14Demo.cpp">
+      <Filter>Demos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PhysicsSystem.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Particle.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\RaycastDemo.cpp">
+      <Filter>Demos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\imgui\ImGuizmo.cpp">
+      <Filter>IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CollisionFeature.cpp">
+      <Filter>Demos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\LinearImpulse.cpp">
+      <Filter>Demos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ConservationOfMomentum.cpp">
+      <Filter>Demos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CH15Demo.cpp">
+      <Filter>Demos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\RigidbodyVolume.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Code\glad\glad.h">
+      <Filter>GLAD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\glad\khrplatform.h">
+      <Filter>GLAD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\IWindow.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\GLWindow.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\matrices.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\vectors.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Geometry2D.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Compare.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\FixedFunctionPrimitives.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Camera.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Geometry3D.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ObjLoader.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\QuadTree.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Scene.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\tiny_obj_loader.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\imgui\imconfig.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\imgui\imgui.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\imgui\imgui_internal.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\imgui\imgui_implementation.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\imgui\stb_rect_pack.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\imgui\stb_textedit.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\imgui\stb_truetype.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\DemoWindow.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\DemoBase.h">
+      <Filter>Demos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\CH14Demo.h">
+      <Filter>Demos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Rigidbody.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PhysicsSystem.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Particle.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\RaycastDemo.h">
+      <Filter>Demos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\imgui\ImGuizmo.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\CollisionFeature.h">
+      <Filter>Demos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\LinearImpulse.h">
+      <Filter>Demos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ConservationOfMomentum.h">
+      <Filter>Demos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\CH15Demo.h">
+      <Filter>Demos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\RigidbodyVolume.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="GLAD">
+      <UniqueIdentifier>{ec1d7027-a69d-467a-824f-67ab2ede281d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows">
+      <UniqueIdentifier>{de5bd7dc-10a7-4b0f-901c-3000c7df14ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{6db8b073-904a-4bae-80b7-c698231c38d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{329f169a-d79c-45f2-9416-ad82b24b62f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application">
+      <UniqueIdentifier>{a43eefed-0cb6-49b7-a761-00de62aa94a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Demos">
+      <UniqueIdentifier>{776830b6-1c65-478b-88df-c81c7243dd19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IMGUI">
+      <UniqueIdentifier>{6ad484e0-fe3c-4ef8-89c5-1211cec6982c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{69b719b3-6448-4541-b05e-d8c32fb16439}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
