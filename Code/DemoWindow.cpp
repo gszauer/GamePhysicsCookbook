@@ -7,6 +7,7 @@
 #include "LinearImpulse.h"
 #include "ConservationOfMomentum.h"
 #include "CH15Demo.h"
+#include "SimpleSprings.h"
 
 #include <cstdlib>
 
@@ -21,7 +22,7 @@ void DemoWindow::OnInitialize() {
 	m_pDemo = 0;
 	imgui_init = true;
 
-	select_all = false;
+	select_all = true;
 }
 
 DemoWindow::~DemoWindow() {
@@ -71,9 +72,9 @@ void DemoWindow::OnUpdate(float deltaTime) {
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
 	if (select_all) {
-		const char* listbox_items[] = { "Raycast Demo", "Chapter 14", "Collision Features", "Linear Impulse", "Conservation Of Momentum", "Chapter 15" };
+		const char* listbox_items[] = { "Raycast Demo", "Chapter 14", "Collision Features", "Linear Impulse", "Conservation Of Momentum", "Chapter 15", "Simple Springs" };
 		int lastSelected = m_selectedDemo;
-		ImGui::ListBox("", &m_selectedDemo, listbox_items, 6, 4);
+		ImGui::ListBox("", &m_selectedDemo, listbox_items, 7, 4);
 
 		if (m_selectedDemo != lastSelected) {
 			StopDemo();
@@ -85,6 +86,7 @@ void DemoWindow::OnUpdate(float deltaTime) {
 				case 3: m_pDemo = new LinearImpulse(); break;
 				case 4: m_pDemo = new ConservationOfMomentum(); break;
 				case 5: m_pDemo = new CH15Demo(); break;
+				case 6: m_pDemo = new SimpleSprings(); break;
 			}
 			
 			m_pDemo->Initialize(GetWidth(), GetHeight());

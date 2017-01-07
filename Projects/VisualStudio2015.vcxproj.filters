@@ -85,6 +85,9 @@
     <ClCompile Include="..\Code\RigidbodyVolume.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\SimpleSprings.cpp">
+      <Filter>Demos</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Code\glad\glad.h">
@@ -191,6 +194,12 @@
     </ClInclude>
     <ClInclude Include="..\Code\RigidbodyVolume.h">
       <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Spring.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\SimpleSprings.h">
+      <Filter>Demos</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

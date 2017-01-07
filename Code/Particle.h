@@ -11,8 +11,8 @@
 // accurate integration model is used. This should help 
 // keep the simulation stable over long periods of time
 
-//#define EULER_INTEGRATION
-#define ACCURATE_EULER_INTEGRATION
+#define EULER_INTEGRATION
+//#define ACCURATE_EULER_INTEGRATION
 
 class Particle : public Rigidbody {
 	vec3 position;
@@ -40,6 +40,27 @@ public:
 
 	void SetBounce(float b);
 	float GetBounce();
+
+	inline void AddImpulse(const vec3& impulse) {
+		velocity = velocity + impulse;
+	}
+
+	inline float InvMass() {
+		if (mass == 0.0f) { return 0.0f; }
+		return 1.0f / mass;
+	}
+
+	inline void SetMass(float m) {
+		mass = m;
+	}
+
+	inline vec3 GetVelocity() {
+#ifdef EULER_INTEGRATION
+		return velocity;
+#else
+		return position - oldPosition;
+#endif
+	}
 };
 
 #endif

@@ -178,6 +178,8 @@
     <ClInclude Include="..\Code\Rigidbody.h" />
     <ClInclude Include="..\Code\QuadTree.h" />
     <ClInclude Include="..\Code\Scene.h" />
+    <ClInclude Include="..\Code\SimpleSprings.h" />
+    <ClInclude Include="..\Code\Spring.h" />
     <ClInclude Include="..\Code\tiny_obj_loader.h" />
     <ClInclude Include="..\Code\vectors.h" />
   </ItemGroup>
@@ -209,6 +211,7 @@
     <ClCompile Include="..\Code\QuadTree.cpp" />
     <ClCompile Include="..\Code\RaycastDemo.cpp" />
     <ClCompile Include="..\Code\Scene.cpp" />
+    <ClCompile Include="..\Code\SimpleSprings.cpp" />
     <ClCompile Include="..\Code\vectors.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

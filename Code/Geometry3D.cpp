@@ -839,6 +839,9 @@ bool Linetest(const AABB& aabb, const Line& line) {
 }
 
 bool Linetest(const OBB& obb, const Line& line) {
+	if (MagnitudeSq(line.end - line.start) < 0.00001f) {
+		return false;
+	}
 	Ray ray;
 	ray.origin = line.start;
 	ray.direction = Normalized(line.end - line.start);

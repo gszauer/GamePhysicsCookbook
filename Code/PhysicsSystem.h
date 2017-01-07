@@ -2,11 +2,13 @@
 #define _H_PHYSICS_SYSTEM_
 
 #include "Rigidbody.h"
+#include "Spring.h"
 
 class PhysicsSystem {
 protected:
 	std::vector<Rigidbody*> bodies;
 	std::vector<OBB> constraints;
+	std::vector<Spring> springs;
 
 	std::vector<Rigidbody*> colliders1;
 	std::vector<Rigidbody*> colliders2;
@@ -28,9 +30,15 @@ public:
 	
 	void AddRigidbody(Rigidbody* body);
 	void AddConstraint(const OBB& constraint);
+	inline void AddSpring(const Spring& spring) {
+		springs.push_back(spring);
+	}
 
 	void ClearRigidbodys();
 	void ClearConstraints();
+	inline void ClearSprings() {
+		springs.clear();
+	}
 };
 
 #endif

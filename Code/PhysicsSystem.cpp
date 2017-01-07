@@ -126,6 +126,11 @@ void PhysicsSystem::Update(float deltaTime) {
 	for (int i = 0, size = bodies.size(); i < size; ++i) {
 		bodies[i]->SolveConstraints(constraints);
 	}
+
+	// Apply spring forces
+	for (int i = 0, size = springs.size(); i < size; ++i) {
+		springs[i].ApplyForce(deltaTime);
+	}
 }
 
 void PhysicsSystem::Render() {
@@ -205,6 +210,24 @@ void PhysicsSystem::Render() {
 		for (int i = 0; i < results.size(); ++i) {
 			::Render(results[i]);
 		}
+		if (status) {
+			glEnable(GL_LIGHTING);
+		}
+	}
+
+	for (int i = 0, size = springs.size(); i < size; ++i) {
+		GLboolean status;
+		glGetBooleanv(GL_LIGHTING, &status);
+
+		for (int i = 0, size = springs.size(); i < size; ++i) {
+			if (springs[i].GetP1() == 0 || springs[i].GetP2() == 0) {
+				continue;
+			}
+
+			Line l(springs[i].GetP1()->GetPosition(), springs[i].GetP2()->GetPosition());
+			::Render(l);
+		}
+
 		if (status) {
 			glEnable(GL_LIGHTING);
 		}

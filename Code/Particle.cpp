@@ -16,7 +16,7 @@ Particle::Particle() {
 void Particle::Update(float deltaTime) {
 #ifdef EULER_INTEGRATION
 	oldPosition = position;
-	vec3 acceleration = forces * (1.0f / mass);
+	vec3 acceleration = forces *InvMass(); // TODO: UPDATE
 #ifdef ACCURATE_EULER_INTEGRATION
 	vec3 oldVelocity = velocity;
 	velocity = velocity * friction + acceleration * deltaTime;
@@ -39,7 +39,11 @@ void Particle::Render() {
 }
 
 void Particle::ApplyForces() {
+#ifdef EULER_INTEGRATION
+	//forces = gravity * mass;
+#else
 	forces = gravity;
+#endif
 }
 
 void Particle::SolveConstraints(const std::vector<OBB>& constraints) {
