@@ -16,15 +16,15 @@ Particle::Particle() {
 void Particle::Update(float deltaTime) {
 #ifdef EULER_INTEGRATION
 	oldPosition = position;
-	vec3 acceleration = forces *InvMass(); // TODO: UPDATE
-#ifdef ACCURATE_EULER_INTEGRATION
-	vec3 oldVelocity = velocity;
-	velocity = velocity * friction + acceleration * deltaTime;
-	position = position + (oldVelocity + velocity) * 0.5f * deltaTime;
-#else
-	velocity = velocity * friction + acceleration * deltaTime;
-	position = position + velocity * deltaTime;
-#endif
+	vec3 acceleration = forces *InvMass();
+	#ifdef ACCURATE_EULER_INTEGRATION
+		vec3 oldVelocity = velocity;
+		velocity = velocity * friction + acceleration * deltaTime;
+		position = position + (oldVelocity + velocity) * 0.5f * deltaTime;
+	#else
+		velocity = velocity * friction + acceleration * deltaTime;
+		position = position + velocity * deltaTime;
+	#endif
 #else
 	vec3 velocity = position - oldPosition;
 	oldPosition = position;
@@ -40,9 +40,9 @@ void Particle::Render() {
 
 void Particle::ApplyForces() {
 #ifdef EULER_INTEGRATION
-	forces = gravity * mass;
+	forces = gravity *mass;
 #else
-	forces = gravity * mass;
+	forces = gravity *mass;
 #endif
 }
 
@@ -93,4 +93,31 @@ void Particle::SetBounce(float b) {
 
 float Particle::GetBounce() {
 	return bounce;
+}
+
+void Particle::AddImpulse(const vec3& impulse) {
+#ifdef EULER_INTEGRATION
+	velocity = velocity + impulse;
+#else
+	vec3 velocity = position - oldPosition;
+	velocity = velocity + impulse;
+	oldPosition = position - velocity;
+#endif
+}
+
+float Particle::InvMass() {
+	if (mass == 0.0f) { return 0.0f; }
+	return 1.0f / mass;
+}
+
+void Particle::SetMass(float m) {
+	mass = m;
+}
+
+vec3 Particle::GetVelocity() {
+#ifdef EULER_INTEGRATION
+	return velocity;
+#else
+	return position - oldPosition;
+#endif
 }

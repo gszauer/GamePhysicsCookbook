@@ -122,14 +122,14 @@ void PhysicsSystem::Update(float deltaTime) {
 		}
 	}
 
-	// Solve constraints
-	for (int i = 0, size = bodies.size(); i < size; ++i) {
-		bodies[i]->SolveConstraints(constraints);
-	}
-
 	// Apply spring forces
 	for (int i = 0, size = springs.size(); i < size; ++i) {
 		springs[i].ApplyForce(deltaTime);
+	}
+
+	// Solve constraints
+	for (int i = 0, size = bodies.size(); i < size; ++i) {
+		bodies[i]->SolveConstraints(constraints);
 	}
 }
 

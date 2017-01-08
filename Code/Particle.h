@@ -41,32 +41,10 @@ public:
 	void SetBounce(float b);
 	float GetBounce();
 
-	inline void AddImpulse(const vec3& impulse) {
-#ifdef EULER_INTEGRATION
-		velocity = velocity + impulse;
-#else
-		vec3 velocity = position - oldPosition;
-		velocity = velocity + impulse;
-		oldPosition = position - velocity;
-#endif
-	}
-
-	inline float InvMass() {
-		if (mass == 0.0f) { return 0.0f; }
-		return 1.0f / mass;
-	}
-
-	inline void SetMass(float m) {
-		mass = m;
-	}
-
-	inline vec3 GetVelocity() {
-#ifdef EULER_INTEGRATION
-		return velocity;
-#else
-		return position - oldPosition;
-#endif
-	}
+	void AddImpulse(const vec3& impulse);
+	float InvMass();
+	void SetMass(float m);
+	vec3 GetVelocity();
 };
 
 #endif

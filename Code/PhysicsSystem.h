@@ -30,15 +30,11 @@ public:
 	
 	void AddRigidbody(Rigidbody* body);
 	void AddConstraint(const OBB& constraint);
-	inline void AddSpring(const Spring& spring) {
-		springs.push_back(spring);
-	}
+	void AddSpring(const Spring& spring);
 
 	void ClearRigidbodys();
 	void ClearConstraints();
-	inline void ClearSprings() {
-		springs.clear();
-	}
+	void ClearSprings();
 };
 
 #endif

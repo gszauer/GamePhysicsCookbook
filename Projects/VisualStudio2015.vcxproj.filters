@@ -88,6 +88,9 @@
     <ClCompile Include="..\Code\SimpleSprings.cpp">
       <Filter>Demos</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\Spring.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Code\glad\glad.h">

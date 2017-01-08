@@ -212,6 +212,7 @@
     <ClCompile Include="..\Code\RaycastDemo.cpp" />
     <ClCompile Include="..\Code\Scene.cpp" />
     <ClCompile Include="..\Code\SimpleSprings.cpp" />
+    <ClCompile Include="..\Code\Spring.cpp" />
     <ClCompile Include="..\Code\vectors.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
