@@ -31,7 +31,7 @@ public:
 	Particle();
 
 	void Update(float deltaTime);
-	virtual void Render();
+	void Render();
 	void ApplyForces();
 	void SolveConstraints(const std::vector<OBB>& constraints);
 
