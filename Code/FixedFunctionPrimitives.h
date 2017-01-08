@@ -25,6 +25,7 @@ void Render(const OBB& obb);
 void Render(const Plane& plane);
 void Render(const Plane& plane, float scale);
 void Render(const Triangle& triangle);
+void Render(const Triangle& triangle, bool oneSided);
 void Render(const Frustum& frustum);
 void RenderNormals(const Frustum& frustum);
 void Render(const CollisionManifold& manifold);

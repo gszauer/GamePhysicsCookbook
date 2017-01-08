@@ -23,6 +23,7 @@ public:
 	void SetParticles(Particle* _p1, Particle* _p2);
 	Particle* GetP1();
 	Particle* GetP2();
+	void SetConstants(float _k, float _b);
 	void ApplyForce(float dt);
 };
 

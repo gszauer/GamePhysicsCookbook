@@ -3,10 +3,12 @@
 
 #include "Rigidbody.h"
 #include "Spring.h"
+#include "Cloth.h"
 
 class PhysicsSystem {
 protected:
 	std::vector<Rigidbody*> bodies;
+	std::vector<Cloth*> cloths;
 	std::vector<OBB> constraints;
 	std::vector<Spring> springs;
 
@@ -29,12 +31,14 @@ public:
 	void Render();
 	
 	void AddRigidbody(Rigidbody* body);
-	void AddConstraint(const OBB& constraint);
+	void AddCloth(Cloth* cloth);
 	void AddSpring(const Spring& spring);
+	void AddConstraint(const OBB& constraint);
 
 	void ClearRigidbodys();
 	void ClearConstraints();
 	void ClearSprings();
+	void ClearCloths();
 };
 
 #endif

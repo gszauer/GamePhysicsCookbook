@@ -45,6 +45,7 @@ public:
 	float InvMass();
 	void SetMass(float m);
 	vec3 GetVelocity();
+	void SetFriction(float f);
 };
 
 #endif

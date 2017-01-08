@@ -233,15 +233,27 @@ void Render(const Plane& plane) {
 }
 
 void Render(const Triangle& triangle) {
+	Render(triangle, false);
+}
+
+void Render(const Triangle& triangle, bool oneSided) {
 	glBegin(GL_TRIANGLES);
 
-	glVertex3f(triangle.a.x, triangle.a.y, triangle.a.z);
-	glVertex3f(triangle.b.x, triangle.b.y, triangle.b.z);
-	glVertex3f(triangle.c.x, triangle.c.y, triangle.c.z);
+	if (!oneSided) {
+		glVertex3f(triangle.a.x, triangle.a.y, triangle.a.z);
+		glVertex3f(triangle.c.x, triangle.c.y, triangle.c.z);
+		glVertex3f(triangle.b.x, triangle.b.y, triangle.b.z);
+	}
+	else {
+		vec3 ab = triangle.a - triangle.b;
+		vec3 ac = triangle.a - triangle.c;
+		vec3 norm = Normalized(Cross(ac, ab));
+		glNormal3f(norm.x, norm.y, norm.z);
+	}
 
 	glVertex3f(triangle.a.x, triangle.a.y, triangle.a.z);
-	glVertex3f(triangle.c.x, triangle.c.y, triangle.c.z);
 	glVertex3f(triangle.b.x, triangle.b.y, triangle.b.z);
+	glVertex3f(triangle.c.x, triangle.c.y, triangle.c.z);
 
 	glEnd();
 }

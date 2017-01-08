@@ -8,6 +8,7 @@
 #include "ConservationOfMomentum.h"
 #include "CH15Demo.h"
 #include "SimpleSprings.h"
+#include "CH16Demo.h"
 
 #include <cstdlib>
 
@@ -72,9 +73,9 @@ void DemoWindow::OnUpdate(float deltaTime) {
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
 	if (select_all) {
-		const char* listbox_items[] = { "Raycast Demo", "Chapter 14", "Collision Features", "Linear Impulse", "Conservation Of Momentum", "Chapter 15", "Simple Springs" };
+		const char* listbox_items[] = { "Raycast Demo", "Chapter 14", "Collision Features", "Linear Impulse", "Conservation Of Momentum", "Chapter 15", "Simple Springs", "Chapter 16" };
 		int lastSelected = m_selectedDemo;
-		ImGui::ListBox("", &m_selectedDemo, listbox_items, 7, 4);
+		ImGui::ListBox("", &m_selectedDemo, listbox_items, 8, 5);
 
 		if (m_selectedDemo != lastSelected) {
 			StopDemo();
@@ -87,15 +88,16 @@ void DemoWindow::OnUpdate(float deltaTime) {
 				case 4: m_pDemo = new ConservationOfMomentum(); break;
 				case 5: m_pDemo = new CH15Demo(); break;
 				case 6: m_pDemo = new SimpleSprings(); break;
+				case 7: m_pDemo = new CH16Demo(); break;
 			}
 			
 			m_pDemo->Initialize(GetWidth(), GetHeight());
 			ApplyDemoCamera();
 		}
 
-		if (ImGui::Button("Clear Console")) {
+		/*if (ImGui::Button("Clear Console")) {
 			system("cls");
-		}
+		}*/
 	}
 	else {
 		if (m_selectedDemo == 0) {

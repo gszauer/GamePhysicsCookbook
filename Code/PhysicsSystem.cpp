@@ -77,6 +77,11 @@ void PhysicsSystem::Update(float deltaTime) {
 		bodies[i]->ApplyForces();
 	}
 
+	// Same as above, calculate forces acting on cloths
+	for (int i = 0, size = cloths.size(); i < size; ++i) {
+		cloths[i]->ApplyForces();
+	}
+
 	// Apply impulses to resolve collisions
 	for (int k = 0; k < ImpulseIteration; ++k) { // Apply impulses
 		for (int i = 0, size = results.size(); i < size; ++i) {
@@ -93,6 +98,11 @@ void PhysicsSystem::Update(float deltaTime) {
 	// Integrate velocity and impulse of objects
 	for (int i = 0, size = bodies.size(); i < size; ++i) {
 		bodies[i]->Update(deltaTime);
+	}
+
+	// Same as above, integrate velocity and impulse of cloths
+	for (int i = 0, size = cloths.size(); i < size; ++i) {
+		cloths[i]->Update(deltaTime);
 	}
 
 	// Correct position to avoid sinking!
@@ -127,9 +137,19 @@ void PhysicsSystem::Update(float deltaTime) {
 		springs[i].ApplyForce(deltaTime);
 	}
 
+	// Same as above, apply spring forces for cloths
+	for (int i = 0, size = cloths.size(); i < size; ++i) {
+		cloths[i]->ApplySpringForces(deltaTime);
+	}
+
 	// Solve constraints
 	for (int i = 0, size = bodies.size(); i < size; ++i) {
 		bodies[i]->SolveConstraints(constraints);
+	}
+
+	// Same as above, solve cloth constraints
+	for (int i = 0, size = cloths.size(); i < size; ++i) {
+		cloths[i]->SolveConstraints(constraints);
 	}
 }
 
@@ -215,10 +235,10 @@ void PhysicsSystem::Render() {
 		}
 	}
 
+	// Render springs
+	GLboolean status;
+	glGetBooleanv(GL_LIGHTING, &status);
 	for (int i = 0, size = springs.size(); i < size; ++i) {
-		GLboolean status;
-		glGetBooleanv(GL_LIGHTING, &status);
-
 		for (int i = 0, size = springs.size(); i < size; ++i) {
 			if (springs[i].GetP1() == 0 || springs[i].GetP2() == 0) {
 				continue;
@@ -227,10 +247,14 @@ void PhysicsSystem::Render() {
 			Line l(springs[i].GetP1()->GetPosition(), springs[i].GetP2()->GetPosition());
 			::Render(l);
 		}
+	}
+	if (status) {
+		glEnable(GL_LIGHTING);
+	}
 
-		if (status) {
-			glEnable(GL_LIGHTING);
-		}
+	// Render all cloths
+	for (int i = 0, size = cloths.size(); i < size; ++i) {
+		cloths[i]->Render(DebugRender);
 	}
 }
 
@@ -248,4 +272,20 @@ void PhysicsSystem::ClearRigidbodys() {
 
 void PhysicsSystem::ClearConstraints() {
 	constraints.clear();
+}
+
+void PhysicsSystem::AddSpring(const Spring& spring) {
+	springs.push_back(spring);
+}
+
+void PhysicsSystem::ClearSprings() {
+	springs.clear();
+}
+
+void PhysicsSystem::AddCloth(Cloth* cloth) {
+	cloths.push_back(cloth);
+}
+
+void PhysicsSystem::ClearCloths() {
+	cloths.clear();
 }
