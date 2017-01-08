@@ -31,7 +31,7 @@ public:
 	Particle();
 
 	void Update(float deltaTime);
-	virtual void Render();
+	void Render();
 	void ApplyForces();
 	void SolveConstraints(const std::vector<OBB>& constraints);
 
@@ -45,6 +45,7 @@ public:
 	float InvMass();
 	void SetMass(float m);
 	vec3 GetVelocity();
+	void SetFriction(float f);
 };
 
 #endif

@@ -148,10 +148,13 @@
     <ClInclude Include="..\Code\CH15Demo.h" />
     <ClInclude Include="..\Code\Camera.h" />
     <ClInclude Include="..\Code\CH14Demo.h" />
+    <ClInclude Include="..\Code\CH16Demo.h" />
+    <ClInclude Include="..\Code\Cloth.h" />
     <ClInclude Include="..\Code\Compare.h" />
     <ClInclude Include="..\Code\ConservationOfMomentum.h" />
     <ClInclude Include="..\Code\DemoBase.h" />
     <ClInclude Include="..\Code\DemoWindow.h" />
+    <ClInclude Include="..\Code\DistanceJoint.h" />
     <ClInclude Include="..\Code\FixedFunctionPrimitives.h" />
     <ClInclude Include="..\Code\CollisionFeature.h" />
     <ClInclude Include="..\Code\Geometry2D.h" />
@@ -168,6 +171,7 @@
     <ClInclude Include="..\Code\imgui\stb_textedit.h" />
     <ClInclude Include="..\Code\imgui\stb_truetype.h" />
     <ClInclude Include="..\Code\IWindow.h" />
+    <ClInclude Include="..\Code\JointDemo.h" />
     <ClInclude Include="..\Code\LinearImpulse.h" />
     <ClInclude Include="..\Code\RigidbodyVolume.h" />
     <ClInclude Include="..\Code\matrices.h" />
@@ -187,9 +191,12 @@
     <ClCompile Include="..\Code\CH15Demo.cpp" />
     <ClCompile Include="..\Code\Camera.cpp" />
     <ClCompile Include="..\Code\CH14Demo.cpp" />
+    <ClCompile Include="..\Code\CH16Demo.cpp" />
+    <ClCompile Include="..\Code\Cloth.cpp" />
     <ClCompile Include="..\Code\ConservationOfMomentum.cpp" />
     <ClCompile Include="..\Code\DemoBase.cpp" />
     <ClCompile Include="..\Code\DemoWindow.cpp" />
+    <ClCompile Include="..\Code\DistanceJoint.cpp" />
     <ClCompile Include="..\Code\FixedFunctionPrimitives.cpp" />
     <ClCompile Include="..\Code\CollisionFeature.cpp" />
     <ClCompile Include="..\Code\Geometry2D.cpp" />
@@ -201,6 +208,7 @@
     <ClCompile Include="..\Code\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\Code\imgui\imgui_implementation.cpp" />
     <ClCompile Include="..\Code\IWindow.cpp" />
+    <ClCompile Include="..\Code\JointDemo.cpp" />
     <ClCompile Include="..\Code\LinearImpulse.cpp" />
     <ClCompile Include="..\Code\main-win32.cpp" />
     <ClCompile Include="..\Code\RigidbodyVolume.cpp" />

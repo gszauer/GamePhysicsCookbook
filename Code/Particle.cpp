@@ -121,3 +121,7 @@ vec3 Particle::GetVelocity() {
 	return position - oldPosition;
 #endif
 }
+
+void Particle::SetFriction(float f) {
+	friction = f;
+}

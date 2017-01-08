@@ -8,6 +8,8 @@
 #include "ConservationOfMomentum.h"
 #include "CH15Demo.h"
 #include "SimpleSprings.h"
+#include "CH16Demo.h"
+#include "JointDemo.h"
 
 #include <cstdlib>
 
@@ -22,7 +24,7 @@ void DemoWindow::OnInitialize() {
 	m_pDemo = 0;
 	imgui_init = true;
 
-	select_all = true;
+	select_all = false;
 }
 
 DemoWindow::~DemoWindow() {
@@ -72,9 +74,10 @@ void DemoWindow::OnUpdate(float deltaTime) {
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
 	if (select_all) {
-		const char* listbox_items[] = { "Raycast Demo", "Chapter 14", "Collision Features", "Linear Impulse", "Conservation Of Momentum", "Chapter 15", "Simple Springs" };
+		const char* listbox_items[] = { "Raycast Demo", "Chapter 14", "Collision Features", "Linear Impulse", "Conservation Of Momentum", "Chapter 15", "Simple Springs", "Chapter 16", "Joint Demo" };
 		int lastSelected = m_selectedDemo;
-		ImGui::ListBox("", &m_selectedDemo, listbox_items, 7, 4);
+		ImGui::PushItemWidth(350);
+		ImGui::ListBox("", &m_selectedDemo, listbox_items, 9, 5);
 
 		if (m_selectedDemo != lastSelected) {
 			StopDemo();
@@ -87,15 +90,17 @@ void DemoWindow::OnUpdate(float deltaTime) {
 				case 4: m_pDemo = new ConservationOfMomentum(); break;
 				case 5: m_pDemo = new CH15Demo(); break;
 				case 6: m_pDemo = new SimpleSprings(); break;
+				case 7: m_pDemo = new CH16Demo(); break;
+				case 8: m_pDemo = new JointDemo(); break;
 			}
 			
 			m_pDemo->Initialize(GetWidth(), GetHeight());
 			ApplyDemoCamera();
 		}
 
-		if (ImGui::Button("Clear Console")) {
+		/*if (ImGui::Button("Clear Console")) {
 			system("cls");
-		}
+		}*/
 	}
 	else {
 		if (m_selectedDemo == 0) {
@@ -123,7 +128,7 @@ void DemoWindow::OnUpdate(float deltaTime) {
 				Start15();
 			}
 		}
-		/*ImGui::SameLine();
+		ImGui::SameLine();
 		if (m_selectedDemo == 2) {
 			if (ImGui::Button("Stop Chapter 16")) {
 				m_selectedDemo = -1;
@@ -135,7 +140,7 @@ void DemoWindow::OnUpdate(float deltaTime) {
 				m_selectedDemo = 2;
 				Start16();
 			}
-		}*/
+		}
 	}
 
 	ImGui::End();
@@ -194,5 +199,7 @@ void DemoWindow::Start15() {
 
 void DemoWindow::Start16() {
 	StopDemo();
-	// TODO
+	m_pDemo = new CH16Demo();
+	m_pDemo->Initialize(GetWidth(), GetHeight());
+	ApplyDemoCamera();
 }

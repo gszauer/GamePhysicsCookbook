@@ -91,6 +91,18 @@
     <ClCompile Include="..\Code\Spring.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CH16Demo.cpp">
+      <Filter>Demos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Cloth.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\DistanceJoint.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\JointDemo.cpp">
+      <Filter>Demos</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Code\glad\glad.h">
@@ -202,6 +214,18 @@
       <Filter>Physics</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\SimpleSprings.h">
+      <Filter>Demos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\CH16Demo.h">
+      <Filter>Demos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Cloth.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\DistanceJoint.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\JointDemo.h">
       <Filter>Demos</Filter>
     </ClInclude>
   </ItemGroup>
