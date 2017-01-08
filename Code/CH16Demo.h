@@ -17,7 +17,6 @@ protected:
 	float part_dist;
 	float k;
 	float d;
-	float size;
 
 	bool size_imgui_window;
 protected:

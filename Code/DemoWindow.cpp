@@ -23,7 +23,7 @@ void DemoWindow::OnInitialize() {
 	m_pDemo = 0;
 	imgui_init = true;
 
-	select_all = true;
+	select_all = false;
 }
 
 DemoWindow::~DemoWindow() {
@@ -125,7 +125,7 @@ void DemoWindow::OnUpdate(float deltaTime) {
 				Start15();
 			}
 		}
-		/*ImGui::SameLine();
+		ImGui::SameLine();
 		if (m_selectedDemo == 2) {
 			if (ImGui::Button("Stop Chapter 16")) {
 				m_selectedDemo = -1;
@@ -137,7 +137,7 @@ void DemoWindow::OnUpdate(float deltaTime) {
 				m_selectedDemo = 2;
 				Start16();
 			}
-		}*/
+		}
 	}
 
 	ImGui::End();
@@ -196,5 +196,7 @@ void DemoWindow::Start15() {
 
 void DemoWindow::Start16() {
 	StopDemo();
-	// TODO
+	m_pDemo = new CH16Demo();
+	m_pDemo->Initialize(GetWidth(), GetHeight());
+	ApplyDemoCamera();
 }

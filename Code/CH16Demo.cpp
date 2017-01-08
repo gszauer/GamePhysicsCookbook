@@ -23,7 +23,6 @@ void CH16Demo::Initialize(int width, int height) {
 	part_dist = 0.2f;
 	k = -3.0f;
 	d = 0.0f;
-	size = 0.8f;
 	ground.size = vec3(10.0f, 0.1f, 10.0f);
 
 	ResetDemo();
@@ -81,7 +80,8 @@ void CH16Demo::ImGUI() {
 	}
 
 	ImGui::Begin("Chapter 16 Demo", 0, ImGuiWindowFlags_NoResize);
-
+	
+	
 	ImGui::PushItemWidth(50);
 	ImGui::SliderInt("Count", &num_part, 5, 30);
 	ImGui::SameLine();
@@ -89,19 +89,12 @@ void CH16Demo::ImGUI() {
 	ImGui::SliderFloat("Distance", &part_dist, 0.1f, 1.0f);
 	ImGui::SameLine();
 	ImGui::PushItemWidth(50);
-	ImGui::SliderFloat("k", &k, -5.0f, 0.0f);
-	ImGui::SameLine();
-	ImGui::PushItemWidth(50);
-	ImGui::SliderFloat("d", &d, 0.0f, 1.0f);
+	ImGui::SliderFloat("Spring k", &k, -5.0f, 0.0f);
 
 	if (ImGui::Button("Reset")) {
 		ResetDemo();
 	}
-	ImGui::SameLine();
-	ImGui::Checkbox("Debug Render", &physicsSystem.DebugRender);
-	ImGui::SameLine();
-	ImGui::PushItemWidth(50);
-	ImGui::SliderFloat("size", &size, 0.0f, 1.0f);
+	
 
 	ImGui::End();
 }

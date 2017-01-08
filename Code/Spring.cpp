@@ -38,9 +38,12 @@ void Spring::ApplyForce(float dt) {
 	float v = Magnitude(relVel);
 
 	float F = -k * x - b * v;
+	/*float f_k = -k * x;
+	float f_b = b * v;
+	f_b = (f_b > f_k)? f_k : f_b;
+	float F = f_k - f_b;*/
 
 	vec3 impulse = Normalized(relPos) * F;
-
 	p1->AddImpulse(impulse * p1->InvMass());
 	p2->AddImpulse(impulse*  -1.0f * p2->InvMass());
 }
