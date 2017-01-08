@@ -25,8 +25,8 @@ class Particle : public Rigidbody {
 
 #ifdef EULER_INTEGRATION
 	vec3 velocity;
-	float mass;
 #endif
+	float mass;
 public:
 	Particle();
 
@@ -42,7 +42,13 @@ public:
 	float GetBounce();
 
 	inline void AddImpulse(const vec3& impulse) {
+#ifdef EULER_INTEGRATION
 		velocity = velocity + impulse;
+#else
+		vec3 velocity = position - oldPosition;
+		velocity = velocity + impulse;
+		oldPosition = position - velocity;
+#endif
 	}
 
 	inline float InvMass() {

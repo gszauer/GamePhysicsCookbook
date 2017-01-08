@@ -40,9 +40,9 @@ void Particle::Render() {
 
 void Particle::ApplyForces() {
 #ifdef EULER_INTEGRATION
-	//forces = gravity * mass;
+	forces = gravity * mass;
 #else
-	forces = gravity;
+	forces = gravity * mass;
 #endif
 }
 
