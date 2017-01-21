@@ -29,6 +29,6 @@ I still want to create a book dedicated to robust rigidbody physics. I'm also ex
 
 __TODO: Imge_
 
-* ISBN-13:
+* ISBN-13: 9781787123663
 * [Publisher Website](https://www.packtpub.com/game-development/game-physics-cookbook)
 * Amazon Page
