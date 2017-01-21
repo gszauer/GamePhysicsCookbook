@@ -27,8 +27,8 @@ I still want to create a book dedicated to robust rigidbody physics. I'm also ex
 
 # Book Info
 
-__TODO: Imge_
+![Cover Image](cover.jpg)
 
 * ISBN-13: 9781787123663
 * [Publisher Website](https://www.packtpub.com/game-development/game-physics-cookbook)
-* Amazon Page
+* [Amazon Page](https://www.amazon.com/Game-Physics-Cookbook-Gabor-Szauer-ebook/dp/B01MDLX5PH)
