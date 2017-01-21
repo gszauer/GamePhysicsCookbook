@@ -2,12 +2,18 @@
 
 This book is a comprehensive guide to game collision detection, but only briefly touches on the topic of collision resolution (Physics). Originally this book was planned as two books:
 
-1) Primitive Collisions Cookbook
-2) Game Physics Cookbook
+1. Primitive Collisions Cookbook
+2. Game Physics Cookbook
 
-I was only able to write one book. This means a LOT of information had to be packed into this book. The general breakdown is as follows
+I was only able to write one book. This means a LOT of information had to be packed into this book. The general breakdown for the book is as follows:
 
-[TODO] Chapter breakdowns
+* __Chapters 1, 2 and 3__    cover the basics Linear Algebra.
+* __Chapters 4, 5 and 6__    cover two dimensional primitives and how to detect intersections between them. 
+* __Chapters 8, 9 and 10__   cover three dimensional primitives and the most efficient way to determine intersections between them. 
+* __Chapters 11, 12 and 13__ cover meshes, scenes and scene organization.
+* __Chapters 14, 15 and 16__ cover physics. Throughout these three chapters we built a very basic rigid body physics engine. Even though the engine is basic; we do some interesting things with it. 
+
+The final three chapters on physics implement particle physics, rigid body physics and soft body physics (cloth). All of these topics are used to progressivley build a rigid body physics engine troughout chapters 14, 15 and 16.
 
 # Issues
 
