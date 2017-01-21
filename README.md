@@ -15,6 +15,14 @@ I was only able to write one book. This means a LOT of information had to be pac
 
 The final three chapters on physics implement particle physics, rigid body physics and soft body physics (cloth). All of these topics are used to progressivley build a rigid body physics engine troughout chapters 14, 15 and 16.
 
+# Demos
+
+![Chapter 14 demo GIF](img/chapter14.gif)
+
+![Chapter 15 demo GIF](img/chapter15.gif)
+
+![Chapter 16 demo GIF](img/chapter16.gif)
+
 # Issues
 
 There are various issues in the physics implementation of the source code. These issues come from the fact that the physics part of this book had to be condensed into three chapters. There was just not enough time to cover everything needed to make a robust rigid-body physics system. The biggest problem with the engine is the fact that __there is no Arbiter__. 
@@ -27,7 +35,7 @@ I still want to create a book dedicated to robust rigidbody physics. I'm also ex
 
 # Book Info
 
-![Cover Image](cover.jpg)
+![Cover Image](img/cover.jpg)
 
 * ISBN-13: 9781787123663
 * [Publisher Website](https://www.packtpub.com/game-development/game-physics-cookbook)
