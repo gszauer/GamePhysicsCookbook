@@ -619,7 +619,7 @@ bool Raycast(const OBB& obb, const Ray& ray, RaycastResult* outResult) {
 	float t[6] = { 0, 0, 0, 0, 0, 0 };
 	for (int i = 0; i < 3; ++i) {
 		if (CMP(f[i], 0)) {
-			if (-e[i] - size[i] > 0 || -e.x + size[i] < 0) {
+			if (-e[i] - size[i] > 0 || -e[i] + size[i] < 0) {
 				return false;
 			}
 			f[i] = 0.00001f; // Avoid div by 0!
