@@ -1,9 +1,6 @@
 #ifndef _H_MATH_MATRICES_
 #define _H_MATH_MATRICES_
-
-#ifndef NO_EXTRAS
 #include <ostream>
-#endif 
 
 
 /* 
@@ -148,19 +145,17 @@ typedef struct mat4 {
 	}
 } mat4;
 
-#ifndef NO_EXTRAS
-	bool operator==(const mat2& l, const mat2& r);
-	bool operator==(const mat3& l, const mat3& r);
-	bool operator==(const mat4& l, const mat4& r);
+bool operator==(const mat2& l, const mat2& r);
+bool operator==(const mat3& l, const mat3& r);
+bool operator==(const mat4& l, const mat4& r);
 
-	bool operator!=(const mat2& l, const mat2& r);
-	bool operator!=(const mat3& l, const mat3& r);
-	bool operator!=(const mat4& l, const mat4& r);
+bool operator!=(const mat2& l, const mat2& r);
+bool operator!=(const mat3& l, const mat3& r);
+bool operator!=(const mat4& l, const mat4& r);
 
-	std::ostream& operator<<(std::ostream& os, const mat2& m);
-	std::ostream& operator<<(std::ostream& os, const mat3& m);
-	std::ostream& operator<<(std::ostream& os, const mat4& m);
-#endif 
+std::ostream& operator<<(std::ostream& os, const mat2& m);
+std::ostream& operator<<(std::ostream& os, const mat3& m);
+std::ostream& operator<<(std::ostream& os, const mat4& m);
 
 void Transpose(const float *srcMat, float *dstMat,  int srcRows,  int srcCols);
 mat2 Transpose(const mat2& matrix);
@@ -208,10 +203,8 @@ mat4 Translation(float x, float y, float z);
 mat4 Translation(const vec3& pos);
 vec3 GetTranslation(const mat4& mat);
 
-#ifndef NO_EXTRAS
 mat4 Translate(float x, float y, float z);
 mat4 Translate(const vec3& pos);
-#endif
 mat4 FromMat3(const mat3& mat);
 
 mat4 Scale(float x, float y, float z);
@@ -220,10 +213,8 @@ vec3 GetScale(const mat4& mat);
 
 mat4 Rotation(float pitch, float yaw, float roll); // X, Y, Z
 mat3 Rotation3x3(float pitch, float yaw, float roll); // X, Y, Z
-#ifndef NO_EXTRAS
 mat2 Rotation2x2(float angle);
 mat4 YawPitchRoll(float yaw, float pitch, float roll); // Y, X, Z
-#endif
 
 mat4 XRotation(float angle);
 mat3 XRotation3x3(float angle);
@@ -234,10 +225,8 @@ mat3 YRotation3x3(float angle);
 mat4 ZRotation(float angle);
 mat3 ZRotation3x3(float angle);
 
-#ifndef NO_EXTRAS
 mat4 Orthogonalize(const mat4& mat);
 mat3 Orthogonalize(const mat3& mat);
-#endif
 
 mat4 AxisAngle(const vec3& axis, float angle);
 mat3 AxisAngle3x3(const vec3& axis, float angle);
@@ -255,9 +244,7 @@ mat4 Ortho(float left, float right, float bottom, float top, float zNear, float 
 
 vec3 Decompose(const mat3& rot);
 
-#ifndef NO_EXTRAS
 mat3 FastInverse(const mat3& mat);
 mat4 FastInverse(const mat4& mat);
-#endif
 
 #endif

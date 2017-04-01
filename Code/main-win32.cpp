@@ -60,13 +60,12 @@ double GetMilliseconds();
 #define NO_RESIZE_STYLE (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX)
 #define NORMAL_STYLE (WS_VISIBLE | WS_OVERLAPPEDWINDOW)
 
+// Some useful resourcesfor making OpenGL windows on Win32
 // https://www.opengl.org/archives/resources/code/samples/win32_tutorial/
 // https://msdn.microsoft.com/en-us/library/bb384843.aspx?f=255&MSPPError=-2147217396
 // https://gist.github.com/gszauer/5718416
 // Glad loader: http://glad.dav1d.de/
 // Glad tutorial: https://github.com/Dav1dde/glad
-// Gl3w loader: https://github.com/skaslev/gl3w
-// GLLoadGen loader: https://bitbucket.org/alfonse/glloadgen/wiki/Home
 
 int main(int argc, const char** argv) {
 	IWindow* pWindowInstance = IWindow::GetInstance();
@@ -189,6 +188,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 
 	while (!pWindowInstance->GetQuitFlag()) {
 		// If or while? Not sure if all messages should process at once or not
+		// Keeping it while for now, but i have serious reservations about this....
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			if (msg.message == WM_QUIT) {
 				break;

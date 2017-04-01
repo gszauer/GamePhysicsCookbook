@@ -1,16 +1,9 @@
+#include "Compare.h"
 #include "matrices.h"
 #include <cmath>
 #include <cfloat>
+#include <iostream>
 
-#ifdef DO_SANITY_TESTS
-	#include <iostream>
-	#include "Compare.h"
-#else
-	#define CMP(x, y) \
-		(fabsf(x - y) <= FLT_EPSILON * fmaxf(1.0f, fmaxf(fabsf(x), fabsf(y))))
-#endif
-
-#ifndef NO_EXTRAS
 bool operator==(const mat2& l, const mat2& r) {
 	for (int i = 0; i < /* 2 * 2 = */4; ++i) {
 		if (!CMP(l.asArray[i], r.asArray[i])) {
@@ -69,9 +62,7 @@ std::ostream& operator<<(std::ostream& os, const mat4& m) {
 	os << m._41 << ", " << m._42 << ", " << m._43 << ", " << m._44;
 	return os;
 }
-#endif 
 
-#ifndef NO_EXTRAS
 mat3 FastInverse(const mat3& mat) {
 	return Transpose(mat);
 }
@@ -94,7 +85,6 @@ mat4 FastInverse(const mat4& mat) {
 
 	return inverse;
 }
-#endif 
 
 void Transpose(const float *srcMat, float *dstMat, int srcRows, int srcCols) {
 	for (int i = 0; i < srcRows * srcCols; i++) {
@@ -382,13 +372,9 @@ mat4 Inverse(const mat4& m) {
 	result._43 = (m._11 * m._23 * m._42 + m._12 * m._21 * m._43 + m._13 * m._22 * m._41 - m._11 * m._22 * m._43 - m._12 * m._23 * m._41 - m._13 * m._21 * m._42) * i_det;
 	result._44 = (m._11 * m._22 * m._33 + m._12 * m._23 * m._31 + m._13 * m._21 * m._32 - m._11 * m._23 * m._32 - m._12 * m._21 * m._33 - m._13 * m._22 * m._31) * i_det;
 
-#ifdef  DO_SANITY_TESTS
-#ifndef NO_EXTRAS
-	if (result * m != mat4()) {
+	/*if (result * m != mat4()) {
 		std::cout << "ERROR! Expecting matrix x inverse to equal identity!\n";
-	}
-#endif 
-#endif
+	}*/
 
 	return result;
 }
@@ -435,7 +421,6 @@ mat4 Translation(const vec3& pos) {
 	);
 }
 
-#ifndef NO_EXTRAS
 mat4 Translate(float x, float y, float z) {
 	return mat4(
 		1.0f, 0.0f, 0.0f, 0.0f,
@@ -453,7 +438,6 @@ mat4 Translate(const vec3& pos) {
 		pos.x, pos.y, pos.z, 1.0f
 	);
 }
-#endif
 
 mat4 FromMat3(const mat3& mat) {
 	mat4 result;
@@ -507,7 +491,6 @@ mat3 Rotation3x3(float pitch, float yaw, float roll) {
 	return ZRotation3x3(roll) * XRotation3x3(pitch) * YRotation3x3(yaw);
 }
 
-#ifndef NO_EXTRAS
 mat2 Rotation2x2(float angle) {
 	return mat2(
 		cosf(angle), sinf(angle),
@@ -533,7 +516,6 @@ mat4 YawPitchRoll(float yaw, float pitch, float roll) {
 	out._44 = 1;
 	return out;
 }
-#endif
 
 mat4 XRotation(float angle) {
 	angle = DEG2RAD(angle);
@@ -592,8 +574,6 @@ mat3 ZRotation3x3(float angle) {
 	);
 }
 
-#ifndef NO_EXTRAS
-
 mat4 Orthogonalize(const mat4& mat) {
 	vec3 xAxis(mat._11, mat._12, mat._13);
 	vec3 yAxis(mat._21, mat._22, mat._23);
@@ -626,7 +606,6 @@ mat3 Orthogonalize(const mat3& mat) {
 		zAxis.x, zAxis.y, zAxis.z
 	);
 }
-#endif
 
 mat4 AxisAngle(const vec3& axis, float angle) {
 	angle = DEG2RAD(angle);
@@ -716,91 +695,31 @@ mat4 LookAt(const vec3& position, const vec3& target, const vec3& up) {
 	vec3 right = Normalized(Cross(up, forward));
 	vec3 newUp = Cross(forward, right);
 
-#ifdef DO_SANITY_TESTS
-	mat4 viewPosition = Translation(position);
-	mat4 viewOrientation = mat4(
-		right.x, right.y, right.z, 0.0f,
-		newUp.x, newUp.y, newUp.z, 0.0f,
-		forward.x, forward.y, forward.z, 0.0f,
-		0.0f, 0.0f, 0.0f, 1.0f
-	);
-
-	// I had this implemented originally, it was wrong!
-	// It's scale * orientation * transform
-	// That's why it needed two inverses :(
-	//mat4 view = Inverse(viewPosition) * Inverse(viewOrientation);
-	//std::cout << "View: " << view << "\n\n";
-	//std::cout << "Alt: " << Inverse(viewOrientation * viewPosition) << "\n\n";
-	// Turns out it's the same as one inverse in the correct order
-	mat4 view = Inverse(viewOrientation * viewPosition);
-	mat4 result =
-#else
-	return
-#endif
-		mat4(
+	return mat4(
 		right.x, newUp.x, forward.x, 0.0f,
 		right.y, newUp.y, forward.y, 0.0f,
 		right.z, newUp.z, forward.z, 0.0f,
 		-Dot(right, position), -Dot(newUp, position), -Dot(forward, position), 1.0f
 	);
-#ifdef DO_SANITY_TESTS
-#ifndef NO_EXTRAS
-	if (result != view) {
-		std::cout << "Error, result and view do not match in an expected manner!\n";
-		std::cout << "view: \n" << view << "\n\n";
-		std::cout << "result: \n" << result << "\n\n";
-	}
-#endif 
-	return result;
-#endif
 }
 
-// https://msdn.microsoft.com/en-us/library/windows/desktop/bb147302(v=vs.85).aspx
 mat4 Projection(float fov, float aspect, float zNear, float zFar) {
-	/* https://msdn.microsoft.com/en-us/library/windows/desktop/bb205350(v=vs.85).aspx 
-	float yScale = 1.0f / tanf(DEG2RAD((fov * 0.5f)));
-	float xScale = yScale / aspect;
-	float zf = zFar;
-	float zn = zNear;
-
-	return mat4(
-		xScale,     0,          0,               0,
-		0,        yScale,       0,               0,
-		0,          0,       zf / (zf - zn),         1,
-		0,          0, - zn*zf / (zf - zn),     0
-	); */
-
 	float tanHalfFov = tanf(DEG2RAD((fov * 0.5f)));
+	float fovY = 1.0f / tanHalfFov; // cot(fov/2)
+	float fovX = fovY / aspect; // cot(fov/2) / aspect
 
-	mat4 result; // There are MANY different ways to derive a projection matrix!
-	
-#if 0
-		result._11 = 1.0f / (aspect * tanHalfFov);
-		result._22 = 1.0f / tanHalfFov;
-		result._33 = (-zNear - zFar) / (zNear - zFar);
-		result._44 = 0.0f;
-		result._34 = 1.0f;
-		result._43 = (2.0f * zFar * zNear) / (zNear - zFar); 
-#else
-		float fovY = 1.0f / tanHalfFov; // cot(fov/2)
-		float fovX = fovY / aspect; // cot(fov/2) / aspect
+	mat4 result; 
 
-		result._11 = fovX;
-		result._22 = fovY;
-		result._33 = zFar / (zFar - zNear); // far / range
-		result._34 = 1.0f;
-		result._43 = -zNear * result._33; // - near * (far / range)
-		result._44 = 0.0f;
-#endif
-
-	// result._43 *= -1.0f;
+	result._11 = fovX;
+	result._22 = fovY;
+	result._33 = zFar / (zFar - zNear); // far / range
+	result._34 = 1.0f;
+	result._43 = -zNear * result._33; // - near * (far / range)
+	result._44 = 0.0f;
 
 	return result;
 }
 
-// Derived following: http://www.songho.ca/opengl/gl_projectionmatrix.html
-// Above was wrong, it was OpenGL style, our matrices are DX style
-// Correct impl: https://msdn.microsoft.com/en-us/library/windows/desktop/bb205347(v=vs.85).aspx
 mat4 Ortho(float left, float right, float bottom, float top, float zNear, float zFar) {
 	float _11 = 2.0f / (right - left);
 	float _22 = 2.0f / (top - bottom);
@@ -815,23 +734,6 @@ mat4 Ortho(float left, float right, float bottom, float top, float zNear, float 
 		0.0f, 0.0f,  _33, 0.0f,
 		 _41,  _42,  _43, 1.0f
 	); 
-
-	/*
-	2 / (r - l)			0					0				0
-	0					2 / (t - b)			0				0
-	0					0					1 / (zf - zn)   0
-	(l + r) / (l - r)	(t + b) / (b - t)	zn / (zn - zf)  1
-	*/
-
-	/*float w = right - left;
-	float h = bottom - top;
-
-	return mat4(
-		w * 0.5f, 0.0f, 0.0f, 0.0f,
-		0.0f, h * 0.5f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f / (zFar - zNear), 0.0f,
-		0.0f, 0.0f, zNear / (zNear - zFar), 1.0f
-	);*/
 }
 
 vec3 Decompose(const mat3& rot1) {
@@ -839,7 +741,7 @@ vec3 Decompose(const mat3& rot1) {
 
 	float sy = sqrt(rot._11 * rot._11 + rot._21 * rot._21);
 
-	bool singular = sy < 1e-6; // If
+	bool singular = sy < 1e-6;
 
 	float x, y, z;
 	if (!singular) {

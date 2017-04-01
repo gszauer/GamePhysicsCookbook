@@ -3,9 +3,7 @@
 
 #include "vectors.h"
 
-#ifndef NO_EXTRAS
 #include <ostream>
-#endif 
 
 typedef vec2 Point2D;
 
@@ -76,7 +74,6 @@ bool PointInCircle(const Point2D& point, const Circle& circle);
 bool PointInRectangle(const Point2D& point, const Rectangle2D& rectangle);
 bool PointInOrientedRectangle(const Point2D& point, const OrientedRectangle& rectangle);
 
-#ifndef NO_EXTRAS
 #define PointCircle(point, circle) \
 	PointInCircle(point, circle)
 #define CirclePoint(circle, point) \
@@ -89,7 +86,6 @@ bool PointInOrientedRectangle(const Point2D& point, const OrientedRectangle& rec
 	PointInOrientedRectangle(point, rect)
 #define OrientedRectanglePoint(rect, point) \
 	PointInOrientedRectangle(point, rect)
-#endif
 
 bool LineCircle(const Line2D& line, const Circle& circle);
 bool LineRectangle(const Line2D& line, const Rectangle2D& rectangle);
@@ -103,12 +99,10 @@ bool LineOrientedRectangle(const Line2D& line, const OrientedRectangle& rectangl
 #define OrientedRectangleLine(rectangle, line) \
 	LineOrientedRectangle(line, rectangle);
 
-#ifndef NO_EXTRAS
 std::ostream& operator<<(std::ostream& os, const Line2D& shape);
 std::ostream& operator<<(std::ostream& os, const Circle& shape);
 std::ostream& operator<<(std::ostream& os, const Rectangle2D& shape);
 std::ostream& operator<<(std::ostream& os, const OrientedRectangle& shape);
-#endif 
 
 bool CircleCircle(const Circle& circle1, const Circle& circle2);
 bool CircleRectangle(const Circle& circle, const Rectangle2D& rect);
@@ -134,14 +128,11 @@ bool OrientedRectangleOrientedRectangleSAT(const OrientedRectangle& rect1, const
 bool OrientedRectangleOrientedRectangle(const OrientedRectangle& rect1, const OrientedRectangle& rect2);
 
 Circle ContainingCircle(Point2D* pointArray, int arrayCount);
-#ifndef NO_EXTRAS
 Circle ContainingCircleAlt(Point2D* pointArray, int arrayCount);
-#endif
 Rectangle2D ContainingRectangle(Point2D* pointArray, int arrayCount);
 
 
 bool PointInShape(const BoundingShape& shape, const Point2D& point);
-#ifndef NO_EXTRAS
 bool LineShape(const Line2D& line, const BoundingShape& shape);
 bool CircleShape(const Circle& circle, const BoundingShape& shape);
 bool RectangleShape(const Rectangle2D& rectangle, const BoundingShape& shape);
@@ -155,6 +146,5 @@ bool OrientedRectangleShape(const OrientedRectangle& rect, const BoundingShape& 
 	RectangleShape(rectangle, shape)
 #define ShapeOrientedRectangle(shape, rect) \
 	OrientedRectangleShape(rect, shape)
-#endif
 
 #endif

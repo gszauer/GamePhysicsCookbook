@@ -1,4 +1,3 @@
-// https://github.com/CedricGuillemet/ImGuizmo
 // v 1.04 WIP
 //
 // The MIT License(MIT)

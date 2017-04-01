@@ -100,15 +100,6 @@ void RenderNormals(const Frustum& frustum) {
 		(FTL + FTR + FBL + FBR) * 0.25f// Far
 	};
 
-	/*vec3 centers[] = {
-		frustum.planes[0].normal,
-		frustum.planes[1].normal,
-		frustum.planes[2].normal,
-		frustum.planes[3].normal,
-		frustum.planes[4].normal,
-		frustum.planes[5].normal,
-	};*/
-
 	glBegin(GL_LINES);
 	for (int i = 0; i < 6; ++i) {
 		vec3 p1 = centers[i] + frustum.planes[i].normal * 0.5f;
@@ -121,11 +112,7 @@ void RenderNormals(const Frustum& frustum) {
 		vec3 p1 = centers[i] + frustum.planes[i].normal * 0.5f;
 		vec3 p2 = p1 + frustum.planes[i].normal * 0.25f;
 
-#ifndef NO_EXTRAS
 		mat4 orient = FastInverse(LookAt(p1, p2, vec3(0, 1, 0)));
-#else
-		mat4 orient = Inverse(LookAt(p1, p2, vec3(0, 1, 0)));
-#endif
 		mat4 rotate = Rotation(90.0f, 0.0f, 0.0f);
 
 		glPushMatrix();
@@ -657,7 +644,6 @@ void FixedFunctionCylinder() {
 }
 
 void FixedFunctionCylinder(int slices, float height, float radius) {
-	// Modified from http://math.hws.edu/graphicsbook/c4/s2.html
 	height *= 0.5f;
 	float twopi_slices = (2.0f * M_PI) / (float)slices;
 
@@ -704,9 +690,6 @@ void FixedFunctionCylinder(int slices, float height, float radius) {
 	glEnd();
 }
 
-/* From the opengl super bible! */
-// Description of what the arguments mean is here: 
-// http://www.povray.org/documentation/images/reference/mimxrtor.png
 void FixedFunctionTorus(int TORUS_MAJOR_RES, int TORUS_MINOR_RES, float TORUS_MAJOR, float TORUS_MINOR) {
 	int    i, j, k;
 	double s, t, x, y, z, nx, ny, nz, scale, twopi;
@@ -744,29 +727,6 @@ void FixedFunctionTorus(int TORUS_MAJOR_RES, int TORUS_MINOR_RES, float TORUS_MA
 		glEnd();
 	}
 }
-
-/* https://www.opengl.org/archives/resources/code/samples/redbook/torus.c
-void FixedFunctionTorus(int numc, int numt) {
-	int i, j, k;
-	double s, t, x, y, z, twopi;
-
-	twopi = 2 * M_PI;
-	for (i = 0; i < numc; i++) {
-		glBegin(GL_QUAD_STRIP);
-		for (j = 0; j <= numt; j++) {
-			for (k = 1; k >= 0; k--) {
-				s = (i + k) % numc + 0.5;
-				t = j % numt;
-
-				x = (1 + .1*cos(s*twopi / numc))*cos(t*twopi / numt);
-				y = (1 + .1*cos(s*twopi / numc))*sin(t*twopi / numt);
-				z = .1 * sin(s * twopi / numc);
-				glVertex3f(x, y, z);
-			}
-		}
-		glEnd();
-	}
-} */
 
 void FixedFunctionPlane(float size, int subdivs) {
 	glBegin(GL_TRIANGLES);
@@ -902,7 +862,6 @@ void FixedFunctionSubdivCone(float *v1, float *v2, int subdiv, float height, flo
 }
 
 
-// Adapted from: http://cs.gmu.edu/~jchen/graphics/book/examples/2.5.cone.c
 void FixedFunctionCone(int subdiv, float height, float radius) {
 	static float vdata[4][3] = {
 		{  1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f,  1.0f },

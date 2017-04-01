@@ -15,7 +15,6 @@
     Commandline:
         --profile="compatibility" --api="gl=2.1" --generator="c" --spec="gl" --extensions=""
     Online:
-        http://glad.dav1d.de/#profile=compatibility&language=c&specification=gl&loader=on&api=gl%3D2.1
 */
 
 #include <stdio.h>
@@ -1362,10 +1361,6 @@ static int find_extensionsGL(void) {
 
 static void find_coreGL(void) {
 
-    /* Thank you @elmindreda
-     * https://github.com/elmindreda/greg/blob/master/templates/greg.c.in#L176
-     * https://github.com/glfw/glfw/blob/master/src/context.c#L36
-     */
     int i, major, minor;
 
     const char* version;

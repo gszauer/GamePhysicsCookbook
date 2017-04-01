@@ -2,14 +2,8 @@
 #include "matrices.h"
 #include <cmath>
 #include <cfloat>
-
-#ifdef DO_SANITY_TESTS
-	#include <iostream>
-	#include "Compare.h"
-#else
-	#define CMP(x, y) \
-		(fabsf(x - y) <= FLT_EPSILON * fmaxf(1.0f, fmaxf(fabsf(x), fabsf(y))))
-#endif
+#include <iostream>
+#include "Compare.h"
 
 #define CLAMP(number, minimum, maximum) \
 	number = (number < minimum) ? minimum : \
@@ -116,7 +110,6 @@ bool PointInOrientedRectangle(const Point2D& point, const OrientedRectangle& rec
 	//localPoint = RotateVector(localPoint, -rectangle.rotation);
 }
 
-#ifndef NO_EXTRAS
 std::ostream& operator<<(std::ostream& os, const Line2D& shape) {
 	os << "start: (" << shape.start.x << ", " << shape.start.y << "), end: (" << shape.end.x << ", " << shape.end.y << ")";
 	return os;
@@ -138,7 +131,6 @@ std::ostream& operator<<(std::ostream& os, const OrientedRectangle& shape) {
 	os << shape.halfExtents.x << ", " << shape.halfExtents.y << "), rotation: " << shape.rotation;
 	return os;
 }
-#endif 
 
 bool LineCircle(const Line2D& line, const Circle& circle) {
 	// Turn line into vector
@@ -572,7 +564,6 @@ bool PointInShape(const BoundingShape& shape, const Point2D& point) {
 	return false;
 }
 
-#ifndef NO_EXTRAS
 bool LineShape(const Line2D& line, const BoundingShape& shape) {
 	for (int i = 0; i < shape.numCircles; ++i) {
 		if (LineCircle(line, shape.circles[i])) {
@@ -628,5 +619,3 @@ bool OrientedRectangleShape(const OrientedRectangle& rect, const BoundingShape& 
 	}
 	return false;
 }
-
-#endif

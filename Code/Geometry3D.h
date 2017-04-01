@@ -4,13 +4,9 @@
 #include <vector>
 #include <utility>
 //#include <cfloat>
-
 #include "vectors.h"
 #include "matrices.h"
-
-#ifndef NO_EXTRAS
 #include <ostream>
-#endif 
 
 typedef vec3 Point;
 
@@ -83,13 +79,11 @@ typedef struct Triangle {
 			Point b;
 			Point c;
 		};
-#ifndef NO_EXTRAS
 		struct {
 			Point p1;
 			Point p2;
 			Point p3;
 		};
-#endif 
 
 		Point points[3];
 		float values[9];
@@ -175,15 +169,12 @@ void ResetRaycastResult(RaycastResult* outResult);
 Point Intersection(Plane p1, Plane p2, Plane p3);
 void GetCorners(const Frustum& f, vec3* outCorners);
 
-#ifndef NO_EXTRAS
 typedef vec3 Point3D;
 typedef Line Line3D;
 typedef Ray Ray3D;
 typedef AABB Rectangle3D;
 typedef Interval Interval3D;
-#endif
 
-#ifndef NO_EXTRAS
 std::ostream& operator<<(std::ostream& os, const Line& shape);
 std::ostream& operator<<(std::ostream& os, const Ray& shape);
 std::ostream& operator<<(std::ostream& os, const Sphere& shape);
@@ -191,7 +182,6 @@ std::ostream& operator<<(std::ostream& os, const AABB& shape);
 std::ostream& operator<<(std::ostream& os, const OBB& shape);
 std::ostream& operator<<(std::ostream& os, const Plane& shape);
 std::ostream& operator<<(std::ostream& os, const Triangle& shape);
-#endif 
 
 float Length(const Line& line);
 float LengthSq(const Line& line);
@@ -200,9 +190,7 @@ vec3 GetMin(const AABB& aabb);
 vec3 GetMax(const AABB& aabb);
 AABB FromMinMax(const vec3& min, const vec3& max);
 float PlaneEquation(const Point& point, const Plane& plane);
-#ifndef NO_EXTRAS
 float PlaneEquation(const Plane& plane, const Point& point);
-#endif
 
 bool PointInSphere(const Point& point, const Sphere& sphere);
 bool PointInAABB(const Point& point, const AABB& aabb);
@@ -211,7 +199,6 @@ bool PointOnPlane(const Point& point, const Plane& plane);
 bool PointOnLine(const Point& point, const Line& line);
 bool PointOnRay(const Point& point, const Ray& ray);
 
-#ifndef NO_EXTRAS
 bool PointInPlane(const Point& point, const Plane& plane);
 bool PointInLine(const Point& point, const Line& line);
 bool PointInRay(const Point& point, const Ray& ray);
@@ -227,7 +214,6 @@ bool ContainsPoint(const Point& point, const Line& line);
 bool ContainsPoint(const Line& line, const Point& point);
 bool ContainsPoint(const Point& point, const Ray& ray);
 bool ContainsPoint(const Ray& ray, const Point& point);
-#endif
 
 Point ClosestPoint(const Sphere& sphere, const Point& point);
 Point ClosestPoint(const AABB& aabb, const Point& point);
@@ -236,7 +222,6 @@ Point ClosestPoint(const Plane& plane, const Point& point);
 Point ClosestPoint(const Line& line, const Point& point);
 Point ClosestPoint(const Ray& ray, const Point& point);
 
-#ifndef NO_EXTRAS
 Point ClosestPoint(const Point& point, const Sphere& sphere);
 Point ClosestPoint(const Point& point, const AABB& aabb);
 Point ClosestPoint(const Point& point, const OBB& obb);
@@ -244,7 +229,6 @@ Point ClosestPoint(const Point& point, const Plane& plane);
 Point ClosestPoint(const Point& point, const Line& line);
 Point ClosestPoint(const Point& point, const Ray& ray);
 Point ClosestPoint(const Point& p, const Triangle& t);
-#endif
 
 Interval GetInterval(const AABB& aabb, const vec3& axis);
 Interval GetInterval(const OBB& obb, const vec3& axis);
@@ -292,7 +276,6 @@ bool Linetest(const OBB& obb, const Line& line);
 bool Linetest(const Plane& plane, const Line& line);
 bool Linetest(const Triangle& triangle, const Line& line);
 
-#ifndef NO_EXTRAS
 bool Raycast(const Ray& ray, const Sphere& sphere, RaycastResult* outResult);
 bool Raycast(const Ray& ray, const AABB& aabb, RaycastResult* outResult);
 bool Raycast(const Ray& ray, const OBB& obb, RaycastResult* outResult);
@@ -301,12 +284,9 @@ bool Linetest(const Line& line, const Sphere& sphere);
 bool Linetest(const Line& line, const AABB& aabb);
 bool Linetest(const Line& line, const OBB& obb);
 bool Linetest(const Line& line, const Plane& plane);
-#endif
 
-#ifndef NO_EXTRAS
 vec3 BarycentricOptimized(const Point& p, const Triangle& t);
 vec3 Centroid(const Triangle& t);
-#endif
 
 bool PointInTriangle(const Point& p, const Triangle& t);
 Plane FromTriangle(const Triangle& t);
@@ -345,10 +325,8 @@ bool MeshOBB(const Mesh& mesh, const OBB& obb);
 bool MeshPlane(const Mesh& mesh, const Plane& plane);
 bool MeshTriangle(const Mesh& mesh, const Triangle& triangle);
 float MeshRay(const Mesh& mesh, const Ray& ray);
-#ifndef NO_EXTRAS
 float Raycast(const Mesh& mesh, const Ray& ray);
 float Raycast(const Model& mesh, const Ray& ray);
-#endif 
 
 mat4 GetWorldMatrix(const Model& model);
 OBB GetOBB(const Model& model);

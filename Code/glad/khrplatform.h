@@ -32,17 +32,14 @@
  * encouraged to submit platform specific modifications to the Khronos
  * group so that they can be included in future versions of this file.
  * Please submit changes by sending them to the public Khronos Bugzilla
- * (http://khronos.org/bugzilla) by filing a bug against product
  * "Khronos (general)" component "Registry".
  *
  * A predefined template which fills in some of the bug fields can be
- * reached using http://tinyurl.com/khrplatform-h-bugreport, but you
  * must create a Bugzilla login first.
  *
  *
  * See the Implementer's Guidelines for information about where this file
  * should be located on your system and for more details of its use:
- *    http://www.khronos.org/registry/implementers_guide.pdf
  *
  * This file should be included as
  *        #include <KHR/khrplatform.h>

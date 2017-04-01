@@ -15,7 +15,6 @@
     Commandline:
         --profile="compatibility" --api="gl=2.1" --generator="c" --spec="gl" --extensions=""
     Online:
-        http://glad.dav1d.de/#profile=compatibility&language=c&specification=gl&loader=on&api=gl%3D2.1
 */
 
 

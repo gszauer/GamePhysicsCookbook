@@ -3,10 +3,6 @@
 #include <cfloat>
 #include <list>
 
-#ifdef DO_SANITY_TESTS
-#include <iostream>
-#endif
-
 #define CMP(x, y) \
 	(fabsf(x - y) <= FLT_EPSILON * fmaxf(1.0f, fmaxf(fabsf(x), fabsf(y))))
 
@@ -46,13 +42,10 @@ float PlaneEquation(const Point& point, const Plane& plane) {
 	return Dot(point, plane.normal) - plane.distance;
 }
 
-#ifndef NO_EXTRAS
 float PlaneEquation(const Plane& plane, const Point& point) {
 	return Dot(point, plane.normal) - plane.distance;
 }
-#endif
 
-#ifndef NO_EXTRAS
 std::ostream& operator<<(std::ostream& os, const Line& shape) {
 	os << "start: (" << shape.start.x << ", " << shape.start.y << ", " << shape.start.z << "), end: (";
 	os << shape.end.x << ", " << shape.end.y << ", " << shape.end.z << ")";
@@ -100,7 +93,6 @@ std::ostream& operator<<(std::ostream& os, const OBB& shape) {
 	os << "z basis:" << shape.orientation._13 << ", " << shape.orientation._23 << ", " << shape.orientation._33 << ")";
 	return os;
 }
-#endif 
 
 bool PointInSphere(const Point& point, const Sphere& sphere) {
 	return MagnitudeSq(point - sphere.position) < sphere.radius * sphere.radius;
@@ -251,7 +243,6 @@ Point ClosestPoint(const Ray& ray, const Point& point) {
 	return Point(ray.origin + ray.direction * t);
 }
 
-#ifndef NO_EXTRAS
 bool PointInPlane(const Point& point, const Plane& plane) {
 	return PointOnPlane(point, plane);
 }
@@ -318,7 +309,6 @@ Point ClosestPoint(const Point& point, const Ray& ray) {
 Point ClosestPoint(const Point& p, const Triangle& t) {
 	return ClosestPoint(t, p);
 }
-#endif
 
 bool SphereSphere(const Sphere& s1, const Sphere& s2) {
 	float radiiSum = s1.radius + s2.radius;
@@ -854,7 +844,6 @@ bool Linetest(const OBB& obb, const Line& line) {
 	return t >= 0 && t * t <= LengthSq(line);
 }
 
-#ifndef NO_EXTRAS
 bool Raycast(const Ray& ray, const Sphere& sphere, RaycastResult* outResult) {
 	return Raycast(sphere, ray, outResult);
 }
@@ -895,7 +884,6 @@ vec3 Centroid(const Triangle& t) {
 	result = result * (1.0f / 3.0f);
 	return result;
 }
-#endif
 
 bool PointInTriangle(const Point& p, const Triangle& t) {
 	// Move the triangle so that the point is  
@@ -926,7 +914,6 @@ bool PointInTriangle(const Point& p, const Triangle& t) {
 	return true;
 }
 
-#ifndef NO_EXTRAS
 vec3 BarycentricOptimized(const Point& p, const Triangle& t) {
 	vec3 v0 = t.b - t.a;
 	vec3 v1 = t.c - t.a;
@@ -950,7 +937,6 @@ vec3 BarycentricOptimized(const Point& p, const Triangle& t) {
 
 	return result;
 }
-#endif
 
 vec3 Barycentric(const Point& p, const Triangle& t) {
 	vec3 ap = p - t.a;
@@ -971,21 +957,6 @@ vec3 Barycentric(const Point& p, const Triangle& t) {
 
 	v = ca - Project(ca, ab);
 	float c = 1.0f - (Dot(v, cp) / Dot(v, ca));
-
-#ifdef DO_SANITY_TESTS
-#ifndef NO_EXTRAS
-	vec3 barycentric = BarycentricOptimized(p, t);
-	if (fabsf(a - barycentric.x) > 0.1f) {
-		std::cout << "Expected a: " << a << " to be: " << barycentric.x << "\n";
-	}
-	if (fabsf(b - barycentric.y) > 0.1f) {
-		std::cout << "Expected b: " << b << " to be: " << barycentric.y << "\n";
-	}
-	if (fabsf(c - barycentric.z) > 0.1f) {
-		std::cout << "Expected c: " << c << " to be: " << barycentric.z << "\n";
-	}
-#endif
-#endif
 
 	return vec3(a, b, c);
 }
@@ -1242,11 +1213,6 @@ bool Raycast(const Triangle& triangle, const Ray& ray, RaycastResult* outResult)
 		barycentric.y >= 0.0f && barycentric.y <= 1.0f &&
 		barycentric.z >= 0.0f && barycentric.z <= 1.0f) {
 
-#ifdef DO_SANITY_TESTS
-		if (!PointInTriangle(result, triangle)) {
-			std::cout << "Point in triangle and barycentric coordinates don't match!\n";
-		}
-#endif
 		if (outResult != 0) {
 			outResult->t = t;
 			outResult->hit = true;
@@ -1256,11 +1222,6 @@ bool Raycast(const Triangle& triangle, const Ray& ray, RaycastResult* outResult)
 
 		return true;
 	}
-#ifdef DO_SANITY_TESTS
-	else if (PointInTriangle(result, triangle)) {
-		std::cout << "Point in triangle and barycentric coordinates don't match!\n";
-	}
-#endif
 
 	return false;
 }
@@ -1624,14 +1585,13 @@ bool MeshTriangle(const Mesh& mesh, const Triangle& triangle) {
 	return false;
 }
 
-#ifndef NO_EXTRAS
 float Raycast(const Mesh& mesh, const Ray& ray) {
 	return MeshRay(mesh, ray);
 }
+
 float Raycast(const Model& mesh, const Ray& ray) {
 	return ModelRay(mesh, ray);
 }
-#endif 
 
 float MeshRay(const Mesh& mesh, const Ray& ray) {
 	if (mesh.accelerator == 0) {

@@ -54,7 +54,6 @@ namespace tinyobj {
 		float shininess;
 		float ior;       // index of refraction
 		float dissolve;  // 1 == opaque; 0 == fully transparent
-						 // illumination model (see http://www.fileformat.info/format/material/)
 		int illum;
 
 		int dummy;  // Suppress padding warning.
@@ -68,7 +67,6 @@ namespace tinyobj {
 		std::string alpha_texname;               // map_d
 
 												 // PBR extension
-												 // http://exocortex.com/blog/extending_wavefront_mtl_to_support_pbr
 		float roughness;                // [0, 1] default 0
 		float metallic;                 // [0, 1] default 0
 		float sheen;                    // [0, 1] default 0
@@ -273,8 +271,6 @@ namespace tinyobj {
 		std::vector<float> vt;
 	};
 
-	// See
-	// http://stackoverflow.com/questions/6089231/getting-std-ifstream-to-handle-lf-cr-and-crlf
 	static std::istream &safeGetline(std::istream &is, std::string &t) {
 		t.clear();
 
