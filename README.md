@@ -79,9 +79,9 @@ If I have a chance to write a second edition of this book, i will remove the cha
 ## Book Info
 
 * ISBN-13: 9781787123663
-* [Publisher Website](https://www.packtpub.com/game-development/game-physics-cookbook)
-* [Amazon Page](https://www.amazon.com/Game-Physics-Cookbook-Gabor-Szauer/dp/1787123669/)
-* [My Publications](http://gaborszauer.com/publication.html)
+* [View at Packt](https://www.packtpub.com/game-development/game-physics-cookbook)
+* [View on Amazon](https://www.amazon.com/Game-Physics-Cookbook-Gabor-Szauer/dp/1787123669/)
+* [All my publications](http://gaborszauer.com/publication.html)
 
 ## Table Of Contents
 
