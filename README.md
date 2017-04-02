@@ -175,7 +175,7 @@ If I have a chance to write a second edition of this book, i will remove the cha
    - Oriented bounding box to oriented bounding box
    - Oriented bounding box to plane
    - Plane to plane
-10. 3D Line Intersections
+1. 3D Line Intersections
    - Introduction
    - Raycast sphere
    - Raycast axis aligned bounding box
@@ -185,7 +185,7 @@ If I have a chance to write a second edition of this book, i will remove the cha
    - Linetest axis aligned bounding box
    - Linetest oriented bounding box
    - Linetest plane
-11. Triangles and Meshes
+1. Triangles and Meshes
    - Introduction
    - Point in triangle
    - Closest point triangle
@@ -200,14 +200,62 @@ If I have a chance to write a second edition of this book, i will remove the cha
    - Mesh object
    - Mesh optimization
    - Mesh operations
-12. Models and Scenes
+2. Models and Scenes
    - Introduction
-13. Camera and Frustum
-14. Constraint Solving
-15. Manifolds and Impulses
-16. Sprints and Joints
-17. Appendix: Advanced Topics
-
+   - The model object
+   - Operations on models
+   - The scene object
+   - Operations on the scene
+   - The octree object
+   - Operations on the octree
+   - Octree and scene integration
+3. Camera and Frustum
+   - Introduction
+   - Camera object
+   - Camera controls
+   - Frustum object
+   - Frusum from matrix
+   - Sphere in frustum
+   - Bounding box in frustum
+   - Octree culling
+   - Picking
+4. Constraint Solving
+   - Introduction
+   - Framework introduction
+   - Raycast sphere
+   - Raycast bounding box
+   - Raycast plane and triangle
+   - Physics system
+   - Integrating particles
+   - Solving constraints
+   - Verlet integration
+5. Manifolds and Impulses
+   - Introduction
+   - Manifold for spheres
+   - Manifold for boxes
+   - Rigid body modifications
+   - Linera velocity
+   - Linear impulse
+   - Physics system update
+   - Angular velocity
+   - Angular impulse
+6. Sprints and Joints
+   - Introductions
+   - Particle modifications
+   - Springs
+   - Cloth
+   - Physics System modification
+   - Joints
+7. Appendix: Advanced Topics
+   - Introduction
+   - Generic collisions
+   - Stability improvements
+   - Sprints
+   - Open source physics engines
+   - Books
+   - Online resources
+   - Summary
+   
 ## Cover
 
 ![Cover Image](img/cover.png)
