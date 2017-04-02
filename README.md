@@ -4,7 +4,7 @@ This book is a comprehensive guide to the linear algebra and collision detection
 
 * __Chapters 1, 2 and 3__    cover the basics Linear Algebra.
 * __Chapters 4, 5 and 6__    cover two dimensional primitives and how to detect intersections between them. 
-* __Chapters 8, 9 and 10__   cover three dimensional primitives and the most efficient way to determine intersections between them. 
+* __Chapters 7, 8, 9 and 10__   cover three dimensional primitives and the most efficient way to determine intersections between them. 
 * __Chapters 11, 12 and 13__ cover meshes, scenes and scene organization.
 * __Chapters 14, 15 and 16__ cover physics. Throughout these three chapters we built a very basic rigid body physics engine.
 
