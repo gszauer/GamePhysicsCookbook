@@ -79,8 +79,183 @@ If I have a chance to write a second edition of this book, i will remove the cha
 ## Book Info
 
 * ISBN-13: 9781787123663
-* [Publisher Website](https://www.packtpub.com/game-development/game-physics-cookbook)
-* [Amazon Page](https://www.amazon.com/Game-Physics-Cookbook-Gabor-Szauer/dp/1787123669/)
-* [My Publications](http://gaborszauer.com/publication.html)
+* [View at Packt](https://www.packtpub.com/game-development/game-physics-cookbook)
+* [View on Amazon](https://www.amazon.com/Game-Physics-Cookbook-Gabor-Szauer/dp/1787123669/)
+* [All my publications](http://gaborszauer.com/publication.html)
+
+## Table Of Contents
+
+1. Vectors
+   - Introduction
+   - Vector definition
+   - Component wise operations
+   - Dot product
+   - Magnitude
+   - Normalizing
+   - Cross product
+   - Angles
+   - Projection
+   - Reflection
+2. Matrices
+   - Introduction
+   - Matrix definition
+   - Transpose
+   - Multiplication
+   - Identity matrix
+   - Determinant of a 2x2 matrix
+   - Matrix of minors
+   - Cofactor
+   - Determinant of a 3x3 matrix
+   - Operations on a 4x4 matrix
+   - Adjugate matrix
+   - Matrix inverse
+3. Matrix Transforms
+   - Introduction
+   - Matrix majors
+   - Translation
+   - Scaling
+   - How rotations work
+   - Rotation matrices
+   - Axis angle rotation
+   - Vector matrix multiplication
+   - Transform matrix
+   - Projection matrix
+4. 2D Primitive Shapes
+   - Introduction
+   - 2D points
+   - 2D lines
+   - Circle
+   - Rectangle
+   - Oriented rectangle
+   - Point containment
+   - Line intersection
+5. 2D Collisions
+   - Introduction
+   - Circle to circle
+   - Circle to rectangle
+   - Circle to oriented rectangle
+   - Rectangle to rectangle
+   - Seperating Axis Theorem
+   - Rectangle to oriented rectangle
+   - Oriented rectangle to oriented rectangle
+6. 2D Optimizations
+   - Introduction
+   - Containing circle
+   - Containing rectangle
+   - Simple and complex shapes
+   - Quad tree
+   - Broad phase collisions
+7. 3D Primitive Shapes
+   - Introduction
+   - Point
+   - Line segment
+   - Ray
+   - Sphere
+   - Axis aligned bounding box
+   - Oriented buonding box
+   - Plane
+   - Triangle
+8. 3D Point Tests
+   - Introduction
+   - Point and sphere
+   - Point and axis aligned bounding box
+   - Point and oriented bounding box
+   - Point and plane
+   - Point and line
+   - Point and ray
+9. 3D Shape Intersections
+   - Introduction
+   - Sphere to sphere
+   - Sphere to axis aligned bounding box
+   - Sphere to oriented bounding box
+   - Sphere to plane
+   - Axis aligned bounding box to axis aligned bounding box
+   - Axis aligned bounding box to oriented bounding box
+   - Axis aligned bounding box to plane
+   - Oriented bounding box to oriented bounding box
+   - Oriented bounding box to plane
+   - Plane to plane
+1. 3D Line Intersections
+   - Introduction
+   - Raycast sphere
+   - Raycast axis aligned bounding box
+   - Raycast oriented bounding box
+   - Raycast plane
+   - Linetest sphere
+   - Linetest axis aligned bounding box
+   - Linetest oriented bounding box
+   - Linetest plane
+1. Triangles and Meshes
+   - Introduction
+   - Point in triangle
+   - Closest point triangle
+   - Triangle to sphere
+   - Triangle to axis aligned bounding box
+   - Triangle to oriented box
+   - Triangle to plane
+   - Triangle to triangle
+   - robustness of the seperating axis theorem
+   - Raycast triangle
+   - Linetest triangle
+   - Mesh object
+   - Mesh optimization
+   - Mesh operations
+2. Models and Scenes
+   - Introduction
+   - The model object
+   - Operations on models
+   - The scene object
+   - Operations on the scene
+   - The octree object
+   - Operations on the octree
+   - Octree and scene integration
+3. Camera and Frustum
+   - Introduction
+   - Camera object
+   - Camera controls
+   - Frustum object
+   - Frusum from matrix
+   - Sphere in frustum
+   - Bounding box in frustum
+   - Octree culling
+   - Picking
+4. Constraint Solving
+   - Introduction
+   - Framework introduction
+   - Raycast sphere
+   - Raycast bounding box
+   - Raycast plane and triangle
+   - Physics system
+   - Integrating particles
+   - Solving constraints
+   - Verlet integration
+5. Manifolds and Impulses
+   - Introduction
+   - Manifold for spheres
+   - Manifold for boxes
+   - Rigid body modifications
+   - Linera velocity
+   - Linear impulse
+   - Physics system update
+   - Angular velocity
+   - Angular impulse
+6. Sprints and Joints
+   - Introductions
+   - Particle modifications
+   - Springs
+   - Cloth
+   - Physics System modification
+   - Joints
+7. Appendix: Advanced Topics
+   - Introduction
+   - Generic collisions
+   - Stability improvements
+   - Sprints
+   - Open source physics engines
+   - Books
+   - Online resources
+   - Summary
+   
+## Cover
 
 ![Cover Image](img/cover.png)
