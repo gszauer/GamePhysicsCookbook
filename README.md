@@ -1,4 +1,4 @@
-# Game Physics Cookbook
+# [Game Physics Cookbook](https://gamephysicscookbook.github.io/)
 
 This book is a comprehensive guide to the linear algebra and collision detection games commonly use, but only briefly touches on the topic of collision resolution (Physics). The book is structured as follows:
 
@@ -9,6 +9,10 @@ This book is a comprehensive guide to the linear algebra and collision detection
 * __Chapters 14, 15 and 16__ cover physics. Throughout these three chapters we built a very basic rigid body physics engine.
 
 All of of the topics covered in this book are used to progressivley build a rigid body physics engine. The final three chapters (14, 15 and 16) implement particle physics, rigid body physics and soft body physics (cloth). An appendinx is provided which briefly covers advanced topics, resources for exploring these topics as well as additional resources for exploring game physics.
+
+## Figures
+
+Some of the figures created for the book did not translate well to print. To address this I have included the all of the book figures in this repow and published the figures online at: [https://github.com/gamephysicscookbook/Figures](https://github.com/gamephysicscookbook/Figures)
 
 ## Math
 
