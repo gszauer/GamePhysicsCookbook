@@ -10,6 +10,10 @@ This book is a comprehensive guide to the linear algebra and collision detection
 
 All of of the topics covered in this book are used to progressivley build a rigid body physics engine. The final three chapters (14, 15 and 16) implement particle physics, rigid body physics and soft body physics (cloth). An appendinx is provided which briefly covers advanced topics, resources for exploring these topics as well as additional resources for exploring game physics.
 
+## Figures
+
+Some of the figures created for the book did not translate well to print. To address this I have published all of the figures used in the book online at: [https://github.com/gamephysicscookbook/Figures](https://github.com/gamephysicscookbook/Figures)
+
 ## Math
 
 The first three chapters of the book are dedicated to teaching the basic linear algebra needed for game development. Every concept is explained in a mathematical context, source code is provided for every concept and images are also provided when something can be explored visually. Troughout the first three chapters the following data structures are created:
