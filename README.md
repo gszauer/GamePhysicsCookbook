@@ -12,7 +12,7 @@ All of of the topics covered in this book are used to progressivley build a rigi
 
 ## Figures
 
-Some of the figures created for the book did not translate well to print. To address this I have published all of the figures used in the book online at: [https://github.com/gamephysicscookbook/Figures](https://github.com/gamephysicscookbook/Figures)
+Some of the figures created for the book did not translate well to print. To address this I have included the all of the book figures in this repow and published the figures online at: [https://github.com/gamephysicscookbook/Figures](https://github.com/gamephysicscookbook/Figures)
 
 ## Math
 
