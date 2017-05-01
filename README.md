@@ -1,4 +1,4 @@
-# Game Physics Cookbook
+# [Game Physics Cookbook](https://gamephysicscookbook.github.io/)
 
 This book is a comprehensive guide to the linear algebra and collision detection games commonly use, but only briefly touches on the topic of collision resolution (Physics). The book is structured as follows:
 
