@@ -1,5 +1,9 @@
 # [Game Physics Cookbook](https://gamephysicscookbook.github.io/)
 
+* [Website](https://gamephysicscookbook.github.io/)
+* [Facebook](https://www.facebook.com/GamePhysicsCookbook/)
+* [Twitter](https://twitter.com/gamephysicsbook)
+
 This book is a comprehensive guide to the linear algebra and collision detection games commonly use, but only briefly touches on the topic of collision resolution (Physics). The book is structured as follows:
 
 * __Chapters 1, 2 and 3__    cover the basics Linear Algebra.
