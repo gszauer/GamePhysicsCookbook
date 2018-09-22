@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Game Physics Cookbook</title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<link rel="stylesheet" type="text/css" href="css/font.css">
+
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-96941899-1', 'auto');
+		  ga('send', 'pageview');
+
+		</script>
+	</head>
+	<body class="new_mobile" style="display: block;">
+		<div id="i-page" class="page page2 ">
+			<div class="page-block" id="page_block_header">
+				<div class="color-overlay"></div>
+				<div class="border-holder">
+					<div class="block-inner">
+						<div class="page-element widget-container page-element-type-image widget-image " id="element-1150">
+							<div class="contents">
+								<img src="img/cover.png" style="height: 100%; width: 100%; margin-top: 0px;" alt="">
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-headline widget-headline " id="element-1067">
+							<div class="contents">
+								<h1>
+									<span style="color:#343642">Learn about:</span>
+								</h1>
+								<h1>
+									<span style="color:#343642">Math, Collision Detection, Collision Resolution</span>
+								</h1>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-headline widget-headline " id="element-1066">
+							<div class="contents">
+								<h1>
+									<b><span style="color:#343642">Game Physics Cookbook</span></b>
+								</h1>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-image widget-image " id="element-1072">
+							<div class="contents">
+								<img src="img/icfocusblue.png" style="height: 100%; width: 100%; margin-top: 0px;" alt="">
+							</div>
+						</div>
+						<!-- Begin conversion -->
+						<div class="page-element widget-container page-element-type-button widget-button " id="element-1147">
+							<div class="conversion_wrapper">
+								<a href="https://www.amazon.com/Game-Physics-Cookbook-Gabor-Szauer/dp/1787123669" style="width: 154px; height: 40px;" data-wid="1147">
+									<div class="btn submit-button button_submit dynamic-button   glossy" style="width: 154px;">Buy on Amazon</div>
+								</a>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-button widget-button " id="element-1148">
+								<div class="conversion_wrapper">
+								<a href="https://www.packtpub.com/game-development/game-physics-cookbook" style="width: 154px; height: 40px;" data-wid="1148">
+									<div class="btn submit-button button_submit dynamic-button   glossy" style="width: 154px;">Buy from Packt</div>
+								</a>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-button widget-button " id="element-1149">
+							<div class="conversion_wrapper">
+								<a href="https://github.com/gamephysicscookbook" style="width: 154px; height: 40px;" data-wid="1149">
+									<div class="btn submit-button button_submit dynamic-button   glossy" style="width: 154px;">Source on Github</div>
+								</a>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-button widget-button " id="element-1155">
+							<div class="conversion_wrapper">
+								<a href="https://github.com/gamephysicscookbook" style="width: 154px; height: 40px;" data-wid="1155">
+									<div class="btn submit-button button_submit dynamic-button   glossy" style="width: 154px;">Figures on Github</div>
+								</a>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-button widget-button " id="element-xx01">
+							<div class="conversion_wrapper">
+								<a href="https://www.facebook.com/GamePhysicsCookbook/" style="width: 154px; height: 40px;" data-wid="xx001">
+									<div class="btn submit-button button_submit dynamic-button   glossy" style="width: 154px;">Facebook</div>
+								</a>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-button widget-button " id="element-xx02">
+							<div class="conversion_wrapper">
+								<a href="https://twitter.com/gamephysicsbook" style="width: 154px; height: 40px;" data-wid="xx002">
+									<div class="btn submit-button button_submit dynamic-button   glossy" style="width: 154px;">Twitter</div>
+								</a>
+							</div>
+						</div>
+						<!-- End conversion -->
+					</div>
+				</div>
+			</div>
+			<div class="page-block" id="page_block_below_fold">
+				<div class="color-overlay"></div>
+				<div class="border-holder">
+					<div class="block-inner">
+						<div class="page-element widget-container page-element-type-headline widget-headline " id="element-1073">
+							<div class="contents">
+								<h1>
+									<span style="color:#333333">Book overview</span>
+								</h1>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-text widget-text " id="element-1074">
+							<div class="contents">
+								<p style=" "><span style="color:#333333">This book is a comprehensive guide to the linear algebra and collision detection games commonly use, but only briefly touches on the topic of collision resolution (Physics). The book is structured as follows:</span></p>
+								<p style=" "><span style="color:#333333">
+									</span>
+								</p>
+								<ul style=" ">
+									<li><b>Chapters 1, 2 and 3</b> cover the basics Linear Algebra.</li>
+									<li><b>Chapters 4, 5 and 6</b> cover two dimensional primitives and how to detect intersections between them.</li>
+									<li><b>Chapters 7, 8, 9 and 10</b> cover three dimensional primitives and how to determine intersections between them.</li>
+									<li><b>Chapters 11, 12 and 13</b> cover meshes, scenes and scene organization.</li>
+									<li style="color: rgb(51, 51, 51);"><b>Chapters 14, 15 an</b><span style="color: rgb(51, 51, 51);"><b>d 16</b> cover physics. Throughout these chapters we built a very basic rigid body physics engine.</span></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="page-block" id="page_block_footer">
+				<div class="color-overlay"></div>
+				<div class="border-holder">
+					<div class="block-inner">
+						<div class="page-element widget-container page-element-type-text widget-text " id="element-1109">
+							<div class="contents">
+								<p style=" ">The basics of a scene graph, viewing and picking 3D objects trough a camera.</p>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-text widget-text " id="element-1087">
+							<div class="contents">
+								<p style=" "><span style="color:#333333">All of of the topics covered in this book are used to progressively build a rigid body physics engine.&nbsp;</span><span style="color: rgb(51, 51, 51);">The final three chapters (14, 15 and 16) implement particle physics, rigid body physics and soft body physics (cloth). &nbsp;</span><span style="color: rgb(51, 51, 51);">An appendix is provided which briefly covers advanced topics and provides resources for exploring these topics.</span></p>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-headline widget-headline " id="element-1104">
+							<div class="contents">
+								<h1>
+									<span style="color:#333333">What you will learn</span>
+								</h1>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-text widget-text " id="element-1111">
+							<div class="contents">
+								<p style=" ">Build a rigid body physics engine from scratch, also explore springs and cloth physics.</p>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-text widget-text " id="element-1105">
+							<div class="contents">
+								<p style=" ">Linear algebra for video games, the math needed to work efficiently with vectors and matrices.</p>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-image widget-image " id="element-1108">
+							<div class="contents">
+								<img src="img/iccheckblue.png" style="height: 100%; width: 100%; margin-top: 0px;" alt="">
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-text widget-text " id="element-1106">
+							<div class="contents">
+								<p style=" "><span style="color:#333333">2D and 3D intersection testing of common shapes such as rays, spheres, bounding boxes and more.</span></p>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-image widget-image " id="element-1110">
+							<div class="contents">
+								<img src="img/iccheckblue.png" style="height: 100%; width: 100%; margin-top: 0px;" alt="">
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-image widget-image " id="element-1107">
+							<div class="contents">
+								<img src="img/iccheckblue.png" style="height: 100%; width: 100%; margin-top: 0px;" alt="">
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-image widget-image " id="element-1112">
+							<div class="contents">
+								<img src="img/iccheckblue.png" style="height: 100%; width: 100%; margin-top: 0px;" alt="">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="page-block" id="page-block-0vkbrpn4kylxflxr">
+				<div class="color-overlay"></div>
+				<div class="border-holder">
+					<div class="block-inner">
+						<div class="page-element widget-container page-element-type-headline widget-headline " id="element-1113">
+							<div class="contents">
+								<h1>
+									<span style="color:#333333">Shape collisions</span>
+								</h1>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-image widget-image " id="element-1156">
+							<div class="contents">
+								<img src="img/collision-matrix.png" style="height: 100%; width: 100%; margin-top: 0px;" alt="">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="page-block" id="page-block-ny15jvywnihhbyb9">
+				<div class="color-overlay"></div>
+				<div class="border-holder">
+					<div class="block-inner">
+
+						<div class="page-element widget-container page-element-type-headline widget-headline " id="element-1102">
+							<div class="contents">
+								<h1>
+									<span style="color:#333333">Physics</span>
+								</h1>
+							</div>
+						</div>
+
+						<div class="page-element widget-container page-element-type-text widget-text " id="element-1145">
+							<div class="contents">
+								<p style=" "><span style="color:#333333">Chapter 14 covers naive particle physics, this chapter is meant as an introduction to setting up a physics loop and considering the general format of a physics loop. Chapter 15 is the most interesting chapter, it implements a basic rigid body physics engine. The basic engine has support for oriented boxes and spheres, stacking can be made to work but is not directly supported. Chapter 16 covers springs and how springs can be used to implement soft body physics. The final demo of the book is a soft body, cloth physics demo.</span></p>
+							</div>
+						</div>
+
+						<div class="page-element widget-container page-element-type-headline widget-headline " id="element-1141">
+							<div class="contents"><h5 style="text-align: left;"><span style="text-align: left;padding-left:63px">Chapter 14, Particle Physics Demo</span></h5></div>
+						</div>
+
+						<div class="page-element widget-container page-element-type-headline widget-headline " id="element-1142">
+							<div class="contents"><h5 style="text-align: left;"><span style="text-align: left;padding-left:63px">Chapter 15, Rigid Body Physics Demo</span></h5></div>
+						</div>
+
+						<div class="page-element widget-container page-element-type-headline widget-headline " id="element-1143">
+							<div class="contents"><h5 style="text-align: left;"><span style="text-align: left;padding-left:63px">Chapter 16, Cloth Physics Demo</span></h5></div>
+						</div>
+
+						<div class="page-element widget-container page-element-type-image widget-image " id="element-1144">
+							<div class="contents">
+								<img src="img/chapter16.gif" style="height: 100%; width: 100%; margin-top: 0px;" alt="">
+							</div>
+						</div>
+						
+						<div class="page-element widget-container page-element-type-image widget-image " id="element-1138">
+							<div class="contents">
+								<img src="img/chapter14.gif" style="height: 100%; width: 100%; margin-top: 0px;" alt="">
+							</div>
+						</div>
+						
+						<div class="page-element widget-container page-element-type-image widget-image " id="element-1139">
+							<div class="contents">
+								<img src="img/chapter15.gif" style="height: 100%; width: 100%; margin-top: 0px;" alt="">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="page-block" id="page-block-a4jkkh9pdypkfbt9">
+				<div class="color-overlay"></div>
+				<div class="border-holder">
+					<div class="block-inner">
+						<div class="page-element widget-container page-element-type-headline widget-headline " id="element-1096">
+							<div class="contents">
+								<h1>
+									<span style="font-size: 36px; line-height: 50.4000015258789px;color:#333333">About the Author</span>
+								</h1>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-text widget-text " id="element-1097">
+							<div class="contents">
+								<p style=" "><span style="color:#333333">Gabor Szauer graduated from Full Sail University with a bachelor's degree in game development. He has been making video games professionally since 2010. He has worked on games for the Nintendo 3DS, Xbox 360, browser-based games as well as games for iOS and Android.</span></p>
+								<p style=" "><span style="color:#333333">&nbsp;</span></p>
+								<p style=" "><span style="color:#333333"><a href="http://gaborszauer.com"  id="link-vicpcgqnjiwqm35gx5ufh6w29" class="url-link">http://gaborszauer.com</a></span></p>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-image widget-image " id="element-1153">
+							<div class="contents">
+								<img src="img/gabor-circle.png" style="height: 100%; width: 100%; margin-top: 0px;" alt="">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="page-block" id="page-block-tsfavvph1bnpnwmi">
+				<div class="color-overlay"></div>
+				<div class="border-holder">
+					<div class="block-inner">
+						<div class="page-element widget-container page-element-type-headline widget-headline " id="element-1114">
+							<div class="contents">
+								<h1>
+									<span style="color:#ffffff">Table of Contents</span>
+								</h1>
+							</div>
+						</div>
+						<div class="page-element widget-container page-element-type-text widget-text " id="element-1115">
+							<div class="contents">
+								<ol style="color: rgb(255, 255, 255);  ">
+									<li><span style="color:#ffffff" class="accordion"><strong>Vectors</strong></span>
+										<ul style="color: rgb(255, 255, 255);" class="accordion_panel">
+										<li><span style="color:#ffffff">Introduction</span></li>
+										<li><span style="color:#ffffff">Vector definition</span></li>
+										<li><span style="color:#ffffff">Component wise operations</span></li>
+										<li><span style="color:#ffffff">Dot product</span></li>
+										<li><span style="color:#ffffff">Magnitude</span></li>
+										<li><span style="color:#ffffff">Normalizing</span></li>
+										<li><span style="color:#ffffff">Cross product</span></li>
+										<li><span style="color:#ffffff">Angles</span></li>
+										<li><span style="color:#ffffff">Projection</span></li>
+										<li><span style="color:#ffffff">Reflection</span></li>
+										</ul>
+									</li>
+									<li><span style="color:#ffffff" class="accordion"><strong>Matrices</strong></span>
+										<ul style="color: rgb(255, 255, 255);" class="accordion_panel">
+										<li><span style="color:#ffffff">Introduction</span></li>
+										<li><span style="color:#ffffff">Matrix definition</span></li>
+										<li><span style="color:#ffffff">Transpose</span></li>
+										<li><span style="color:#ffffff">Multiplication</span></li>
+										<li><span style="color:#ffffff">Identity matrix</span></li>
+										<li><span style="color:#ffffff">Determinant of a 2x2 matrix</span></li>
+										<li><span style="color:#ffffff">Matrix of minors</span></li>
+										<li><span style="color:#ffffff">Cofactor</span></li>
+										<li><span style="color:#ffffff">Determinant of a 3x3 matrix</span></li>
+										<li><span style="color:#ffffff">Operations on a 4x4 matrix</span></li>
+										<li><span style="color:#ffffff">Adjugate matrix</span></li>
+										<li><span style="color:#ffffff">Matrix inverse</span></li>
+										</ul>
+									</li>
+									<li><span style="color:#ffffff" class="accordion"><strong>Matrix Transforms</strong></span>
+										<ul style="color: rgb(255, 255, 255);" class="accordion_panel">
+										<li><span style="color:#ffffff">Introduction</span></li>
+										<li><span style="color:#ffffff">Matrix majors</span></li>
+										<li><span style="color:#ffffff">Translation</span></li>
+										<li><span style="color:#ffffff">Scaling</span></li>
+										<li><span style="color:#ffffff">How rotations work</span></li>
+										<li><span style="color:#ffffff">Rotation matrices</span></li>
+										<li><span style="color:#ffffff">Axis angle rotation</span></li>
+										<li><span style="color:#ffffff">Vector matrix multiplication</span></li>
+										<li><span style="color:#ffffff">Transform matrix</span></li>
+										<li><span style="color:#ffffff">Projection matrix</span></li>
+										</ul>
+									</li>
+									<li><span style="color:#ffffff" class="accordion"><strong>2D Primitive Shapes</strong></span>
+										<ul style="color: rgb(255, 255, 255);" class="accordion_panel">
+										<li><span style="color:#ffffff">Introduction</span></li>
+										<li><span style="color:#ffffff">2D points</span></li>
+										<li><span style="color:#ffffff">2D lines</span></li>
+										<li><span style="color:#ffffff">Circle</span></li>
+										<li><span style="color:#ffffff">Rectangle</span></li>
+										<li><span style="color:#ffffff">Oriented rectangle</span></li>
+										<li><span style="color:#ffffff">Point containment</span></li>
+										<li><span style="color:#ffffff">Line intersection</span></li>
+										</ul>
+									</li>
+									<li><span style="color:#ffffff" class="accordion"><strong>2D Collisions</strong></span>
+										<ul style="color: rgb(255, 255, 255);" class="accordion_panel">
+										<li><span style="color:#ffffff">Introduction</span></li>
+										<li><span style="color:#ffffff">Circle to circle</span></li>
+										<li><span style="color:#ffffff">Circle to rectangle</span></li>
+										<li><span style="color:#ffffff">Circle to oriented rectangle</span></li>
+										<li><span style="color:#ffffff">Rectangle to rectangle</span></li>
+										<li><span style="color:#ffffff">Seperating Axis Theorem</span></li>
+										<li><span style="color:#ffffff">Rectangle to oriented rectangle</span></li>
+										<li><span style="color:#ffffff">Oriented rectangle to oriented rectangle</span></li>
+										</ul>
+									</li>
+									<li><span style="color:#ffffff" class="accordion"><strong>2D Optimizations</strong></span>
+										<ul style="color: rgb(255, 255, 255);" class="accordion_panel">
+										<li><span style="color:#ffffff">Introduction</span></li>
+										<li><span style="color:#ffffff">Containing circle</span></li>
+										<li><span style="color:#ffffff">Containing rectangle</span></li>
+										<li><span style="color:#ffffff">Simple and complex shapes</span></li>
+										<li><span style="color:#ffffff">Quad tree</span></li>
+										<li><span style="color:#ffffff">Broad phase collisions</span></li>
+										</ul>
+									</li>
+									<li><span style="color:#ffffff" class="accordion"><strong>3D Primitive Shapes</strong></span>
+										<ul style="color: rgb(255, 255, 255);" class="accordion_panel">
+										<li><span style="color:#ffffff">Introduction</span></li>
+										<li><span style="color:#ffffff">Point</span></li>
+										<li><span style="color:#ffffff">Line segment</span></li>
+										<li><span style="color:#ffffff">Ray</span></li>
+										<li><span style="color:#ffffff">Sphere</span></li>
+										<li><span style="color:#ffffff">Axis aligned bounding box</span></li>
+										<li><span style="color:#ffffff">Oriented buonding box</span></li>
+										<li><span style="color:#ffffff">Plane</span></li>
+										<li><span style="color:#ffffff">Triangle</span></li>
+										</ul>
+									</li>
+									<li><span style="color:#ffffff" class="accordion"><strong>3D Point Tests</strong></span>
+										<ul style="color: rgb(255, 255, 255);" class="accordion_panel">
+										<li><span style="color:#ffffff">Introduction</span></li>
+										<li><span style="color:#ffffff">Point and sphere</span></li>
+										<li><span style="color:#ffffff">Point and axis aligned bounding box</span></li>
+										<li><span style="color:#ffffff">Point and oriented bounding box</span></li>
+										<li><span style="color:#ffffff">Point and plane</span></li>
+										<li><span style="color:#ffffff">Point and line</span></li>
+										<li><span style="color:#ffffff">Point and ray</span></li>
+										</ul>
+									</li>
+									<li><span style="color:#ffffff" class="accordion"><strong>3D Shape Intersections</strong></span>
+										<ul style="color: rgb(255, 255, 255);" class="accordion_panel">
+										<li><span style="color:#ffffff">Introduction</span></li>
+										<li><span style="color:#ffffff">Sphere to sphere</span></li>
+										<li><span style="color:#ffffff">Sphere to axis aligned bounding box</span></li>
+										<li><span style="color:#ffffff">Sphere to oriented bounding box</span></li>
+										<li><span style="color:#ffffff">Sphere to plane</span></li>
+										<li><span style="color:#ffffff">Axis aligned bounding box to axis aligned bounding box</span></li>
+										<li><span style="color:#ffffff">Axis aligned bounding box to oriented bounding box</span></li>
+										<li><span style="color:#ffffff">Axis aligned bounding box to plane</span></li>
+										<li><span style="color:#ffffff">Oriented bounding box to oriented bounding box</span></li>
+										<li><span style="color:#ffffff">Oriented bounding box to plane</span></li>
+										<li><span style="color:#ffffff">Plane to plane</span></li>
+										</ul>
+									</li>
+									<li><span style="color:#ffffff" class="accordion"><strong>3D Line Intersections</strong></span>
+										<ul style="color: rgb(255, 255, 255);" class="accordion_panel">
+										<li><span style="color:#ffffff">Introduction</span></li>
+										<li><span style="color:#ffffff">Raycast sphere</span></li>
+										<li><span style="color:#ffffff">Raycast axis aligned bounding box</span></li>
+										<li><span style="color:#ffffff">Raycast oriented bounding box</span></li>
+										<li><span style="color:#ffffff">Raycast plane</span></li>
+										<li><span style="color:#ffffff">Linetest sphere</span></li>
+										<li><span style="color:#ffffff">Linetest axis aligned bounding box</span></li>
+										<li><span style="color:#ffffff">Linetest oriented bounding box</span></li>
+										<li><span style="color:#ffffff">Linetest plane</span></li>
+										</ul>
+									</li>
+									<li><span style="color:#ffffff" class="accordion"><strong>Triangles and Meshes</strong></span>
+										<ul style="color: rgb(255, 255, 255);" class="accordion_panel">
+										<li><span style="color:#ffffff">Introduction</span></li>
+										<li><span style="color:#ffffff">Point in triangle</span></li>
+										<li><span style="color:#ffffff">Closest point triangle</span></li>
+										<li><span style="color:#ffffff">Triangle to sphere</span></li>
+										<li><span style="color:#ffffff">Triangle to axis aligned bounding box</span></li>
+										<li><span style="color:#ffffff">Triangle to oriented box</span></li>
+										<li><span style="color:#ffffff">Triangle to plane</span></li>
+										<li><span style="color:#ffffff">Triangle to triangle</span></li>
+										<li><span style="color:#ffffff">robustness of the seperating axis theorem</span></li>
+										<li><span style="color:#ffffff">Raycast triangle</span></li>
+										<li><span style="color:#ffffff">Linetest triangle</span></li>
+										<li><span style="color:#ffffff">Mesh object</span></li>
+										<li><span style="color:#ffffff">Mesh optimization</span></li>
+										<li><span style="color:#ffffff">Mesh operations</span></li>
+										</ul>
+									</li>
+									<li><span style="color:#ffffff" class="accordion"><strong>Models and Scenes</strong></span>
+										<ul style="color: rgb(255, 255, 255);" class="accordion_panel">
+										<li><span style="color:#ffffff">Introduction</span></li>
+										<li><span style="color:#ffffff">The model object</span></li>
+										<li><span style="color:#ffffff">Operations on models</span></li>
+										<li><span style="color:#ffffff">The scene object</span></li>
+										<li><span style="color:#ffffff">Operations on the scene</span></li>
+										<li><span style="color:#ffffff">The octree object</span></li>
+										<li><span style="color:#ffffff">Operations on the octree</span></li>
+										<li><span style="color:#ffffff">Octree and scene integration</span></li>
+										</ul>
+									</li>
+									<li><span style="color:#ffffff" class="accordion"><strong>Camera and Frustum</strong></span>
+										<ul style="color: rgb(255, 255, 255);" class="accordion_panel">
+										<li><span style="color:#ffffff">Introduction</span></li>
+										<li><span style="color:#ffffff">Camera object</span></li>
+										<li><span style="color:#ffffff">Camera controls</span></li>
+										<li><span style="color:#ffffff">Frustum object</span></li>
+										<li><span style="color:#ffffff">Frusum from matrix</span></li>
+										<li><span style="color:#ffffff">Sphere in frustum</span></li>
+										<li><span style="color:#ffffff">Bounding box in frustum</span></li>
+										<li><span style="color:#ffffff">Octree culling</span></li>
+										<li><span style="color:#ffffff">Picking</span></li>
+										</ul>
+									</li>
+									<li><span style="color:#ffffff" class="accordion"><strong>Constraint Solving</strong></span>
+										<ul style="color: rgb(255, 255, 255);" class="accordion_panel">
+										<li><span style="color:#ffffff">Introduction</span></li>
+										<li><span style="color:#ffffff">Framework introduction</span></li>
+										<li><span style="color:#ffffff">Raycast sphere</span></li>
+										<li><span style="color:#ffffff">Raycast bounding box</span></li>
+										<li><span style="color:#ffffff">Raycast plane and triangle</span></li>
+										<li><span style="color:#ffffff">Physics system</span></li>
+										<li><span style="color:#ffffff">Integrating particles</span></li>
+										<li><span style="color:#ffffff">Solving constraints</span></li>
+										<li><span style="color:#ffffff">Verlet integration</span></li>
+										</ul>
+									</li>
+									<li><span style="color:#ffffff" class="accordion"><strong>Manifolds and Impulses</strong></span>
+										<ul style="color: rgb(255, 255, 255);" class="accordion_panel">
+										<li><span style="color:#ffffff">Introduction</span></li>
+										<li><span style="color:#ffffff">Manifold for spheres</span></li>
+										<li><span style="color:#ffffff">Manifold for boxes</span></li>
+										<li><span style="color:#ffffff">Rigid body modifications</span></li>
+										<li><span style="color:#ffffff">Linera velocity</span></li>
+										<li><span style="color:#ffffff">Linear impulse</span></li>
+										<li><span style="color:#ffffff">Physics system update</span></li>
+										<li><span style="color:#ffffff">Angular velocity</span></li>
+										<li><span style="color:#ffffff">Angular impulse</span></li>
+										</ul>
+									</li>
+									<li><span style="color:#ffffff" class="accordion"><strong>Sprints and Joints</strong></span>
+										<ul style="color: rgb(255, 255, 255);" class="accordion_panel">
+										<li><span style="color:#ffffff">Introductions</span></li>
+										<li><span style="color:#ffffff">Particle modifications</span></li>
+										<li><span style="color:#ffffff">Springs</span></li>
+										<li><span style="color:#ffffff">Cloth</span></li>
+										<li><span style="color:#ffffff">Physics System modification</span></li>
+										<li><span style="color:#ffffff">Joints</span></li>
+										</ul>
+									</li>
+									<li><span style="color:#ffffff" class="accordion"><strong>Appendix: Advanced Topics</strong></span>
+										<ul style="color: rgb(255, 255, 255);" class="accordion_panel">
+										<li><span style="color:#ffffff">Introduction</span></li>
+										<li><span style="color:#ffffff">Generic collisions</span></li>
+										<li><span style="color:#ffffff">Stability improvements</span></li>
+										<li><span style="color:#ffffff">Sprints</span></li>
+										<li><span style="color:#ffffff">Open source physics engines</span></li>
+										<li><span style="color:#ffffff">Books</span></li>
+										<li><span style="color:#ffffff">Online resources</span></li>
+										<li><span style="color:#ffffff">Summary</span></li>
+										</ul>
+									</li>
+								</ol>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- end -->
+		<script>
+			var acc = document.getElementsByClassName("accordion");
+
+			for (var i = 0; i < acc.length; i++) {
+				acc[i].innerHTML += " (Click to expand)"
+
+			    acc[i].addEventListener("click", function() {
+			        this.classList.toggle("active");
+			        var panel = this.nextElementSibling;
+
+			        if (panel.style.display === "none") {
+			            panel.style.display = "block";
+			            this.innerHTML = this.innerHTML.replace("to expand", "to collapse")
+			        } else {
+			            panel.style.display = "none";
+			            this.innerHTML = this.innerHTML.replace("to collapse", "to expand")
+			        }
+			    });
+			}
+
+			var pan = document.getElementsByClassName("accordion_panel");
+			for (var i = 0; i < pan.length; i++) {
+			    pan[i].style.display = "none";
+		    };
+		</script>
+		<div id="fb-root"></div>
+	</body>
+</html>

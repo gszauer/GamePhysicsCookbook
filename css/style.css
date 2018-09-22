@@ -1,0 +1,973 @@
+/* https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_accordion */
+
+.accordion {
+    cursor: pointer;
+}
+
+#element-1148 .dynamic-button {
+    background-color: #cca600;
+    color: #ffffff;
+}
+#element-1148 .dynamic-button:active {} #element-1148 .dynamic-button:hover {
+    background-color: #ccbf00;
+}
+#element-1148 .dynamic-button,
+#element-1148 .image-button {
+    width: 157px;
+    height: 40px;
+    z-index: 32;
+    line-height: 16px;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: Open Sans;
+    border-radius: 5px;
+}
+/*@media screen and ( max-width: 620px),
+screen and ( max-width: 999px) and ( -webkit-min-device-pixel-ratio: 1.5) and ( max-device-width: 1280px) and ( max-device-height: 720px),
+screen and ( max-width: 999px) and ( -webkit-min-device-pixel-ratio: 1.5) and ( max-device-width: 1000px) {*/
+    body:not( .tablet) #element-1148 .dynamic-button,
+    body:not( .tablet) #element-1148 .image-button {
+        width: 140px;
+        height: 40px;
+        z-index: 32;
+        line-height: 40px;
+        font-size: 14px;
+    }
+/*}*/
+#element-1148 .dynamic-button.glossy {
+    background-image: linear-gradient(bottom, #cca600, rgb(230, 192, 26));
+    background-image: -o-linear-gradient(bottom, #cca600, rgb(230, 192, 26));
+    background-image: -moz-linear-gradient(bottom, #cca600, rgb(230, 192, 26));
+    background-image: -webkit-linear-gradient(bottom, #cca600, rgb(230, 192, 26));
+    background-image: -ms-linear-gradient(bottom, #cca600, rgb(230, 192, 26));
+    background-image: -webkit-gradient( linear, right bottom, right top, color-stop(0, #cca600), color-stop(0.66, rgb(230, 192, 26)));
+}
+#element-1148 .dynamic-button.glossy:hover {
+    background-image: linear-gradient(bottom, #ccbf00, rgb(230, 217, 26));
+    background-image: -o-linear-gradient(bottom, #ccbf00, rgb(230, 217, 26));
+    background-image: -moz-linear-gradient(bottom, #ccbf00, rgb(230, 217, 26));
+    background-image: -webkit-linear-gradient(bottom, #ccbf00, rgb(230, 217, 26));
+    background-image: -ms-linear-gradient(bottom, #ccbf00, rgb(230, 217, 26));
+    background-image: -webkit-gradient( linear, right bottom, right top, color-stop(0, #ccbf00), color-stop(0.66, rgb(230, 217, 26)));
+}
+
+
+/* Facebook */
+#element-xx01 .dynamic-button {
+    background-color: #0059cc;
+    color: #ffffff;
+}
+#element-xx01 .dynamic-button:active {} #element-xx01 .dynamic-button:hover {
+    background-color: #0073cc;
+}
+#element-xx01 .dynamic-button,
+#element-xx01 .image-button {
+    width: 157px;
+    height: 40px;
+    z-index: 32;
+    line-height: 16px;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: Open Sans;
+    border-radius: 5px;
+}
+
+body:not( .tablet) #element-xx01 .dynamic-button,
+body:not( .tablet) #element-xx01 .image-button {
+    width: 140px;
+    height: 40px;
+    z-index: 32;
+    line-height: 40px;
+    font-size: 14px;
+}
+
+#element-xx01 .dynamic-button.glossy {
+    background-image: linear-gradient(bottom, #0059cc, rgb(26, 115, 230));
+    background-image: -o-linear-gradient(bottom, #0059cc, rgb(26, 115, 230));
+    background-image: -moz-linear-gradient(bottom, #0059cc, rgb(26, 115, 230));
+    background-image: -webkit-linear-gradient(bottom, #0059cc, rgb(26, 115, 230));
+    background-image: -ms-linear-gradient(bottom, #0059cc, rgb(26, 115, 230));
+    background-image: -webkit-gradient( linear, right bottom, right top, color-stop(0, #0059cc), color-stop(0.66, rgb(26, 115, 230)));
+}
+#element-xx01 .dynamic-button.glossy:hover {
+    background-image: linear-gradient(bottom, #0073cc, rgb(26, 141, 230));
+    background-image: -o-linear-gradient(bottom, #0073cc, rgb(26, 141, 230));
+    background-image: -moz-linear-gradient(bottom, #0073cc, rgb(26, 141, 230));
+    background-image: -webkit-linear-gradient(bottom, #0073cc, rgb(26, 141, 230));
+    background-image: -ms-linear-gradient(bottom, #0073cc, rgb(26, 141, 230));
+    background-image: -webkit-gradient( linear, right bottom, right top, color-stop(0, #0073cc), color-stop(0.66, rgb(26, 141, 230)));
+}
+/* End Facebook */
+
+/* Twitter */
+#element-xx02 .dynamic-button {
+    background-color: #0059cc;
+    color: #ffffff;
+}
+#element-xx02 .dynamic-button:active {} #element-xx02 .dynamic-button:hover {
+    background-color: #0073cc;
+}
+#element-xx02 .dynamic-button,
+#element-xx02 .image-button {
+    width: 157px;
+    height: 40px;
+    z-index: 32;
+    line-height: 16px;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: Open Sans;
+    border-radius: 5px;
+}
+
+body:not( .tablet) #element-xx02 .dynamic-button,
+body:not( .tablet) #element-xx02 .image-button {
+    width: 140px;
+    height: 40px;
+    z-index: 32;
+    line-height: 40px;
+    font-size: 14px;
+}
+
+#element-xx02 .dynamic-button.glossy {
+    background-image: linear-gradient(bottom, #0059cc, rgb(26, 115, 230));
+    background-image: -o-linear-gradient(bottom, #0059cc, rgb(26, 115, 230));
+    background-image: -moz-linear-gradient(bottom, #0059cc, rgb(26, 115, 230));
+    background-image: -webkit-linear-gradient(bottom, #0059cc, rgb(26, 115, 230));
+    background-image: -ms-linear-gradient(bottom, #0059cc, rgb(26, 115, 230));
+    background-image: -webkit-gradient( linear, right bottom, right top, color-stop(0, #0059cc), color-stop(0.66, rgb(26, 115, 230)));
+}
+#element-xx02 .dynamic-button.glossy:hover {
+    background-image: linear-gradient(bottom, #0073cc, rgb(26, 141, 230));
+    background-image: -o-linear-gradient(bottom, #0073cc, rgb(26, 141, 230));
+    background-image: -moz-linear-gradient(bottom, #0073cc, rgb(26, 141, 230));
+    background-image: -webkit-linear-gradient(bottom, #0073cc, rgb(26, 141, 230));
+    background-image: -ms-linear-gradient(bottom, #0073cc, rgb(26, 141, 230));
+    background-image: -webkit-gradient( linear, right bottom, right top, color-stop(0, #0073cc), color-stop(0.66, rgb(26, 141, 230)));
+}
+/* End Twitter */
+
+#element-1149 .dynamic-button {
+    background-color: #089723;
+    color: #ffffff;
+}
+#element-1149 .dynamic-button:active {} #element-1149 .dynamic-button:hover {
+    background-color: #00b317;
+}
+#element-1149 .dynamic-button,
+#element-1149 .image-button {
+    width: 154px;
+    height: 40px;
+    z-index: 33;
+    line-height: 16px;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: Open Sans;
+    border-radius: 5px;
+}
+/*@media screen and ( max-width: 620px),
+screen and ( max-width: 999px) and ( -webkit-min-device-pixel-ratio: 1.5) and ( max-device-width: 1280px) and ( max-device-height: 720px),
+screen and ( max-width: 999px) and ( -webkit-min-device-pixel-ratio: 1.5) and ( max-device-width: 1000px) {*/
+    body:not( .tablet) #element-1149 .dynamic-button,
+    body:not( .tablet) #element-1149 .image-button {
+        width: 150px;
+        height: 40px;
+        z-index: 33;
+        line-height: 40px;
+        font-size: 14px;
+    }
+/*}*/
+#element-1149 .dynamic-button.glossy {
+    background-image: linear-gradient(bottom, #089723, rgb(34, 177, 61));
+    background-image: -o-linear-gradient(bottom, #089723, rgb(34, 177, 61));
+    background-image: -moz-linear-gradient(bottom, #089723, rgb(34, 177, 61));
+    background-image: -webkit-linear-gradient(bottom, #089723, rgb(34, 177, 61));
+    background-image: -ms-linear-gradient(bottom, #089723, rgb(34, 177, 61));
+    background-image: -webkit-gradient( linear, right bottom, right top, color-stop(0, #089723), color-stop(0.66, rgb(34, 177, 61)));
+}
+#element-1149 .dynamic-button.glossy:hover {
+    background-image: linear-gradient(bottom, #00b317, rgb(26, 205, 49));
+    background-image: -o-linear-gradient(bottom, #00b317, rgb(26, 205, 49));
+    background-image: -moz-linear-gradient(bottom, #00b317, rgb(26, 205, 49));
+    background-image: -webkit-linear-gradient(bottom, #00b317, rgb(26, 205, 49));
+    background-image: -ms-linear-gradient(bottom, #00b317, rgb(26, 205, 49));
+    background-image: -webkit-gradient( linear, right bottom, right top, color-stop(0, #00b317), color-stop(0.66, rgb(26, 205, 49)));
+}
+#element-1147 .dynamic-button {
+    background-color: #cca600;
+    color: #ffffff;
+}
+#element-1147 .dynamic-button:active {} #element-1147 .dynamic-button:hover {
+    background-color: #ccbf00;
+}
+#element-1147 .dynamic-button,
+#element-1147 .image-button {
+    width: 154px;
+    height: 40px;
+    z-index: 31;
+    line-height: 16px;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: Open Sans;
+    border-radius: 5px;
+}
+/*@media screen and ( max-width: 620px),
+screen and ( max-width: 999px) and ( -webkit-min-device-pixel-ratio: 1.5) and ( max-device-width: 1280px) and ( max-device-height: 720px),
+screen and ( max-width: 999px) and ( -webkit-min-device-pixel-ratio: 1.5) and ( max-device-width: 1000px) {*/
+    body:not( .tablet) #element-1147 .dynamic-button,
+    body:not( .tablet) #element-1147 .image-button {
+        width: 140px;
+        height: 40px;
+        z-index: 31;
+        line-height: 40px;
+        font-size: 14px;
+    }
+/*}*/
+#element-1147 .dynamic-button.glossy {
+    background-image: linear-gradient(bottom, #cca600, rgb(230, 192, 26));
+    background-image: -o-linear-gradient(bottom, #cca600, rgb(230, 192, 26));
+    background-image: -moz-linear-gradient(bottom, #cca600, rgb(230, 192, 26));
+    background-image: -webkit-linear-gradient(bottom, #cca600, rgb(230, 192, 26));
+    background-image: -ms-linear-gradient(bottom, #cca600, rgb(230, 192, 26));
+    background-image: -webkit-gradient( linear, right bottom, right top, color-stop(0, #cca600), color-stop(0.66, rgb(230, 192, 26)));
+}
+#element-1147 .dynamic-button.glossy:hover {
+    background-image: linear-gradient(bottom, #ccbf00, rgb(230, 217, 26));
+    background-image: -o-linear-gradient(bottom, #ccbf00, rgb(230, 217, 26));
+    background-image: -moz-linear-gradient(bottom, #ccbf00, rgb(230, 217, 26));
+    background-image: -webkit-linear-gradient(bottom, #ccbf00, rgb(230, 217, 26));
+    background-image: -ms-linear-gradient(bottom, #ccbf00, rgb(230, 217, 26));
+    background-image: -webkit-gradient( linear, right bottom, right top, color-stop(0, #ccbf00), color-stop(0.66, rgb(230, 217, 26)));
+}
+#element-1155 .dynamic-button {
+    background-color: #089723;
+    color: #ffffff;
+}
+#element-1155 .dynamic-button:active {} #element-1155 .dynamic-button:hover {
+    background-color: #00b317;
+}
+#element-1155 .dynamic-button,
+#element-1155 .image-button {
+    width: 154px;
+    height: 40px;
+    z-index: 36;
+    line-height: 16px;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: Open Sans;
+    border-radius: 5px;
+}
+/*@media screen and ( max-width: 620px),
+screen and ( max-width: 999px) and ( -webkit-min-device-pixel-ratio: 1.5) and ( max-device-width: 1280px) and ( max-device-height: 720px),
+screen and ( max-width: 999px) and ( -webkit-min-device-pixel-ratio: 1.5) and ( max-device-width: 1000px) {*/
+    body:not( .tablet) #element-1155 .dynamic-button,
+    body:not( .tablet) #element-1155 .image-button {
+        width: 154px;
+        height: 40px;
+        z-index: 36;
+        line-height: 40px;
+        font-size: 14px;
+    }
+/*}*/
+#element-1155 .dynamic-button.glossy {
+    background-image: linear-gradient(bottom, #089723, rgb(34, 177, 61));
+    background-image: -o-linear-gradient(bottom, #089723, rgb(34, 177, 61));
+    background-image: -moz-linear-gradient(bottom, #089723, rgb(34, 177, 61));
+    background-image: -webkit-linear-gradient(bottom, #089723, rgb(34, 177, 61));
+    background-image: -ms-linear-gradient(bottom, #089723, rgb(34, 177, 61));
+    background-image: -webkit-gradient( linear, right bottom, right top, color-stop(0, #089723), color-stop(0.66, rgb(34, 177, 61)));
+}
+#element-1155 .dynamic-button.glossy:hover {
+    background-image: linear-gradient(bottom, #00b317, rgb(26, 205, 49));
+    background-image: -o-linear-gradient(bottom, #00b317, rgb(26, 205, 49));
+    background-image: -moz-linear-gradient(bottom, #00b317, rgb(26, 205, 49));
+    background-image: -webkit-linear-gradient(bottom, #00b317, rgb(26, 205, 49));
+    background-image: -ms-linear-gradient(bottom, #00b317, rgb(26, 205, 49));
+    background-image: -webkit-gradient( linear, right bottom, right top, color-stop(0, #00b317), color-stop(0.66, rgb(26, 205, 49)));
+}
+.page-element .btn,
+.page-element .contents,
+.page-element.widget-form form,
+.page-element.widget-form form input,
+.page-element.widget-form form textarea,
+.page-element.widget-form form select,
+.page-element.widget-form form label {
+    font-family: Open Sans;
+    font-weight: normal;
+}
+.page-element.widget-headline .contents h1,
+.page-element.widget-headline .contents h2,
+.page-element.widget-headline .contents h3,
+.page-element.widget-headline .contents h4,
+.page-element.widget-headline .contents h5,
+.page-element.widget-headline .contents h6 {
+    font-family: Bitter;
+    font-weight: normal;
+}
+[id^=___plusone] {
+    width: 51px !important;
+}
+div.social.lines [id^=___plusone] {
+    width: 62px !important;
+}
+div.social.lines span[class^=IN-widget] {
+    min-width: 70px !important;
+}
+div.social.buttons [id^=___plusone] {
+    width: 36px !important;
+}
+div.social.buttons div[class^=fb-like] {
+    width: 58px !important;
+}
+div.social.tiles [id^=___plusone] {
+    height: 63px !important;
+    margin-top: 2px !important;
+}
+div.social.tiles .fb-like iframe {
+    margin-top: 1px !important;
+}
+.widget-testimonial.style-1 .contents div.testimonial-text {
+    margin-top: 0;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    /*background-color: #ffffff;*/
+    /*background-image: url("../img/shattered.png");*/
+    background-color: #343642;
+    background-position: top left;
+    background-repeat: repeat;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+}
+.page .page-block .block-inner {
+    background-color: transparent;
+}
+#element-1066 {
+    height: 56px;
+    width: 470px;
+    left: 467px;
+    top: 117px;
+    z-index: 3;
+}
+#element-1066 p,
+#element-1066 ul,
+#element-1066 ol,
+#element-1066 h1 {
+    font-size: 38px;
+    color: rgb(0, 0, 0);
+    line-height: 53px;
+    text-align: left;
+}
+#element-1067 {
+    height: 48px;
+    width: 476px;
+    left: 467px;
+    top: 176px;
+    z-index: 4;
+}
+#element-1067 p,
+#element-1067 ul,
+#element-1067 ol,
+#element-1067 h1 {
+    font-size: 20px;
+    color: rgb(0, 0, 0);
+    line-height: 24px;
+    text-align: left;
+}
+#element-1072 {
+    height: 107px;
+    width: 31px;
+    left: 418px;
+    top: 128px;
+    z-index: 5;
+}
+#element-1073 {
+    height: 50px;
+    width: 919px;
+    left: 20px;
+    top: 20px;
+    z-index: 6;
+}
+#element-1073 p,
+#element-1073 ul,
+#element-1073 ol,
+#element-1073 h1 {
+    font-size: 36px;
+    color: rgb(0, 0, 0);
+    line-height: 50px;
+    text-align: left;
+}
+#element-1074 {
+    height: 174px;
+    width: 919px;
+    left: 20px;
+    top: 77px;
+    z-index: 7;
+}
+#element-1074 p,
+#element-1074 ul,
+#element-1074 ol,
+#element-1074 h1 {
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    line-height: 22px;
+    text-align: left;
+}
+#element-1087 {
+    height: 66px;
+    width: 923px;
+    left: 20px;
+    top: 84px;
+    z-index: 8;
+}
+#element-1087 p,
+#element-1087 ul,
+#element-1087 ol,
+#element-1087 h1 {
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    line-height: 22px;
+    text-align: left;
+}
+#element-1096 {
+    height: 50px;
+    width: 450px;
+    left: 20px;
+    top: 53px;
+    z-index: 9;
+}
+#element-1096 p,
+#element-1096 ul,
+#element-1096 ol,
+#element-1096 h1 {} #element-1097 {
+    height: 132px;
+    width: 612px;
+    left: 20px;
+    top: 111px;
+    z-index: 10;
+}
+#element-1097 p,
+#element-1097 ul,
+#element-1097 ol,
+#element-1097 h1 {
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    line-height: 22px;
+    text-align: left;
+}
+#element-1102 {
+    height: 50px;
+    width: 450px;
+    left: 20px;
+    top: 18px;
+    z-index: 11;
+}
+#element-1102 p,
+#element-1102 ul,
+#element-1102 ol,
+#element-1102 h1 {
+    font-size: 36px;
+    color: rgb(0, 0, 0);
+    line-height: 50px;
+    text-align: left;
+}
+#element-1104 {
+    height: 50px;
+    width: 450px;
+    left: 20px;
+    top: 25px;
+    z-index: 12;
+}
+#element-1104 p,
+#element-1104 ul,
+#element-1104 ol,
+#element-1104 h1 {
+    font-size: 36px;
+    color: rgb(0, 0, 0);
+    line-height: 50px;
+    text-align: left;
+}
+#element-1105 {
+    height: 44px;
+    width: 408px;
+    left: 63px;
+    top: 181px;
+    z-index: 13;
+}
+#element-1105 p,
+#element-1105 ul,
+#element-1105 ol,
+#element-1105 h1 {
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    line-height: 22px;
+    text-align: left;
+}
+#element-1106 {
+    height: 44px;
+    width: 408px;
+    left: 531px;
+    top: 181px;
+    z-index: 14;
+}
+#element-1106 p,
+#element-1106 ul,
+#element-1106 ol,
+#element-1106 h1 {
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    line-height: 22px;
+    text-align: left;
+}
+#element-1107 {
+    height: 32px;
+    width: 32px;
+    left: 21px;
+    top: 187px;
+    z-index: 15;
+}
+#element-1108 {
+    height: 32px;
+    width: 32px;
+    left: 488px;
+    top: 187px;
+    z-index: 16;
+}
+#element-1109 {
+    height: 44px;
+    width: 408px;
+    left: 63px;
+    top: 261px;
+    z-index: 17;
+}
+#element-1109 p,
+#element-1109 ul,
+#element-1109 ol,
+#element-1109 h1 {
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    line-height: 22px;
+    text-align: left;
+}
+#element-1110 {
+    height: 32px;
+    width: 32px;
+    left: 21px;
+    top: 267px;
+    z-index: 18;
+}
+#element-1111 {
+    height: 44px;
+    width: 408px;
+    left: 531px;
+    top: 261px;
+    z-index: 19;
+}
+#element-1111 p,
+#element-1111 ul,
+#element-1111 ol,
+#element-1111 h1 {
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    line-height: 22px;
+    text-align: left;
+}
+#element-1112 {
+    height: 32px;
+    width: 32px;
+    left: 488px;
+    top: 267px;
+    z-index: 20;
+}
+#element-1113 {
+    height: 50px;
+    width: 450px;
+    left: 20px;
+    top: 16px;
+    z-index: 21;
+}
+#element-1113 p,
+#element-1113 ul,
+#element-1113 ol,
+#element-1113 h1 {
+    font-size: 36px;
+    color: rgb(0, 0, 0);
+    line-height: 50px;
+    text-align: left;
+}
+#element-1114 {
+    height: 50px;
+    width: 450px;
+    left: 20px;
+    top: 33px;
+    z-index: 22;
+}
+#element-1114 p,
+#element-1114 ul,
+#element-1114 ol,
+#element-1114 h1 {
+    font-size: 36px;
+    color: rgb(0, 0, 0);
+    line-height: 50px;
+    text-align: left;
+}
+#element-1115 {
+    /*height: 3760px;*/
+    width: 874px;
+    left: 20px;
+    top: 107px;
+    z-index: 23;
+}
+#element-1115 p,
+#element-1115 ul,
+#element-1115 ol,
+#element-1115 h1 {
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    line-height: 22px;
+    text-align: left;
+}
+#element-1138 {
+    height: 593px;
+    width: 795px;
+    left: 83px;
+    top: 257px;
+    z-index: 24;
+}
+#element-1139 {
+    height: 593px;
+    width: 795px;
+    left: 83px;
+    top: 925px;
+    z-index: 25;
+}
+#element-1141 {
+    height: 34px;
+    width: 543px;
+    left: 20px;
+    top: 213px;
+    z-index: 26;
+}
+#element-1141 p,
+#element-1141 span,
+#element-1141 ul,
+#element-1141 ol,
+#element-1141 h1 {
+    font-size: 24px;
+    color: rgb(0, 0, 0);
+    line-height: 34px;
+    text-align: left;
+}
+#element-1142 {
+    height: 34px;
+    width: 543px;
+    left: 20px;
+    top: 880px;
+    z-index: 27;
+}
+#element-1142 p,
+#element-1142 span,
+#element-1142 ul,
+#element-1142 ol,
+#element-1142 h1 {
+    font-size: 24px;
+    color: rgb(0, 0, 0);
+    line-height: 34px;
+    text-align: left;
+}
+#element-1143 {
+    height: 34px;
+    width: 543px;
+    left: 20px;
+    top: 1549px;
+    z-index: 28;
+}
+#element-1143 p,
+#element-1143 span,
+#element-1143 ul,
+#element-1143 ol,
+#element-1143 h1 {
+    font-size: 24px;
+    color: rgb(0, 0, 0);
+    line-height: 34px;
+    text-align: left;
+}
+#element-1144 {
+    height: 593px;
+    width: 795px;
+    left: 83px;
+    top: 1593px;
+    z-index: 29;
+}
+#element-1145 {
+    height: 110px;
+    width: 913px;
+    left: 20px;
+    top: 76px;
+    z-index: 30;
+}
+#element-1145 p,
+#element-1145 ul,
+#element-1145 ol,
+#element-1145 h1 {
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    line-height: 22px;
+    text-align: left;
+}
+#element-1147 { /* Amazon */
+    height: 40px;
+    width: 154px;
+    left: 493px;
+    top: 260px;
+    z-index: 31;
+}
+#element-1148 { /* Packt */
+    height: 40px;
+    width: 157px;
+    left: 682px;
+    top: 260px;
+    z-index: 32;
+}
+#element-1149 { /* Source */
+    height: 40px;
+    width: 154px;
+    left: 493px;
+    top: 325px;
+    z-index: 33;
+}
+#element-1155 { /* Figures */
+    height: 40px;
+    width: 154px;
+    left: 682px;
+    top: 325px;
+    z-index: 36;
+}
+#element-xx01 { /* Facebook */
+    height: 40px;
+    width: 154px;
+    left: 493px;
+    top: 390px;
+    z-index: 31;
+}
+#element-xx02 { /* Twitter */
+    height: 40px;
+    width: 154px;
+    left: 682px;
+    top: 390px;
+    z-index: 31;
+}
+#element-1150 {
+    height: 410px;
+    width: 333px;
+    left: 29px;
+    top: 30px;
+    z-index: 34;
+}
+#element-1153 {
+    height: 200px;
+    width: 200px;
+    left: 694px;
+    top: 40px;
+    z-index: 35;
+}
+#element-1156 {
+    height: 454px;
+    width: 757px;
+    left: 92px;
+    top: 89px;
+    z-index: 37;
+}
+#page_block_header {
+    height: 469px;
+    background-color: #ffffff;
+    background-image: url("../img/shattered.png");
+}
+#page_block_header .border-holder {
+    background-image: none;
+    background-color: transparent;
+    background-repeat: repeat;
+    background-position: top left;
+    width: 960px;
+    margin: 0 auto;
+    border-width: 0px;
+    height: 469px;
+}
+/*@media only screen and (max-width: 770px) {*/
+    .border-holder {
+        background-attachment: scroll !important;
+    }
+/*}*/
+#page_block_header .color-overlay {
+    width: 960px;
+    left: 0;
+    right: 0;
+    height: 100%;
+    position: absolute;
+    margin: 0 auto;
+    background-color: rgba(0, 0, 0, 0);
+    opacity: 0.5;
+}
+#page_block_header .block-inner {
+    margin-top: 0px;
+    margin-left: 0px;
+}
+#page_block_below_fold {
+    height: 273px;
+}
+#page_block_below_fold .border-holder {
+    background-image: none;
+    background-color: #ffffff;
+    background-repeat: repeat;
+    background-position: top left;
+    border-color: #eeeeee;
+    border-style: dashed;
+    width: auto;
+    border-width: 0;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+    height: 273px;
+}
+/*@media only screen and (max-width: 770px) {*/
+    .border-holder {
+        background-attachment: scroll !important;
+    }
+/*}*/
+#page_block_below_fold .color-overlay {} #page_block_below_fold .block-inner {
+    margin-top: -3px;
+}
+#page_block_footer {
+    height: 336px;
+}
+#page_block_footer .border-holder {
+    background-image: none;
+    background-color: #ffffff;
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-size: auto auto;
+    -webkit-background-size: auto auto;
+    -moz-background-size: auto auto;
+    -o-background-size: auto auto;
+    border-color: #eeeeee;
+    border-style: dashed;
+    width: auto;
+    border-width: 0;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+    height: 336px;
+}
+/*@media only screen and (max-width: 770px) {*/
+    .border-holder {
+        background-attachment: scroll !important;
+    }
+/*}*/
+#page_block_footer .color-overlay {} #page_block_footer .block-inner {
+    margin-top: -3px;
+}
+#page-block-0vkbrpn4kylxflxr {
+    height: 565px;
+}
+#page-block-0vkbrpn4kylxflxr .border-holder {
+    background-image: none;
+    background-color: #ffffff;
+    background-repeat: repeat;
+    background-position: top left;
+    width: auto;
+    border-width: 0;
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+    height: 565px;
+}
+/*@media only screen and (max-width: 770px) {*/
+    .border-holder {
+        background-attachment: scroll !important;
+    }
+/*}*/
+#page-block-0vkbrpn4kylxflxr .color-overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    margin: 0 auto;
+    background-color: rgba(0, 0, 0, 0);
+    opacity: 0.5;
+}
+#page-block-0vkbrpn4kylxflxr .block-inner {
+    margin-top: 0px;
+}
+#page-block-ny15jvywnihhbyb9 {
+    height: 2209px;
+}
+#page-block-ny15jvywnihhbyb9 .border-holder {
+    background-image: none;
+    background-color: #ffffff;
+    background-repeat: repeat;
+    background-position: top left;
+    border-color: #eeeeee;
+    border-style: dashed;
+    width: auto;
+    border-width: 0;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+    height: 2209px;
+}
+/*@media only screen and (max-width: 770px) {*/
+    .border-holder {
+        background-attachment: scroll !important;
+    }
+/*}*/
+#page-block-ny15jvywnihhbyb9 .color-overlay {} #page-block-ny15jvywnihhbyb9 .block-inner {
+    margin-top: -3px;
+}
+#page-block-a4jkkh9pdypkfbt9 {
+    height: 262px;
+}
+#page-block-a4jkkh9pdypkfbt9 .border-holder {
+    background-image: none;
+    background-color: #ffffff;
+    background-repeat: repeat;
+    background-position: top left;
+    border-color: #eeeeee;
+    border-style: dashed;
+    width: auto;
+    border-width: 0;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+    height: 262px;
+}
+/*@media only screen and (max-width: 770px) {*/
+    .border-holder {
+        background-attachment: scroll !important;
+    }
+/*}*/
+#page-block-a4jkkh9pdypkfbt9 .color-overlay {} #page-block-a4jkkh9pdypkfbt9 .block-inner {
+    margin-top: -3px;
+}
+#page-block-tsfavvph1bnpnwmi {
+    /*height: 4200px;*/
+    /*display: block;*/
+    /* TODO: Figure out how to make this display! */
+}
+#page-block-tsfavvph1bnpnwmi .border-holder {
+    background-image: none;
+    background-color: #343642;
+    background-repeat: repeat;
+    background-position: top left;
+    width: auto;
+    border-width: 0;
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+    /*height: 4200px;*/
+}
+/*@media only screen and (max-width: 770px) {*/
+    .border-holder {
+        background-attachment: scroll !important;
+    }
+/*}*/
+#page-block-tsfavvph1bnpnwmi .color-overlay {} #page-block-tsfavvph1bnpnwmi .block-inner {
+    margin-top: 0px;
+}
