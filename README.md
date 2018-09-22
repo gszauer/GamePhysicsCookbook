@@ -1,6 +1,6 @@
-# [Game Physics Cookbook](https://gamephysicscookbook.github.io/)
+# [Game Physics Cookbook](http://gamephysicscookbook.com/)
 
-* [Website](https://gamephysicscookbook.github.io/)
+* [Website](http://gamephysicscookbook.com/)
 * [Facebook](https://www.facebook.com/GamePhysicsCookbook/)
 * [Twitter](https://twitter.com/gamephysicsbook)
 
